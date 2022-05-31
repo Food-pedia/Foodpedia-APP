@@ -38,7 +38,7 @@ public class MainActivity2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); //여기 main2로 해야되는거 아니야?
 
         Interpreter lite = getTfliteInterpreter("converted_model.tflite");
 
