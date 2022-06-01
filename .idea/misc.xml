@@ -3,14 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/nerim/Project/Foodpedia-APP/app/src/main/res/layout/activity_main2.xml" value="0.23125" />
+        <entry key="..\:/Users/esthe/StudioProjects/Foodpedia-APP/app/src/main/res/layout/activity_main.xml" value="0.1171875" />
+        <entry key="..\:/Users/esthe/StudioProjects/Foodpedia-APP/app/src/main/res/layout/activity_main2.xml" value="0.1" />
+        <entry key="..\:/Users/esthe/StudioProjects/Foodpedia-APP/app/src/main/res/layout/activity_main3.xml" value="0.2" />
       </map>
     </option>
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_15_PREVIEW" project-jdk-name="15" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_15" project-jdk-name="15" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
