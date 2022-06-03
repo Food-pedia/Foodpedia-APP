@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import java.io.ByteArrayOutputStream;
+
 public class MainActivity3 extends AppCompatActivity {
     final private static String TAG = "tag";
     Button btn_camera;
@@ -28,7 +30,7 @@ public class MainActivity3 extends AppCompatActivity {
         setContentView(R.layout.activity_main3);
 
         btn_camera = findViewById(R.id.btn_camera);
-        img = findViewById(R.id.img_camera);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "권한 설정 완료");
@@ -59,7 +61,19 @@ public class MainActivity3 extends AppCompatActivity {
                 if (resultCode == RESULT_OK && intent.hasExtra("data")) {
                     Bitmap bitmap = (Bitmap) intent.getExtras().get("data");
                     if (bitmap != null) {
-                       img.setImageBitmap(bitmap);
+                       ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                       float scale = (float) (1024/(float)bitmap.getWidth());
+                       int image_w = (int) (bitmap.getWidth() * scale);
+                       int image_h = (int) (bitmap.getHeight() * scale);
+                       Bitmap resize = Bitmap.createScaledBitmap(bitmap, image_w, image_h, true);
+                       resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                       byte[] byteArray = stream.toByteArray();
+
+                       Intent intent2 = new Intent(this, FoodRecognitionActivity.class);
+                       intent2.putExtra("image", byteArray);
+                       startActivity(intent2);
+
+
                     }
                 }
                 break;

@@ -21,6 +21,9 @@
             android:name=".MainActivity"
             android:exported="true"/>
         <activity
+            android:name=".FoodRecognitionActivity"
+            android:exported="true"/>
+        <activity
                 android:name=".MainActivity3"
                 android:exported="true">
             <intent-filter>
