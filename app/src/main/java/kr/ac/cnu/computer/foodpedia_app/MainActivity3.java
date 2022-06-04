@@ -60,24 +60,25 @@ public class MainActivity3 extends AppCompatActivity {
             case TAKE_PICTURE:
                 if (resultCode == RESULT_OK && intent.hasExtra("data")) {
                     Bitmap bitmap = (Bitmap) intent.getExtras().get("data");
-                    if (bitmap != null) {
-                       ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                       float scale = (float) (1024/(float)bitmap.getWidth());
-                       int image_w = (int) (bitmap.getWidth() * scale);
-                       int image_h = (int) (bitmap.getHeight() * scale);
-                       Bitmap resize = Bitmap.createScaledBitmap(bitmap, image_w, image_h, true);
-                       resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                       byte[] byteArray = stream.toByteArray();
+//                    bitmap = bitmap.createScaledBitmap(bitmap,640,640,true);
+//                    if (bitmap != null) {
+//                       ByteArrayOutputStream stream = new ByteArrayOutputStream();
+//                       float scale = (float) (1024/(float)bitmap.getWidth());
+//                       int image_w = (int) (bitmap.getWidth() * scale);
+//                       int image_h = (int) (bitmap.getHeight() * scale);
+//                       Bitmap resize = Bitmap.createScaledBitmap(bitmap, image_w, image_h, true);
+//                       resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+////                       byte[] byteArray = stream.toByteArray();
 
-                       Intent intent2 = new Intent(this, FoodRecognitionActivity.class);
-                       intent2.putExtra("image", byteArray);
+                       Intent intent2 = new Intent(this, MainActivity2.class);
+                       intent2.putExtra("image", bitmap);
                        startActivity(intent2);
 
 
                     }
                 }
-                break;
+//                break;
         }
     }
-}
+
 
