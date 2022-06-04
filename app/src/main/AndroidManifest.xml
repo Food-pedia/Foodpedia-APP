@@ -15,15 +15,11 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.FoodpediaAPP">
         <activity
-                android:name=".MainActivity2"
+                android:name=".FoodRecognitionActivity"
                 android:exported="true"
                 android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".FoodRecognitionActivity"
             android:exported="true"
             android:screenOrientation="portrait"/>
         <activity

@@ -23,7 +23,7 @@ import android.util.Log;
 
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.Tensor;
-import kr.ac.cnu.computer.foodpedia_app.MainActivity2;
+import kr.ac.cnu.computer.foodpedia_app.FoodRecognitionActivity;
 import kr.ac.cnu.computer.foodpedia_app.env.Logger;
 import kr.ac.cnu.computer.foodpedia_app.env.Utils;
 import org.tensorflow.lite.gpu.GpuDelegate;
@@ -211,7 +211,7 @@ public class YoloV5Classifier implements Classifier {
 
     @Override
     public float getObjThresh() {
-        return MainActivity2.MINIMUM_CONFIDENCE_TF_OD_API;
+        return FoodRecognitionActivity.MINIMUM_CONFIDENCE_TF_OD_API;
     }
 
     private static final Logger LOGGER = new Logger();

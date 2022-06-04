@@ -11,11 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
-import java.io.ByteArrayOutputStream;
 
 public class MainActivity3 extends AppCompatActivity {
     final private static String TAG = "tag";
@@ -70,7 +67,7 @@ public class MainActivity3 extends AppCompatActivity {
 //                       resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 ////                       byte[] byteArray = stream.toByteArray();
 
-                       Intent intent2 = new Intent(this, MainActivity2.class);
+                       Intent intent2 = new Intent(this, FoodRecognitionActivity.class);
                        intent2.putExtra("image", bitmap);
                        startActivity(intent2);
 
