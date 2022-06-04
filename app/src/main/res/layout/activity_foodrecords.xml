@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+    <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_weight="1">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp" app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="50dp" android:id="@+id/constraintLayout">
+
+            <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="date"
+                    android:ems="10"
+                    android:id="@+id/editTextDate"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="10dp" app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="10dp"/>
+            <TextView
+                    android:text="Calories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/calories"
+                    android:layout_marginTop="50dp"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextDate" android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="10dp"/>
+            <TextView
+                    android:text="1,284"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/eatenCalories"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/calories"
+                    app:layout_constraintStart_toEndOf="@+id/imageView4" android:layout_marginStart="10dp"
+                    android:textColor="#000000" android:textSize="20sp"/>
+            <ImageView
+                    android:layout_width="26dp"
+                    android:layout_height="25dp" app:srcCompat="@drawable/fire" android:id="@+id/imageView4"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="10dp" android:layout_marginTop="15dp"
+                    app:layout_constraintTop_toBottomOf="@+id/calories"/>
+            <TextView
+                    android:text="🎊 Keep the pace! You're doing great"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/encouragement"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="10dp" android:backgroundTint="#A1E6E6E6" android:background="#ECECEC"
+                    android:padding="10dp" android:textColor="#000000" android:paddingStart="10dp"
+                    android:textSize="16sp"/>
+            <ImageView
+                    android:layout_width="310dp"
+                    android:layout_height="130dp" app:srcCompat="@drawable/temporal_pie_chart"
+                    android:id="@+id/imageView5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/encouragement"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="200dp" app:srcCompat="@drawable/example_diet_02" android:id="@+id/imageView3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2"/>
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="212dp" app:srcCompat="@drawable/example_diet_01" android:id="@+id/imageView2"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="10dp" app:layout_constraintTop_toBottomOf="@+id/constraintLayout"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
