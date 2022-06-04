@@ -18,6 +18,12 @@ output.json
 /.idea/misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
+/.gradle/buildOutputCleanup
+/.gradle/checksums
+/.gradle/configuration-cache
+/.gradle/vcs-1
+/.gradle/6.7.1
+/.idea/sonarlint/issuestore/index.pb
 
 # Keystore files
 *.jks
@@ -59,3 +65,8 @@ gen-external-apklibs
 # virtual machine crash logs
 hs_err_pid*
 replay_pid
+
+
+
+
+
