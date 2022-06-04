@@ -74,7 +74,7 @@
         android:textSize="10sp" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/food1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="음식1" />
