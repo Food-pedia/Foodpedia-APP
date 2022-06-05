@@ -26,13 +26,15 @@ render.experimental.xml
 /.idea/sonarlint/issuestore/index.pb
 /app/src/main/assets/loading.json
 /app/src/main/assets/loading2.json
+/.gradle/workspace-id.txt
+/.gradle/workspace-id.txt.lock
 
 # Keystore files
 *.jks
 *.keystore
 
-# Google Services (e.g. APIs or Firebase)
-google-services.json
+## Google Services (e.g. APIs or Firebase)
+#google-services.json
 
 # Android Profiling
 *.hprof
@@ -67,8 +69,5 @@ gen-external-apklibs
 # virtual machine crash logs
 hs_err_pid*
 replay_pid
-
-
-
 
 
