@@ -24,6 +24,8 @@ render.experimental.xml
 /.gradle/vcs-1
 /.gradle/6.7.1
 /.idea/sonarlint/issuestore/index.pb
+/app/src/main/assets/loading.json
+/app/src/main/assets/loading2.json
 
 # Keystore files
 *.jks
