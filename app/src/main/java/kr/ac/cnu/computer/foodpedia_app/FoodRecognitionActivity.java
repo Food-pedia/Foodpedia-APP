@@ -29,6 +29,7 @@ import kr.ac.cnu.computer.foodpedia_app.tracking.MultiBoxTracker;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -37,10 +38,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FoodRecognitionActivity extends AppCompatActivity {
 
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.25f;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +134,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     private LinearLayout foodButtonLayout;
     private LottieAnimationView animationView;
 
+    private String foodKorName = "";
+
     private void initBox() {
         previewHeight = TF_OD_API_INPUT_SIZE;
         previewWidth = TF_OD_API_INPUT_SIZE;
@@ -167,6 +173,16 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             finish();
         }
     }
+    private void getFoodKorName(FirebaseFirestore db, String foodEngName){
+        db.collection("food").document(foodEngName).get().addOnCompleteListener(task->{
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                HashMap foodMap = (HashMap) document.getData();
+                foodKorName = foodMap.get("korean").toString();
+            }
+        });
+    }
+
 
     private void handleResult(Bitmap bitmap, List<Classifier.Recognition> results) {
         final Canvas canvas = new Canvas(bitmap);
@@ -187,6 +203,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         final List<Classifier.Recognition> mappedRecognitions =
                 new LinkedList<Classifier.Recognition>();
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         for (final Classifier.Recognition result : results) {
             final RectF location = result.getLocation();
             animationView.setVisibility(View.GONE);
@@ -194,8 +212,12 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 canvas.drawRect(location, paint);
                 Log.e("=== title : ", result.getTitle());
                 Log.e("=== location : ", location + "");
+
+                String foodEngName = result.getTitle();
+                getFoodKorName(db, foodEngName);
+
                 borderedText.drawText(
-                        canvas, location.left , location.top, result.getTitle(),boxPaint);
+                        canvas, location.left , location.top, foodKorName, boxPaint);  //!여기
                 cropToFrameTransform.mapRect(location);
 //
                 result.setLocation(location);
@@ -211,6 +233,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
     }
 
+
+
     private void recognizationFood(List<Classifier.Recognition> results) {
 
         int foodNum = results.size(); // Number of Foods Detected
@@ -218,11 +242,15 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         List<String> foodName = new ArrayList<String>();
         List<RectF> coordinates = new ArrayList<RectF>();
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         for (final Classifier.Recognition result : results) { // Detected Food label, coordinates
             final RectF location = result.getLocation();
+            String foodEngName = result.getTitle();
+            getFoodKorName(db, foodEngName);
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                 coordinates.add(location);
-                foodName.add(result.getTitle());
+                foodName.add(foodKorName);
             }
         }
 
