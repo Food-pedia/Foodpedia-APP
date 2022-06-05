@@ -173,12 +173,14 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             finish();
         }
     }
-    private void getFoodKorName(FirebaseFirestore db, String foodEngName){
-        db.collection("food").document(foodEngName).get().addOnCompleteListener(task->{
+
+    private void getFoodKorName(FirebaseFirestore db, String foodEngName) {
+        db.collection("food").document(foodEngName).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 HashMap foodMap = (HashMap) document.getData();
                 foodKorName = foodMap.get("korean").toString();
+
             }
         });
     }
@@ -214,14 +216,15 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 Log.e("=== location : ", location + "");
 
                 String foodEngName = result.getTitle();
-                getFoodKorName(db, foodEngName);
 
                 borderedText.drawText(
-                        canvas, location.left , location.top, foodKorName, boxPaint);  //!여기
+                        canvas, location.left, location.top, foodEngName, boxPaint);  //!여기
                 cropToFrameTransform.mapRect(location);
-//
+
                 result.setLocation(location);
                 mappedRecognitions.add(result);
+
+
             }
         }
 //        tracker.trackResults(mappedRecognitions, new Random().nextInt());
@@ -232,7 +235,6 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         recognizationFood(mappedRecognitions);
 
     }
-
 
 
     private void recognizationFood(List<Classifier.Recognition> results) {
@@ -250,7 +252,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             getFoodKorName(db, foodEngName);
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                 coordinates.add(location);
-                foodName.add(foodKorName);
+                foodName.add(foodEngName);
             }
         }
 
