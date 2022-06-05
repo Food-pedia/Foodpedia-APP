@@ -36,6 +36,8 @@ import java.util.Random;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 public class FoodRecognitionActivity extends AppCompatActivity {
 
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.25f;
@@ -50,6 +52,10 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         foodButtonLayout = findViewById(R.id.foodButtonLayout);
+        animationView = findViewById(R.id.lottie);
+        animationView.setAnimation("loading2.json");
+        animationView.playAnimation();
+        animationView.loop(true);
 
 //        cameraButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, DetectorActivity.class)));
 
@@ -122,6 +128,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private LinearLayout foodButtonLayout;
+    private LottieAnimationView animationView;
 
     private void initBox() {
         previewHeight = TF_OD_API_INPUT_SIZE;
@@ -165,14 +172,14 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         final Canvas canvas = new Canvas(bitmap);
         final Paint paint = new Paint();
 
-//        borderedText = new BorderedText(30.0f);
-//        boxPaint.setColor(Color.RED);
-//        boxPaint.setStyle(Paint.Style.STROKE);
-//        boxPaint.setStrokeWidth(10.0f);
-//        boxPaint.setStrokeCap(Paint.Cap.ROUND);
-//        boxPaint.setStrokeJoin(Paint.Join.ROUND);
-//        boxPaint.setStrokeMiter(100);
-//
+        borderedText = new BorderedText(30.0f);
+        boxPaint.setColor(Color.RED);
+        boxPaint.setStyle(Paint.Style.STROKE);
+        boxPaint.setStrokeWidth(10.0f);
+        boxPaint.setStrokeCap(Paint.Cap.ROUND);
+        boxPaint.setStrokeJoin(Paint.Join.ROUND);
+        boxPaint.setStrokeMiter(100);
+
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(2.0f);
@@ -182,20 +189,21 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
         for (final Classifier.Recognition result : results) {
             final RectF location = result.getLocation();
+            animationView.setVisibility(View.GONE);
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
-//                canvas.drawRect(location, paint);
+                canvas.drawRect(location, paint);
                 Log.e("=== title : ", result.getTitle());
                 Log.e("=== location : ", location + "");
-//                borderedText.drawText(
-//                        canvas, location.left , location.top, result.getTitle(),boxPaint);
+                borderedText.drawText(
+                        canvas, location.left , location.top, result.getTitle(),boxPaint);
                 cropToFrameTransform.mapRect(location);
 //
                 result.setLocation(location);
                 mappedRecognitions.add(result);
             }
         }
-        tracker.trackResults(mappedRecognitions, new Random().nextInt());
-        trackingOverlay.postInvalidate();
+//        tracker.trackResults(mappedRecognitions, new Random().nextInt());
+//        trackingOverlay.postInvalidate();
 
 
         imageView.setImageBitmap(bitmap);

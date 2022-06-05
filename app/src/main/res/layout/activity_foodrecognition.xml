@@ -16,6 +16,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie"
+        android:layout_width="match_parent"
+        android:layout_height="200sp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <kr.ac.cnu.computer.foodpedia_app.customview.OverlayView
         android:id="@+id/tracking_overlay"
         android:layout_width="416dp"
@@ -60,7 +70,7 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="62dp"
+        android:layout_height="45dp"
         android:layout_marginTop="8dp"
         android:fontFamily="monospace"
         android:paddingLeft="20dp"
@@ -99,7 +109,7 @@
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="62dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
         android:layout_marginBottom="4dp"
         android:text="Update"
         app:layout_constraintBottom_toBottomOf="parent"
