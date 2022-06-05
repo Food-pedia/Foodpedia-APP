@@ -255,11 +255,23 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 foodName.add(foodEngName);
             }
         }
+        // foodEngName -> foodKorName
+        List<String> foodKorName = new ArrayList<String>();
+        for(int i=0; i<foodNum; i++){
+            db.collection("food").document(foodName.get(i)).get().addOnCompleteListener(task->{
+                //작업이 성공적으로 마쳤을때
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    HashMap foodMap = (HashMap)document.getData();
+                    foodKorName.add(foodMap.get("korean").toString());
+                  }
+            });
+        }
 
         for (int i = 0; i < foodNum; i++) {
             //인식된 식품 개수만큼 버튼 생성
             foodButtons.add(new Button(this));
-            foodButtons.get(i).setText(foodName.get(i));
+            foodButtons.get(i).setText(foodKorName.get(i));
             foodButtonLayout.addView(foodButtons.get(i));
 
             //식품 버튼 누르면 해당 식품영양정보 페이지로 이동
