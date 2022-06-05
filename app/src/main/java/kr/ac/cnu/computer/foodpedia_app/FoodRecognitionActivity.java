@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -255,24 +256,32 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 foodName.add(foodEngName);
             }
         }
+
         // foodEngName -> foodKorName
         List<String> foodKorName = new ArrayList<String>();
         for(int i=0; i<foodNum; i++){
             db.collection("food").document(foodName.get(i)).get().addOnCompleteListener(task->{
                 //작업이 성공적으로 마쳤을때
                 if (task.isSuccessful()) {
+                    System.out.println("hi");
                     DocumentSnapshot document = task.getResult();
                     HashMap foodMap = (HashMap)document.getData();
                     foodKorName.add(foodMap.get("korean").toString());
-                  }
+                    System.out.println("bye");
+                }
             });
         }
 
+        System.out.println(foodKorName);
         for (int i = 0; i < foodNum; i++) {
             //인식된 식품 개수만큼 버튼 생성
             foodButtons.add(new Button(this));
             foodButtons.get(i).setText(foodKorName.get(i));
-            foodButtonLayout.addView(foodButtons.get(i));
+
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            param.weight = 1;
+            param.gravity = Gravity.CLIP_HORIZONTAL;
+            foodButtonLayout.addView(foodButtons.get(i), param);
 
             //식품 버튼 누르면 해당 식품영양정보 페이지로 이동
             Button foodButton = foodButtons.get(i);
