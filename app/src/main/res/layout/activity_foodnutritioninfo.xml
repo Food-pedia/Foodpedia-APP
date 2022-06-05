@@ -145,7 +145,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/linearLayout6"
+            android:id="@+id/linearLayout10"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -188,7 +188,8 @@
             android:background="#BA4F4F"
             app:boxBackgroundColor="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/textView13"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
