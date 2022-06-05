@@ -126,23 +126,23 @@ public class MultiBoxTracker {
     }
 
     public synchronized void draw(final Canvas canvas) {
-        final boolean rotated = sensorOrientation % 180 == 90;
-        final float multiplier =
-                Math.min(
-                        canvas.getHeight() / (float) (rotated ? frameWidth : frameHeight),
-                        canvas.getWidth() / (float) (rotated ? frameHeight : frameWidth));
-        frameToCanvasMatrix =
-                ImageUtils.getTransformationMatrix(
-                        frameWidth,
-                        frameHeight,
-                        (int) (multiplier * (rotated ? frameHeight : frameWidth)),
-                        (int) (multiplier * (rotated ? frameWidth : frameHeight)),
-                        sensorOrientation,
-                        false);
+//        final boolean rotated = sensorOrientation % 180 == 90;
+//        final float multiplier =
+//                Math.min(
+//                        canvas.getHeight() / (float) (rotated ? frameWidth : frameHeight),
+//                        canvas.getWidth() / (float) (rotated ? frameHeight : frameWidth));
+//        frameToCanvasMatrix =
+//                ImageUtils.getTransformationMatrix(
+//                        frameWidth,
+//                        frameHeight,
+//                        (int) (multiplier * (rotated ? frameHeight : frameWidth)),
+//                        (int) (multiplier * (rotated ? frameWidth : frameHeight)),
+//                        sensorOrientation,
+//                        false);
         for (final TrackedRecognition recognition : trackedObjects) {
             final RectF trackedPos = recognition.location;
 
-            getFrameToCanvasMatrix().mapRect(trackedPos);
+//            getFrameToCanvasMatrix().mapRect(trackedPos);
             boxPaint.setColor(recognition.color);
 
 //      float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
