@@ -100,13 +100,13 @@
         android:layout_height="49dp"
         android:layout_marginBottom="8dp"
         android:background="#ECDEDE"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/updateBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/updateBtn"
         android:layout_width="match_parent"
         android:layout_height="62dp"
         android:layout_marginStart="4dp"

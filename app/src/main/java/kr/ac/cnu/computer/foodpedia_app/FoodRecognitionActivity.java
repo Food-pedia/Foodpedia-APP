@@ -1,5 +1,7 @@
 package kr.ac.cnu.computer.foodpedia_app;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ActivityManager;
@@ -12,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -29,6 +32,8 @@ import kr.ac.cnu.computer.foodpedia_app.tflite.YoloV5Classifier;
 import kr.ac.cnu.computer.foodpedia_app.tracking.MultiBoxTracker;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,14 +42,19 @@ import java.util.Random;
 
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FoodRecognitionActivity extends AppCompatActivity {
 
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.25f;
+    List<String> foodName = new ArrayList<String>();
 
 
     @Override
@@ -175,16 +185,16 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         }
     }
 
-    private void getFoodKorName(FirebaseFirestore db, String foodEngName) {
-        db.collection("food").document(foodEngName).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                HashMap foodMap = (HashMap) document.getData();
-                foodKorName = foodMap.get("korean").toString();
-
-            }
-        });
-    }
+//    private void getFoodKorName(FirebaseFirestore db, String foodEngName) {
+//        db.collection("food").document(foodEngName).get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                DocumentSnapshot document = task.getResult();
+//                HashMap foodMap = (HashMap) document.getData();
+//                foodKorName = foodMap.get("korean").toString();
+//
+//            }
+//        });
+//    }
 
 
     private void handleResult(Bitmap bitmap, List<Classifier.Recognition> results) {
@@ -242,7 +252,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
         int foodNum = results.size(); // Number of Foods Detected
         List<Button> foodButtons = new ArrayList<Button>(); //인식된 식품 버튼 저장할 배열
-        List<String> foodName = new ArrayList<String>();
+
         List<RectF> coordinates = new ArrayList<RectF>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -250,7 +260,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         for (final Classifier.Recognition result : results) { // Detected Food label, coordinates
             final RectF location = result.getLocation();
             String foodEngName = result.getTitle();
-            getFoodKorName(db, foodEngName);
+            //getFoodKorName(db, foodEngName);
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                 coordinates.add(location);
                 foodName.add(foodEngName);
@@ -258,25 +268,25 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         }
 
         // foodEngName -> foodKorName
-        List<String> foodKorName = new ArrayList<String>();
-        for(int i=0; i<foodNum; i++){
-            db.collection("food").document(foodName.get(i)).get().addOnCompleteListener(task->{
-                //작업이 성공적으로 마쳤을때
-                if (task.isSuccessful()) {
-                    System.out.println("hi");
-                    DocumentSnapshot document = task.getResult();
-                    HashMap foodMap = (HashMap)document.getData();
-                    foodKorName.add(foodMap.get("korean").toString());
-                    System.out.println("bye");
-                }
-            });
-        }
+//        List<String> foodKorName = new ArrayList<String>();
+//        for(int i=0; i<foodNum; i++){
+//            db.collection("food").document(foodName.get(i)).get().addOnCompleteListener(task->{
+//                //작업이 성공적으로 마쳤을때
+//                if (task.isSuccessful()) {
+//                    System.out.println("hi");
+//                    DocumentSnapshot document = task.getResult();
+//                    HashMap foodMap = (HashMap)document.getData();
+//                    foodKorName.add(foodMap.get("korean").toString());
+//                    System.out.println("bye");
+//                }
+//            });
+//        }
 
-        System.out.println(foodKorName);
+        //System.out.println(foodKorName);
         for (int i = 0; i < foodNum; i++) {
             //인식된 식품 개수만큼 버튼 생성
             foodButtons.add(new Button(this));
-            foodButtons.get(i).setText(foodKorName.get(i));
+            foodButtons.get(i).setText(foodName.get(i));
 
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             param.weight = 1;
@@ -294,5 +304,38 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 }
             });
         }
+
+        Button updateButton = findViewById(R.id.updateBtn);
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View view) {
+                String getName = ""; //나중에 사용자 이름이나 id 저장
+                String getTimezone = ""; //나중에 아침,점심,저녁저장
+                LocalDateTime now = LocalDateTime.now();
+                String getFormatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+
+                HashMap<String, Object> result = new HashMap<>();
+                result.put("member", getName);
+                result.put("time", getFormatedNow);
+                result.put("timezone", getTimezone);
+                result.put("foods", foodName);
+
+                db.collection("foodRecord")
+                        .add(result)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getApplicationContext(), "저장에 실패했습니다", Toast.LENGTH_LONG).show();
+                            }
+                        });
+            }
+        });
     }
 }
