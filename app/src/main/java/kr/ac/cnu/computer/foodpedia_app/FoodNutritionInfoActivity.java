@@ -37,6 +37,7 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
                     HashMap foodMap = (HashMap)document.getData();
 
                     foodNameTextView.setText(foodMap.get("korean").toString()); //식품 이름 맞게 출력
+                    System.out.println(foodMap.get("korean").toString()); // debug msg
                     energyTextView.setText(foodMap.get("energy").toString() + "kcal");   //칼로리 맞게 출력
                     proteinTextView.setText(foodMap.get("protein").toString() + "g");   //단백질 맞게 출력
                     carbsTextView.setText(foodMap.get("carbohydrate").toString() + "g");   //탄수화물 맞게 출력

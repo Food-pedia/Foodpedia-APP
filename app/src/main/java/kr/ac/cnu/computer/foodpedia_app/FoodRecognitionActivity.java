@@ -22,6 +22,7 @@ import android.view.Gravity;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import kr.ac.cnu.computer.foodpedia_app.customview.OverlayView;
 import kr.ac.cnu.computer.foodpedia_app.env.BorderedText;
 import kr.ac.cnu.computer.foodpedia_app.env.ImageUtils;
@@ -66,6 +67,11 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         Intent takePicture = getIntent();
 
         imageView = findViewById(R.id.imageView);
+
+        String imagePath = getIntent().getStringExtra("path");
+        System.out.println("DEBUG : " + imagePath);
+        Glide.with(this).load(imagePath).into(imageView);
+
         foodButtonLayout = findViewById(R.id.foodButtonLayout);
         animationView = findViewById(R.id.lottie);
         animationView.setAnimation("loading2.json");

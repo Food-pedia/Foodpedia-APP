@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,14 +12,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 
 public class MainActivity3 extends AppCompatActivity {
     final private static String TAG = "tag";
-    Button btn_camera;
+    Button btn_camera, btn_gallery;
     ImageView img;
+    String imagePath = "";
     final static int TAKE_PICTURE = 1;
+    final static int GET_FROM_GALLERY = 2;
 
 
     @Override
@@ -27,6 +39,7 @@ public class MainActivity3 extends AppCompatActivity {
         setContentView(R.layout.activity_main3);
 
         btn_camera = findViewById(R.id.btn_camera);
+        btn_gallery = findViewById(R.id.btn_gallery);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -47,8 +60,17 @@ public class MainActivity3 extends AppCompatActivity {
                 }
             }
         });
-    }
 
+        btn_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent();
+                galleryIntent.setType("image/*");
+                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(galleryIntent, GET_FROM_GALLERY);
+            }
+        });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -70,9 +92,24 @@ public class MainActivity3 extends AppCompatActivity {
                        Intent intent2 = new Intent(this, FoodRecognitionActivity.class);
                        intent2.putExtra("image", bitmap);
                        startActivity(intent2);
-
-
                     }
+                break;
+            case GET_FROM_GALLERY:
+                if (resultCode == RESULT_OK) {
+                    imagePath = intent.getDataString();
+                    if (imagePath.length() > 0) {
+                        Glide.with(this).load(imagePath).into(img);
+                    }
+//
+//                    Bitmap bitmap = (Bitmap) intent.getExtras().get("data");
+//                    Glide.with(getApplicationContext()).load(intent.getData()).override().into();
+//
+//
+//                    Intent intent2 = new Intent(this, FoodRecognitionActivity.class);
+//                    intent2.putExtra("image", bitmap);
+//                    startActivity(intent2);
+                }
+                break;
                 }
 //                break;
         }
