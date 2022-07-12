@@ -52,6 +52,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.bumptech.glide.Glide;
+
 public class FoodRecognitionActivity extends AppCompatActivity {
 
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.25f;
@@ -65,12 +67,9 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
         // MainActivity3 -> MainActivity2 intent image
         Intent takePicture = getIntent();
+        System.out.println("DEBUG : " + takePicture.toString());
 
         imageView = findViewById(R.id.imageView);
-
-        String imagePath = getIntent().getStringExtra("path");
-        System.out.println("DEBUG : " + imagePath);
-        Glide.with(this).load(imagePath).into(imageView);
 
         foodButtonLayout = findViewById(R.id.foodButtonLayout);
         animationView = findViewById(R.id.lottie);
@@ -80,11 +79,21 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
 //        cameraButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, DetectorActivity.class)));
 
+//        String imagePath = takePicture.getStringExtra("path");
+//        System.out.println("DEBUG : " + takePicture);
+//        if (imagePath == null) {
+//            this.sourceBitmap = (Bitmap) takePicture.getParcelableExtra("image");
+//            System.out.println("DEBUG : " + sourceBitmap);
+//            this.cropBitmap = Utils.processBitmap(sourceBitmap, TF_OD_API_INPUT_SIZE);
+//            this.imageView.setImageBitmap(cropBitmap);
+//        } else {
+//            Glide.with(this).load(imagePath).into(imageView);
+//        }
 
         this.sourceBitmap = (Bitmap) takePicture.getParcelableExtra("image");
+        System.out.println("DEBUG : " + sourceBitmap);
         this.cropBitmap = Utils.processBitmap(sourceBitmap, TF_OD_API_INPUT_SIZE);
         this.imageView.setImageBitmap(cropBitmap);
-
 
         Log.e("=== sourceBitmap : ", this.sourceBitmap + "");
         Log.e("=== cropBitmap : ", this.cropBitmap + "");
