@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Foodpedia-APP</string>
+    <string name="image_view_description">첨부한 이미지</string>
+    <string name="morning">아침</string>
+    <string name="lunch">점심</string>
+    <string name="dinner">저녁</string>
+    <string name="record_description">Please enter your diet</string>
+    <string name="update">UPDATE</string>
 </resources>
