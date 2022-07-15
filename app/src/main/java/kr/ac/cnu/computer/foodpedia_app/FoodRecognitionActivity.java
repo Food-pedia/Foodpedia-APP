@@ -83,17 +83,6 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
 //        cameraButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, DetectorActivity.class)));
 
-//        String imagePath = takePicture.getStringExtra("path");
-//        System.out.println("DEBUG : " + takePicture);
-//        if (imagePath == null) {
-//            this.sourceBitmap = (Bitmap) takePicture.getParcelableExtra("image");
-//            System.out.println("DEBUG : " + sourceBitmap);
-//            this.cropBitmap = Utils.processBitmap(sourceBitmap, TF_OD_API_INPUT_SIZE);
-//            this.imageView.setImageBitmap(cropBitmap);
-//        } else {
-//            Glide.with(this).load(imagePath).into(imageView);
-//        }
-
         this.sourceBitmap = (Bitmap) takePicture.getParcelableExtra("image");
         System.out.println("DEBUG : " + sourceBitmap);
         this.cropBitmap = Utils.processBitmap(sourceBitmap, TF_OD_API_INPUT_SIZE);
@@ -112,19 +101,6 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
         if (detector != null && cropBitmap != null) {
             Handler handler = new Handler();
-            Thread detectThread = new Thread() {
-                final List<Classifier.Recognition> results = detector.recognizeImage(cropBitmap);
-                @Override
-                public void run() {
-                    System.out.println("===runnable1");
-                    handleResult(cropBitmap, results);
-                    try {
-                        Thread.sleep(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
 
             // 참고 : https://brunch.co.kr/@mystoryg/84
             new Thread(new Runnable() {
@@ -133,10 +109,10 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 public void run() {
                     Looper.prepare();
                     // UI 작업 수행 불가능
-                    System.out.println("===runnable1");
                     handleResult(cropBitmap, results);
+
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -145,7 +121,6 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             // UI 작업 수행 가능
-                            System.out.println("===runnable2");
                             drawButton();
                             try {
                                 Thread.sleep(1000);
@@ -317,8 +292,6 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
 
     private void recognizationFood(List<Classifier.Recognition> results) {
-
-        int foodNum = results.size(); // Number of Foods Detected
         List<RectF> coordinates = new ArrayList<RectF>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -338,8 +311,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-                String getName = ""; //나중에 사용자 이름이나 id 저장
-                String getTimezone = ""; //나중에 아침,점심,저녁저장
+                String getName = ""; // 나중에 사용자 이름이나 id 저장
+                String getTimezone = ""; // 나중에 아침,점심,저녁저장
                 LocalDateTime now = LocalDateTime.now();
                 String getFormatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
 
