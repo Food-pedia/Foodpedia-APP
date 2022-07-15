@@ -1,5 +1,6 @@
 package kr.ac.cnu.computer.foodpedia_app;
 
+import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import kr.ac.cnu.computer.foodpedia_app.customview.OverlayView;
 import kr.ac.cnu.computer.foodpedia_app.env.BorderedText;
 import kr.ac.cnu.computer.foodpedia_app.env.ImageUtils;
@@ -58,7 +61,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.25f;
     List<String> foodName = new ArrayList<String>();
-
+    List<String> foodKorName = new ArrayList<String>();
+    List<Button> foodButtons = new ArrayList<Button>(); //인식된 식품 버튼 저장할 배열
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,18 +112,53 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
         if (detector != null && cropBitmap != null) {
             Handler handler = new Handler();
-
-            new Thread(() -> {
+            Thread detectThread = new Thread() {
                 final List<Classifier.Recognition> results = detector.recognizeImage(cropBitmap);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        handleResult(cropBitmap, results);
+                @Override
+                public void run() {
+                    System.out.println("===runnable1");
+                    handleResult(cropBitmap, results);
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                });
+                }
+            };
+
+            // 참고 : https://brunch.co.kr/@mystoryg/84
+            new Thread(new Runnable() {
+                final List<Classifier.Recognition> results = detector.recognizeImage(cropBitmap);
+                @Override
+                public void run() {
+                    Looper.prepare();
+                    // UI 작업 수행 불가능
+                    System.out.println("===runnable1");
+                    handleResult(cropBitmap, results);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // UI 작업 수행 가능
+                            System.out.println("===runnable2");
+                            drawButton();
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+                    Looper.loop();
+                }
             }).start();
         }
-
     }
 
     private static final Logger LOGGER = new Logger();
@@ -160,8 +199,6 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     private LinearLayout foodButtonLayout;
     private LottieAnimationView animationView;
 
-    private String foodKorName = "";
-
     private void initBox() {
         previewHeight = TF_OD_API_INPUT_SIZE;
         previewWidth = TF_OD_API_INPUT_SIZE;
@@ -200,17 +237,17 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         }
     }
 
-//    private void getFoodKorName(FirebaseFirestore db, String foodEngName) {
-//        db.collection("food").document(foodEngName).get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                DocumentSnapshot document = task.getResult();
-//                HashMap foodMap = (HashMap) document.getData();
-//                foodKorName = foodMap.get("korean").toString();
-//
-//            }
-//        });
-//    }
+    private void getFoodKorName(FirebaseFirestore db, String foodEngName) {
 
+        db.collection("food").document(foodEngName).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                HashMap foodMap = (HashMap) document.getData();
+                foodKorName.add(foodMap.get("korean").toString());
+                Log.e("=== korean ", foodMap.get("korean").toString());
+            }
+        });
+    }
 
     private void handleResult(Bitmap bitmap, List<Classifier.Recognition> results) {
         final Canvas canvas = new Canvas(bitmap);
@@ -243,14 +280,31 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
                 String foodEngName = result.getTitle();
 
+                Thread getKorNameThread = new Thread() {
+                    public void run() {
+                        try {
+                            Thread.sleep(1000);
+                            getFoodKorName(db, foodEngName);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+
+                getKorNameThread.start();
+
+                try {
+                    getKorNameThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
                 borderedText.drawText(
                         canvas, location.left, location.top, foodEngName, boxPaint);  //!여기
                 cropToFrameTransform.mapRect(location);
 
                 result.setLocation(location);
                 mappedRecognitions.add(result);
-
-
             }
         }
 //        tracker.trackResults(mappedRecognitions, new Random().nextInt());
@@ -259,15 +313,12 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
         imageView.setImageBitmap(bitmap);
         recognizationFood(mappedRecognitions);
-
     }
 
 
     private void recognizationFood(List<Classifier.Recognition> results) {
 
         int foodNum = results.size(); // Number of Foods Detected
-        List<Button> foodButtons = new ArrayList<Button>(); //인식된 식품 버튼 저장할 배열
-
         List<RectF> coordinates = new ArrayList<RectF>();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -275,49 +326,11 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         for (final Classifier.Recognition result : results) { // Detected Food label, coordinates
             final RectF location = result.getLocation();
             String foodEngName = result.getTitle();
-            //getFoodKorName(db, foodEngName);
+
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                 coordinates.add(location);
                 foodName.add(foodEngName);
             }
-        }
-
-        // foodEngName -> foodKorName
-//        List<String> foodKorName = new ArrayList<String>();
-//        for(int i=0; i<foodNum; i++){
-//            db.collection("food").document(foodName.get(i)).get().addOnCompleteListener(task->{
-//                //작업이 성공적으로 마쳤을때
-//                if (task.isSuccessful()) {
-//                    System.out.println("hi");
-//                    DocumentSnapshot document = task.getResult();
-//                    HashMap foodMap = (HashMap)document.getData();
-//                    foodKorName.add(foodMap.get("korean").toString());
-//                    System.out.println("bye");
-//                }
-//            });
-//        }
-
-        //System.out.println(foodKorName);
-        for (int i = 0; i < foodNum; i++) {
-            //인식된 식품 개수만큼 버튼 생성
-            foodButtons.add(new Button(this));
-            foodButtons.get(i).setText(foodName.get(i));
-
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            param.weight = 1;
-            param.gravity = Gravity.CLIP_HORIZONTAL;
-            foodButtonLayout.addView(foodButtons.get(i), param);
-
-            //식품 버튼 누르면 해당 식품영양정보 페이지로 이동
-            Button foodButton = foodButtons.get(i);
-            foodButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(), FoodNutritionInfoActivity.class);
-                    intent.putExtra("foodName", foodButton.getText());   //다음 페이지로 식품 이름 전달
-                    startActivity(intent);
-                }
-            });
         }
 
         Button updateButton = findViewById(R.id.updateBtn);
@@ -352,5 +365,29 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                         });
             }
         });
+    }
+
+    private void drawButton() {
+        Log.e("=== drawButton", foodKorName.size() + "");
+        for (int i = 0; i < foodKorName.size(); i++) {
+            foodButtons.add(new Button(this));
+            foodButtons.get(i).setText(foodKorName.get(i));
+
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            param.weight = 1;
+            param.gravity = Gravity.CLIP_HORIZONTAL;
+            foodButtonLayout.addView(foodButtons.get(i), param);
+
+            //식품 버튼 누르면 해당 식품영양정보 페이지로 이동
+            Button foodButton = foodButtons.get(i);
+            foodButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getApplicationContext(), FoodNutritionInfoActivity.class);
+                    intent.putExtra("foodName", foodButton.getText());   //다음 페이지로 식품 이름 전달
+                    startActivity(intent);
+                }
+            });
+        }
     }
 }
