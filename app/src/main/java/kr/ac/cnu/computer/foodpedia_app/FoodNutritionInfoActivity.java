@@ -1,23 +1,40 @@
 package kr.ac.cnu.computer.foodpedia_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class FoodNutritionInfoActivity extends AppCompatActivity {
     final private static String TAG = "tag";
+    String energy = "";
+    String protein = "";
+    String carbs = "";
+    String fat = "";
+    String sugar = "";
+    double intake = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodnutritioninfo);
+
+        String foodName = getIntent().getStringExtra("foodName");
+        //String foodName = "galbiguyi";
+
 
         TextView foodNameTextView = findViewById(R.id.foodName);
         TextView energyTextView = findViewById(R.id.energy);
@@ -25,9 +42,8 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
         TextView carbsTextView = findViewById(R.id.carbs);
         TextView fatTextView = findViewById(R.id.fat);
         TextView sugarTextView = findViewById(R.id.sugar);
-
-        String foodName = getIntent().getStringExtra("foodName");
-        //String foodName = "galbiguyi";
+        EditText intakeInput = findViewById(R.id.intakeInput);
+        Button intakeModifyBtn = findViewById(R.id.intakeModifyBtn);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("food").document(foodName).get().addOnCompleteListener(task->{
@@ -36,12 +52,18 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     HashMap foodMap = (HashMap)document.getData();
 
+                    energy = foodMap.get("energy").toString();
+                    protein = foodMap.get("protein").toString();
+                    carbs = foodMap.get("carbohydrate").toString();
+                    fat = foodMap.get("fat").toString();
+                    sugar = foodMap.get("total-sugar").toString();
+
                     foodNameTextView.setText(foodMap.get("korean").toString()); //식품 이름 맞게 출력
-                    energyTextView.setText(foodMap.get("energy").toString() + "kcal");   //칼로리 맞게 출력
-                    proteinTextView.setText(foodMap.get("protein").toString() + "g");   //단백질 맞게 출력
-                    carbsTextView.setText(foodMap.get("carbohydrate").toString() + "g");   //탄수화물 맞게 출력
-                    fatTextView.setText(foodMap.get("fat").toString() + "g");   //지방 맞게 출력
-                    sugarTextView.setText(foodMap.get("total-sugar").toString() + "g");   //총당류 맞게 출력
+                    energyTextView.setText(energy + "kcal");   //칼로리 맞게 출력
+                    proteinTextView.setText(protein + "g");   //단백질 맞게 출력
+                    carbsTextView.setText(carbs + "g");   //탄수화물 맞게 출력
+                    fatTextView.setText(fat + "g");   //지방 맞게 출력
+                    sugarTextView.setText(sugar + "g");   //총당류 맞게 출력
                 }
                 // 데이터를 가져오는 작업이 에러났을 때
                  else {
@@ -50,5 +72,45 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
 
         });
 
+        intakeModifyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String intakeString = intakeInput.getText().toString();
+                try{
+                    intake = isInteger(intakeString)? (double) Integer.parseInt(intakeString) :Double.parseDouble(intakeString);
+                } catch(Exception e){
+                    //섭취량이 빈칸이거나 숫자가 입력되지않았을때
+                    Toast.makeText(getApplicationContext(), "섭취량에 숫자를 입력해주세요.",Toast.LENGTH_SHORT).show();
+                }
+
+                energyTextView.setText(NutToText(energy, intake)+ "kcal");
+                proteinTextView.setText(NutToText(protein, intake)+"g");
+                carbsTextView.setText(NutToText(carbs, intake)+"g");
+                fatTextView.setText(NutToText(fat, intake)+"g");
+                sugarTextView.setText(NutToText(sugar, intake)+"g");
+            }
+        });
     }
+
+    private boolean isInteger(String num) {
+        try {
+            Integer.parseInt(num);    // int 형으로 변환해보고
+            return true;                      // 이상없으면 true를 리턴
+        }
+        catch (NumberFormatException e) {
+            return false;                    // 이상 있으면 false를 리턴
+        }
+    }
+
+    private String NutToText(String nut, Double intake){
+        //영양소 섭취량에 맞게 계산
+        double CalculateNut = Double.parseDouble(nut)*intake;
+        //소수점 둘째자리까지만 나오게 계산
+        double decimalizedValue = Math.round(CalculateNut*100)/100.0;
+        //불필요한 0 제거
+        DecimalFormat df = new DecimalFormat("#.##");
+        return df.format(decimalizedValue);
+    }
+
+
 }

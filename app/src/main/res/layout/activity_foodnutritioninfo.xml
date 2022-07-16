@@ -44,7 +44,7 @@
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="0.95">
 
             <TextView
                 android:id="@+id/index_energy"
@@ -173,50 +173,78 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout7"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="78dp"
         android:layout_marginTop="15sp"
         android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteX="3dp"
         tools:layout_editor_absoluteY="500dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="95dp"
-            android:background="#BA4F4F"
-            app:boxBackgroundColor="@color/white"
-            app:layout_constraintEnd_toStartOf="@+id/textView13"
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+
+<!--            android:id="@+id/intakeInputLayout"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+
+
+<!--            android:layout_marginStart="133dp"-->
+<!--            app:boxBackgroundColor="@color/white"-->
+<!--            app:boxStrokeColor="@color/black"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/textView13"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            tools:ignore="MissingConstraints">-->
+
+
+        <!--        </com.google.android.material.textfield.TextInputLayout>-->
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/intakeInput"
+            android:layout_width="67dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="106dp"
+            android:text="1"
+            android:textAlignment="textEnd"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="1"
-                android:textAlignment="textEnd" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             android:id="@+id/textView13"
-            android:layout_width="119dp"
+            android:layout_width="55dp"
             android:layout_height="52dp"
+            android:layout_marginBottom="3dp"
             android:gravity="center_vertical"
             android:text="인분"
             android:textSize="19sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/intakeInput"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.545"
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/intakeModifyBtn"
+            android:layout_width="69dp"
+            android:layout_height="53dp"
+            android:layout_marginEnd="106dp"
+            android:text="수정"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textInputLayout"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="0dp" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/textView13"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/foodNutSaveBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="추가" />
+        android:text="저장" />
 
 </LinearLayout>
