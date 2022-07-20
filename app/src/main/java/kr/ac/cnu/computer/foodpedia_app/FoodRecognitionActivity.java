@@ -1,7 +1,11 @@
 package kr.ac.cnu.computer.foodpedia_app;
 
 import android.os.Looper;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -60,9 +64,27 @@ import com.bumptech.glide.Glide;
 public class FoodRecognitionActivity extends AppCompatActivity {
 
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.25f;
-    List<String> foodName = new ArrayList<String>();
+
+    List<String> foodName = new ArrayList<String>();    //인식된 식품 이름들 저장할 배열
     List<String> foodKorName = new ArrayList<String>();
     List<Button> foodButtons = new ArrayList<Button>(); //인식된 식품 버튼 저장할 배열
+    List<Double> intake = new ArrayList<Double>();    //인식된 식품 이름별 섭취량 저장할 배열(foodName index에 맞춰)
+
+    String foodRecordId = "";
+
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if(result.getResultCode() == RESULT_OK) {
+                    Intent intent = result.getData();
+                    String modifiedIntakeFoodName = intent.getStringExtra("modifiedIntakeFoodName");
+                    String modifiedIntake = intent.getStringExtra("modifiedIntake");
+                    if(foodName.contains(modifiedIntakeFoodName)){
+                        intake.set(foodName.indexOf(modifiedIntakeFoodName), Double.parseDouble(modifiedIntake));
+                    }
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -306,6 +328,10 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             }
         }
 
+        for(int i=0; i<foodName.size(); i++){   //인식된 식품 개수에 맞게 섭취량 배열 1로 초기화
+            intake.add(1.0);
+        }
+
         Button updateButton = findViewById(R.id.updateBtn);
         updateButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -321,21 +347,22 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 result.put("time", getFormatedNow);
                 result.put("timezone", getTimezone);
                 result.put("foods", foodName);
+                result.put("intake", intake);
 
-                db.collection("foodRecord")
-                        .add(result)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                Task<DocumentReference> addedDocRef = db.collection("foodRecord").add(result);
+                addedDocRef.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
-                                Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_LONG).show();
+                                foodRecordId = documentReference.getId();
+                                Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "저장에 실패했습니다", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "저장에 실패했습니다", Toast.LENGTH_SHORT).show();
                             }
-                        });
+                            });
             }
         });
     }
@@ -358,7 +385,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), FoodNutritionInfoActivity.class);
                     intent.putExtra("foodName", foodButton.getText());   //다음 페이지로 식품 이름 전달
-                    startActivity(intent);
+                    intent.putExtra("foodRecordId", foodRecordId);  //다음 페이지로 현재 식단 기록 id 전달
+                    mStartForResult.launch(intent);
                 }
             });
         }

@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 
 public class FoodNutritionInfoActivity extends AppCompatActivity {
     final private static String TAG = "tag";
+
     String energy = "";
     String protein = "";
     String carbs = "";
@@ -26,15 +28,13 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
     String sugar = "";
     double intake = 1;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodnutritioninfo);
 
         String foodName = getIntent().getStringExtra("foodName");
-        //String foodName = "galbiguyi";
-
+        //String foodName = "gimbap";
 
         TextView foodNameTextView = findViewById(R.id.foodName);
         TextView energyTextView = findViewById(R.id.energy);
@@ -44,6 +44,7 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
         TextView sugarTextView = findViewById(R.id.sugar);
         EditText intakeInput = findViewById(R.id.intakeInput);
         Button intakeModifyBtn = findViewById(R.id.intakeModifyBtn);
+        Button foodNutSaveBtn = findViewById(R.id.foodNutSaveBtn);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("food").document(foodName).get().addOnCompleteListener(task->{
@@ -88,6 +89,17 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
                 carbsTextView.setText(NutToText(carbs, intake)+"g");
                 fatTextView.setText(NutToText(fat, intake)+"g");
                 sugarTextView.setText(NutToText(sugar, intake)+"g");
+            }
+        });
+
+        foodNutSaveBtn.setOnClickListener(new View.OnClickListener() {  //저장 버튼 누르면 식품인식페이지로 섭취량 전달
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), FoodRecognitionActivity.class);
+                intent.putExtra("modifiedIntakeFoodName", foodName);   //다음 페이지로 식품 이름 전달
+                intent.putExtra("modifiedIntake", String.valueOf(intake));  //다음 페이지로 섭취량 전달
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }

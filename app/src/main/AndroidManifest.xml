@@ -50,7 +50,8 @@
         <activity
                 android:name=".FoodRecordsActivity"
                 android:exported="true"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait"
+                android:parentActivityName=".FoodRecognitionActivity"/>
     </application>
 
 </manifest>
