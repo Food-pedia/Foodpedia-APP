@@ -380,12 +380,19 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
             //식품 버튼 누르면 해당 식품영양정보 페이지로 이동
             Button foodButton = foodButtons.get(i);
+            String foodButtonEngName = foodName.get(i);
+            String foodButtonIntake = intake.get(i).toString();
             foodButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), FoodNutritionInfoActivity.class);
-                    intent.putExtra("foodName", foodButton.getText());   //다음 페이지로 식품 이름 전달
-                    intent.putExtra("foodRecordId", foodRecordId);  //다음 페이지로 현재 식단 기록 id 전달
+                    System.out.println("foodName : "+foodName);
+                    System.out.println("foodKorName : "+foodKorName);
+                    System.out.println("foodButtonEngName : "+foodButtonEngName);
+
+                    intent.putExtra("foodName", foodButtonEngName);   //다음 페이지로 해당 식품 이름 전달
+                    intent.putExtra("foodIntake", foodButtonEngName);   //다음 페이지로 해당 식품 섭취량 전달
+                    intent.putExtra("foodRecordId", foodButtonIntake);  //다음 페이지로 현재 식단 기록 id 전달
                     mStartForResult.launch(intent);
                 }
             });
