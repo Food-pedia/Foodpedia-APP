@@ -34,7 +34,7 @@ public class CalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         calendarView = findViewById(R.id.calendarView);
-        // 첫 시작 요일이 월요일이 되도록 설정
+        // 첫 시작 요일은 월요일
         calendarView.state()
                 .edit()
                 .setFirstDayOfWeek(DayOfWeek.of(Calendar.MONDAY))
@@ -51,24 +51,23 @@ public class CalendarActivity extends AppCompatActivity {
         calendarView.setOnRangeSelectedListener(new OnRangeSelectedListener() {
             @Override
             public void onRangeSelected(@NonNull MaterialCalendarView widget, @NonNull List<CalendarDay> dates) {
-                // 아래 로그를 통해 시작일, 종료일이 어떻게 찍히는지 확인하고 본인이 필요한 방식에 따라 바꿔 사용한다
-                // UTC 시간을 구하려는 경우 이 라이브러리에서 제공하지 않으니 별도의 로직을 짜서 만들어내 써야 한다
+                // UTC 시간을 구하려는 경우 이 라이브러리에서 제공하지 않으니 별도의 로직을 짜야 한다
                 String startDay = dates.get(0).getDate().toString();
                 String endDay = dates.get(dates.size() - 1).getDate().toString();
                 Log.e(TAG, "시작일 : " + startDay + ", 종료일 : " + endDay);
             }
         });
 
-        // 일자 선택 시 내가 정의한 드로어블이 적용되도록 한다
+        // 일자 선택 시 내가 정의한 드로어블이 적용되도록
         calendarView.addDecorators(new DayDecorator(this));
 
         // 좌우 화살표 가운데의 연/월이 보이는 방식 커스텀
         calendarView.setTitleFormatter(new TitleFormatter() {
             @Override
             public CharSequence format(CalendarDay day) {
-                // CalendarDay라는 클래스는 LocalDate 클래스를 기반으로 만들어진 클래스다
-                // 때문에 MaterialCalendarView에서 연/월 보여주기를 커스텀하려면 CalendarDay 객체의 getDate()로 연/월을 구한 다음 LocalDate 객체에 넣어서
-                // LocalDate로 변환하는 처리가 필요하다
+                // CalendarDay라는 클래스는 LocalDate 클래스를 기반으로 만들어진 클래스
+                // 때문에 MaterialCalendarView에서 연/월 보여주기를 커스텀하려면
+                // CalendarDay 객체의 getDate()로 연/월을 구한 다음 LocalDate 객체에 넣어서 LocalDate로 변환하는 처리 필요
                 LocalDate inputText = day.getDate();
                 String[] calendarHeaderElements = inputText.toString().split("-");
                 StringBuilder calendarHeaderBuilder = new StringBuilder();
