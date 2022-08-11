@@ -2,10 +2,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:state_checked="true"
+            android:color="@color/white"
             android:drawable="@drawable/transparent_calendar_element" />
     <item
             android:state_pressed="true"
+            android:color="@color/white"
             android:drawable="@drawable/transparent_calendar_element" />
-    <item android:drawable="@android:color/transparent" />
+    <item android:drawable="@android:color/transparent"
+          android:color="@color/black" />
 </selector>
 
