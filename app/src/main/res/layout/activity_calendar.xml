@@ -6,13 +6,44 @@
                                                    android:layout_height="match_parent"
                                                    tools:context=".CalendarActivity">
 
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            android:id="@+id/calendarView"
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:theme="@style/CalenderViewCustom"
-            app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
-            app:mcv_selectionMode="single"
-            app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText" />
+            android:layout_height="match_parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical">
+            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                    android:id="@+id/calendarView"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:theme="@style/CalenderViewCustom"
+                    app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
+                    app:mcv_selectionMode="single"
+                    app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText"
+            >
+            </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="2dp"
+                    android:id="@+id/eatLogInfo">
+                <TextView
+                        android:text="@string/log_title"
+                        android:layout_width="352dp"
+                        android:layout_height="match_parent" android:id="@+id/textView2" android:textSize="20sp"
+                        android:gravity="center_vertical" android:paddingStart="10dp" android:paddingEnd="10dp"/>
+                <Button
+                        android:text="@string/add"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content" android:id="@+id/logAddBtn"
+                />
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical" android:id="@+id/eatLogView">
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,15 +5,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.DayViewDecorator;
-import com.prolificinteractive.materialcalendarview.DayViewFacade;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.prolificinteractive.materialcalendarview.OnRangeSelectedListener;
+import com.prolificinteractive.materialcalendarview.*;
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter;
 import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter;
 import com.prolificinteractive.materialcalendarview.format.TitleFormatter;
@@ -28,12 +27,18 @@ public class CalendarActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
     private MaterialCalendarView calendarView;
+    private LinearLayout eatLogInfo;
+    private LinearLayout eatLogView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         calendarView = findViewById(R.id.calendarView);
+        eatLogView = (LinearLayout) findViewById(R.id.eatLogView);
+        eatLogInfo = (LinearLayout) findViewById(R.id.eatLogInfo);
+        eatLogView.setVisibility(View.GONE);
+        eatLogInfo.setVisibility(View.GONE);
         // 첫 시작 요일은 월요일
         calendarView.state()
                 .edit()
@@ -55,6 +60,16 @@ public class CalendarActivity extends AppCompatActivity {
                 String startDay = dates.get(0).getDate().toString();
                 String endDay = dates.get(dates.size() - 1).getDate().toString();
                 Log.e(TAG, "시작일 : " + startDay + ", 종료일 : " + endDay);
+            }
+        });
+
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                // needs date click event login
+
+                eatLogView.setVisibility(View.VISIBLE);
+                eatLogInfo.setVisibility(View.VISIBLE);
             }
         });
 
