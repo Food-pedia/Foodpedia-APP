@@ -7,8 +7,12 @@
                                                    tools:context=".CalendarActivity">
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            android:id="@+id/calendarview"
+            android:id="@+id/calendarView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:theme="@style/CalenderViewCustom"
+            app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
+            app:mcv_selectionMode="range"
+            app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

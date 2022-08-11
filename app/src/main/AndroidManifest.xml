@@ -24,7 +24,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/external" />
         </provider>
-        
+
         <activity
                 android:name=".FoodRecognitionActivity"
                 android:exported="true"
@@ -41,17 +41,28 @@
                 android:name=".MainActivity3"
                 android:exported="true"
                 android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN"/>-->
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER"/>-->
+<!--            </intent-filter>-->
         </activity>
         <activity
                 android:name=".FoodRecordsActivity"
                 android:exported="true"
                 android:screenOrientation="portrait"
                 android:parentActivityName=".FoodRecognitionActivity"/>
+
+        <activity
+                android:name=".CalendarActivity"
+                android:exported="true"
+                android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
