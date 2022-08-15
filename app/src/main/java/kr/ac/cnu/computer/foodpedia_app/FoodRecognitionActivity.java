@@ -131,10 +131,10 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 public void run() {
                     Looper.prepare();
                     // UI 작업 수행 불가능
-                    handleResult(cropBitmap, results);
+                    getFoodKorName(results);
 
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(3000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -143,6 +143,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             // UI 작업 수행 가능
+                            handleResult(cropBitmap, results);
                             drawButton();
                             try {
                                 Thread.sleep(1000);
@@ -234,16 +235,20 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         }
     }
 
-    private void getFoodKorName(FirebaseFirestore db, String foodEngName) {
+    private void getFoodKorName(List<Classifier.Recognition> results) {
 
-        db.collection("food").document(foodEngName).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                HashMap foodMap = (HashMap) document.getData();
-                foodKorName.add(foodMap.get("korean").toString());
-                Log.e("=== korean ", foodMap.get("korean").toString());
-            }
-        });
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        for (final Classifier.Recognition result : results) {
+            db.collection("food").document(result.getTitle()).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    HashMap foodMap = (HashMap) document.getData();
+                    foodKorName.add(foodMap.get("korean").toString());
+                    Log.e("=== korean ", foodMap.get("korean").toString());
+                }
+            });
+        }
     }
 
     private void handleResult(Bitmap bitmap, List<Classifier.Recognition> results) {
@@ -262,42 +267,43 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(2.0f);
 
+        int idx = 0;
+
         final List<Classifier.Recognition> mappedRecognitions =
                 new LinkedList<Classifier.Recognition>();
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         for (final Classifier.Recognition result : results) {
             final RectF location = result.getLocation();
             animationView.setVisibility(View.GONE);
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
-                canvas.drawRect(location, paint);
+//                Thread getKorNameThread = new Thread() {
+//                    public void run() {
+//                        try {
+//                            Thread.sleep(3000);
+//                            getFoodKorName(db, foodEngName);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                };
+//
+//                getKorNameThread.start();
+//
+//                try {
+//                    getKorNameThread.join();
+//                } catch (InterruptedException e) {
+//                    e.p
+
                 Log.e("=== title : ", result.getTitle());
                 Log.e("=== location : ", location + "");
-
-                String foodEngName = result.getTitle();
-
-                Thread getKorNameThread = new Thread() {
-                    public void run() {
-                        try {
-                            Thread.sleep(1000);
-                            getFoodKorName(db, foodEngName);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-
-                getKorNameThread.start();
-
-                try {
-                    getKorNameThread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                canvas.drawRect(location, paint);
+                if (foodKorName.size() <= idx) {
+                    borderedText.drawText(
+                            canvas, location.left, location.top, "hi", boxPaint);  //!여기
+                } else {
+                    borderedText.drawText(
+                            canvas, location.left, location.top, foodKorName.get(idx++), boxPaint);  //!여기
                 }
-
-                borderedText.drawText(
-                        canvas, location.left, location.top, foodEngName, boxPaint);  //!여기
                 cropToFrameTransform.mapRect(location);
 
                 result.setLocation(location);
