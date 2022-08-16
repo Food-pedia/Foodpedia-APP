@@ -69,6 +69,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     List<String> foodKorName = new ArrayList<String>();
     List<Button> foodButtons = new ArrayList<Button>(); //인식된 식품 버튼 저장할 배열
     List<Double> intake = new ArrayList<Double>();    //인식된 식품 이름별 섭취량 저장할 배열(foodName index에 맞춰)
+    Intent newIntent=null;
 
     String foodRecordId = "";
 
@@ -76,9 +77,9 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if(result.getResultCode() == RESULT_OK) {
-                    Intent intent = result.getData();
-                    String modifiedIntakeFoodName = intent.getStringExtra("modifiedIntakeFoodName");
-                    String modifiedIntake = intent.getStringExtra("modifiedIntake");
+                    newIntent = result.getData();
+                    String modifiedIntakeFoodName = newIntent.getStringExtra("modifiedIntakeFoodName");
+                    String modifiedIntake = newIntent.getStringExtra("modifiedIntake");
                     if(foodName.contains(modifiedIntakeFoodName)){
                         intake.set(foodName.indexOf(modifiedIntakeFoodName), Double.parseDouble(modifiedIntake));
                     }
@@ -387,21 +388,52 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             //식품 버튼 누르면 해당 식품영양정보 페이지로 이동
             Button foodButton = foodButtons.get(i);
             String foodButtonEngName = foodName.get(i);
-            String foodButtonIntake = intake.get(i).toString();
+            String foodButtonIntake = "";
             foodButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(getApplicationContext(), FoodNutritionInfoActivity.class);
+                    updateIntake();
+                    //foodButtonIntake = intake.get(foodName.indexOf(foodButtonEngName)).toString();
                     System.out.println("foodName : "+foodName);
                     System.out.println("foodKorName : "+foodKorName);
                     System.out.println("foodButtonEngName : "+foodButtonEngName);
+                    System.out.println("updateIntake : "+intake);
 
                     intent.putExtra("foodName", foodButtonEngName);   //다음 페이지로 해당 식품 이름 전달
-                    intent.putExtra("foodIntake", foodButtonEngName);   //다음 페이지로 해당 식품 섭취량 전달
-                    intent.putExtra("foodRecordId", foodButtonIntake);  //다음 페이지로 현재 식단 기록 id 전달
+                    System.out.println("updateIntakeHere : "+intake.get(foodName.indexOf(foodButtonEngName)).toString());
+                    intent.putExtra("foodIntake", intake.get(foodName.indexOf(foodButtonEngName)).toString());   //다음 페이지로 해당 식품 섭취량 전달
+                    intent.putExtra("foodRecordId", foodRecordId);  //다음 페이지로 현재 식단 기록 id 전달
                     mStartForResult.launch(intent);
                 }
             });
         }
     }
+
+    private void updateIntake(){
+        if (newIntent != null){
+            Log.e("updateIntake", "here");
+            String modifiedIntakeFoodName = newIntent.getStringExtra("modifiedIntakeFoodName");
+            String modifiedIntake = newIntent.getStringExtra("modifiedIntake");
+            Log.e("modifiedIntakeFoodName", modifiedIntakeFoodName);
+            Log.e("modifiedIntake", modifiedIntake);
+            if(foodName.contains(modifiedIntakeFoodName)){
+                intake.set(foodName.indexOf(modifiedIntakeFoodName), Double.parseDouble(modifiedIntake));
+            }
+        }
+        else {
+            Log.e("updateIntake", "intentNull");
+            if(intake.size()!=foodName.size()){
+                for(int i=0; i<foodName.size(); i++) {
+                    intake.add(1.0);
+                }
+            }
+            else{
+                System.out.print("intake: "+intake);
+            }
+
+        }
+
+    }
+
 }

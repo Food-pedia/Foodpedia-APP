@@ -34,6 +34,8 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_foodnutritioninfo);
 
         String foodName = getIntent().getStringExtra("foodName");
+        String foodIntake = getIntent().getStringExtra("foodIntake");
+        intake = isInteger(foodIntake)? (double) Integer.parseInt(foodIntake) :Double.parseDouble(foodIntake);
         //String foodName = "gimbap";
 
         TextView foodNameTextView = findViewById(R.id.foodName);
@@ -60,11 +62,13 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
                     sugar = foodMap.get("total-sugar").toString();
 
                     foodNameTextView.setText(foodMap.get("korean").toString()); //식품 이름 맞게 출력
-                    energyTextView.setText(energy + "kcal");   //칼로리 맞게 출력
-                    proteinTextView.setText(protein + "g");   //단백질 맞게 출력
-                    carbsTextView.setText(carbs + "g");   //탄수화물 맞게 출력
-                    fatTextView.setText(fat + "g");   //지방 맞게 출력
-                    sugarTextView.setText(sugar + "g");   //총당류 맞게 출력
+                    energyTextView.setText(NutToText(energy, intake) + "kcal");   //칼로리 맞게 출력
+                    proteinTextView.setText(NutToText(protein, intake)+"g");
+                    carbsTextView.setText(NutToText(carbs, intake)+"g");
+                    fatTextView.setText(NutToText(fat, intake)+"g");
+                    sugarTextView.setText(NutToText(sugar, intake)+"g");
+
+                    intakeInput.setText(foodIntake);
                 }
                 // 데이터를 가져오는 작업이 에러났을 때
                  else {
@@ -124,5 +128,8 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
         return df.format(decimalizedValue);
     }
 
-
+//    private String intakeToText(String intake){
+//        DecimalFormat df = new DecimalFormat("#.##");
+//        return df.format(intake);
+//    }
 }
