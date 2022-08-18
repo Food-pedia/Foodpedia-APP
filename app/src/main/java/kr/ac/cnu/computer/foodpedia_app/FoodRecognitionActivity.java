@@ -62,8 +62,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.25f;
 
     List<String> foodName = new ArrayList<String>();    //인식된 식품 이름들 저장할 배열
-    List<String> foodKorName = new ArrayList<String>();
-    Map<String, String> foodKorMap = new HashMap<>();
+    Map<String, String> foodKorName = new HashMap<>();
     List<Button> foodButtons = new ArrayList<Button>(); //인식된 식품 버튼 저장할 배열
     List<Double> intake = new ArrayList<Double>();    //인식된 식품 이름별 섭취량 저장할 배열(foodName index에 맞춰)
     Intent newIntent=null;
@@ -242,8 +241,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     HashMap foodMap = (HashMap) document.getData();
-                    foodKorName.add(foodMap.get("korean").toString());
-                    foodKorMap.put(result.getTitle(), foodMap.get("korean").toString());
+                    foodKorName.put(result.getTitle(), foodMap.get("korean").toString());
                     Log.e("=== getFoodKorName ", result.getTitle() + " " + foodMap.get("korean").toString());
                 }
             });
@@ -297,7 +295,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 Log.e("=== location : ", location + "");
                 canvas.drawRect(location, paint);
 
-                String foodName = (foodKorMap.get(result.getTitle()) == null ? "" : foodKorMap.get(result.getTitle()));
+                String foodName = (foodKorName.get(result.getTitle()) == null ? "" : foodKorName.get(result.getTitle()));
                 borderedText.drawText(
                         canvas, location.left, location.top, foodName, boxPaint);
                 cropToFrameTransform.mapRect(location);
@@ -371,18 +369,22 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
     private void drawButton() {
         Log.e("=== drawButton", foodKorName.size() + "");
-        for (int i = 0; i < foodKorName.size(); i++) {
+        Iterator<String> foodEngNames = foodKorName.keySet().iterator();
+        int idx = 0;
+        while (foodEngNames.hasNext()) {
+            String curFoodEngName = foodEngNames.next();
+            String curFoodKorName = foodKorName.get(curFoodEngName);
             foodButtons.add(new Button(this));
-            foodButtons.get(i).setText(foodKorName.get(i));
+            foodButtons.get(idx).setText(curFoodKorName);
 
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             param.weight = 1;
             param.gravity = Gravity.CLIP_HORIZONTAL;
-            foodButtonLayout.addView(foodButtons.get(i), param);
+            foodButtonLayout.addView(foodButtons.get(idx), param);
 
             //식품 버튼 누르면 해당 식품영양정보 페이지로 이동
-            Button foodButton = foodButtons.get(i);
-            String foodButtonEngName = foodName.get(i);
+            Button foodButton = foodButtons.get(idx);
+            String foodButtonEngName = curFoodEngName;
             String foodButtonIntake = "";
             foodButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -402,7 +404,40 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                     mStartForResult.launch(intent);
                 }
             });
+            idx++;
         }
+//        for (int i = 0; i < foodKorName.size(); i++) {
+//            foodButtons.add(new Button(this));
+////            foodButtons.get(i).setText(foodKorName.);
+//
+//            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//            param.weight = 1;
+//            param.gravity = Gravity.CLIP_HORIZONTAL;
+//            foodButtonLayout.addView(foodButtons.get(i), param);
+//
+//            //식품 버튼 누르면 해당 식품영양정보 페이지로 이동
+//            Button foodButton = foodButtons.get(i);
+//            String foodButtonEngName = foodName.get(i);
+//            String foodButtonIntake = "";
+//            foodButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent intent = new Intent(getApplicationContext(), FoodNutritionInfoActivity.class);
+//                    updateIntake();
+//                    //foodButtonIntake = intake.get(foodName.indexOf(foodButtonEngName)).toString();
+//                    System.out.println("foodName : "+foodName);
+//                    System.out.println("foodKorName : "+foodKorName);
+//                    System.out.println("foodButtonEngName : "+foodButtonEngName);
+//                    System.out.println("updateIntake : "+intake);
+//
+//                    intent.putExtra("foodName", foodButtonEngName);   //다음 페이지로 해당 식품 이름 전달
+//                    System.out.println("updateIntakeHere : "+intake.get(foodName.indexOf(foodButtonEngName)).toString());
+//                    intent.putExtra("foodIntake", intake.get(foodName.indexOf(foodButtonEngName)).toString());   //다음 페이지로 해당 식품 섭취량 전달
+//                    intent.putExtra("foodRecordId", foodRecordId);  //다음 페이지로 현재 식단 기록 id 전달
+//                    mStartForResult.launch(intent);
+//                }
+//            });
+//        }
     }
 
     private void updateIntake(){
