@@ -42,11 +42,7 @@ import kr.ac.cnu.computer.foodpedia_app.tracking.MultiBoxTracker;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import android.view.View;
 import android.widget.LinearLayout;
@@ -67,6 +63,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
     List<String> foodName = new ArrayList<String>();    //인식된 식품 이름들 저장할 배열
     List<String> foodKorName = new ArrayList<String>();
+    Map<String, String> foodKorMap = new HashMap<>();
     List<Button> foodButtons = new ArrayList<Button>(); //인식된 식품 버튼 저장할 배열
     List<Double> intake = new ArrayList<Double>();    //인식된 식품 이름별 섭취량 저장할 배열(foodName index에 맞춰)
     Intent newIntent=null;
@@ -246,7 +243,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     HashMap foodMap = (HashMap) document.getData();
                     foodKorName.add(foodMap.get("korean").toString());
-                    Log.e("=== korean ", foodMap.get("korean").toString());
+                    foodKorMap.put(result.getTitle(), foodMap.get("korean").toString());
+                    Log.e("=== getFoodKorName ", result.getTitle() + " " + foodMap.get("korean").toString());
                 }
             });
         }
@@ -298,13 +296,10 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 Log.e("=== title : ", result.getTitle());
                 Log.e("=== location : ", location + "");
                 canvas.drawRect(location, paint);
-                if (foodKorName.size() <= idx) {
-                    borderedText.drawText(
-                            canvas, location.left, location.top, "hi", boxPaint);  //!여기
-                } else {
-                    borderedText.drawText(
-                            canvas, location.left, location.top, foodKorName.get(idx++), boxPaint);  //!여기
-                }
+
+                String foodName = (foodKorMap.get(result.getTitle()) == null ? "" : foodKorMap.get(result.getTitle()));
+                borderedText.drawText(
+                        canvas, location.left, location.top, foodName, boxPaint);
                 cropToFrameTransform.mapRect(location);
 
                 result.setLocation(location);
