@@ -2,6 +2,7 @@ package kr.ac.cnu.computer.foodpedia_app;
 
 import android.os.Looper;
 
+import android.widget.*;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -24,8 +25,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,8 +44,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -313,12 +310,16 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         }
 
         Button updateButton = findViewById(R.id.updateBtn);
+
         updateButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
                 String getName = ""; // 나중에 사용자 이름이나 id 저장
-                String getTimezone = ""; // 나중에 아침,점심,저녁저장
+
+                RadioGroup timezoneGroup = (RadioGroup) findViewById(R.id.radioGroupTimezone);
+                RadioButton selectedTimezone = (RadioButton) findViewById(timezoneGroup.getCheckedRadioButtonId());
+                String getTimezone = selectedTimezone.getText().toString();
                 LocalDateTime now = LocalDateTime.now();
                 String getFormatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
 
