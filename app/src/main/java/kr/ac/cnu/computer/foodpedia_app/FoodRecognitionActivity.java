@@ -336,6 +336,9 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                             public void onSuccess(DocumentReference documentReference) {
                                 foodRecordId = documentReference.getId();
                                 Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
+//                                Intent intent = new Intent(getApplicationContext(), FoodRecordsActivity.class);
+//                                intent.putExtra("recordId", foodRecordId);
+//                                mStartForResult.launch(intent);
                             }
                             })
                             .addOnFailureListener(new OnFailureListener() {
