@@ -8,6 +8,9 @@
     <string name="update">UPDATE</string>
     <string name="log_title">식단 기록</string>
     <string name="add">+</string>
+    <string name="fat">지방</string>
+    <string name="protein">단백질</string>
+    <string name="carbohydrate">탄수화물</string>
 
     <string-array name="weekdays">
         <item>일</item>
