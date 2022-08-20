@@ -83,10 +83,10 @@ public class FoodRecordsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // UI 작업 수행 가능
-                        eatenCalories.setText(calories + "kcal");
-                        eatenFat.setText(fat + "");
-                        eatenProtein.setText(protein + "");
-                        eatenCarbohydrate.setText(carbohydrate + "");
+                        eatenCalories.setText(Math.round(calories) + "kcal");
+                        eatenFat.setText(Math.round(fat) + "");
+                        eatenProtein.setText(Math.round(protein) + "");
+                        eatenCarbohydrate.setText(Math.round(carbohydrate) + "");
 
                         try {
                             Thread.sleep(1000);
