@@ -20,6 +20,7 @@ import java.util.List;
 public class FoodRecordsActivity extends AppCompatActivity {
     final private static String TAG = "tag";
     Double calories = 0.0, fat = 0.0, protein = 0.0, carbohydrate = 0.0;
+    String recordDate = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +28,11 @@ public class FoodRecordsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_foodrecords);
 
         String recordId = getIntent().getStringExtra("recordId");
-        TextView recordDate = (TextView) findViewById(R.id.recordDate);
-        TextView eatenCalories = (TextView) findViewById(R.id.eatenCalories);
-        TextView eatenFat = (TextView) findViewById(R.id.eatenFat);
-        TextView eatenProtein = (TextView) findViewById(R.id.eatenProtein);
-        TextView eatenCarbohydrate = (TextView) findViewById(R.id.eatenCarbohydrate);
+        TextView recordDateTextView = (TextView) findViewById(R.id.recordDate);
+        TextView eatenCaloriesTextView = (TextView) findViewById(R.id.eatenCalories);
+        TextView eatenFatTextView = (TextView) findViewById(R.id.eatenFat);
+        TextView eatenProteinTextView = (TextView) findViewById(R.id.eatenProtein);
+        TextView eatenCarbohydrateTextView = (TextView) findViewById(R.id.eatenCarbohydrate);
 
         Handler handler = new Handler();
 
@@ -46,8 +47,8 @@ public class FoodRecordsActivity extends AppCompatActivity {
 
                         DocumentSnapshot documentSnapshot = task.getResult();
                         HashMap recordMap = (HashMap) documentSnapshot.getData();
-                        recordDate.setText(recordMap.get("time").toString());
                         ArrayList<String> foods = (ArrayList<String>) recordMap.get("foods");
+                        recordDate = recordMap.get("time").toString().substring(0, 10);
 
                         for (int foodIdx = 0; foodIdx < foods.size(); foodIdx++) {
                             db.collection("food").document(foods.get(foodIdx)).get().addOnCompleteListener(getFoodInfoTask -> {
@@ -83,10 +84,11 @@ public class FoodRecordsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // UI 작업 수행 가능
-                        eatenCalories.setText(Math.round(calories) + "kcal");
-                        eatenFat.setText(Math.round(fat) + "");
-                        eatenProtein.setText(Math.round(protein) + "");
-                        eatenCarbohydrate.setText(Math.round(carbohydrate) + "");
+                        recordDateTextView.setText(recordDate);
+                        eatenCaloriesTextView.setText(Math.round(calories) + "kcal");
+                        eatenFatTextView.setText(Math.round(fat) + "");
+                        eatenProteinTextView.setText(Math.round(protein) + "");
+                        eatenCarbohydrateTextView.setText(Math.round(carbohydrate) + "");
 
                         try {
                             Thread.sleep(1000);
