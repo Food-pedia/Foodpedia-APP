@@ -13,14 +13,47 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import kr.ac.cnu.computer.foodpedia_app.tflite.Classifier;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class FoodRecordsActivity extends AppCompatActivity {
     final private static String TAG = "tag";
     Double calories = 0.0, fat = 0.0, protein = 0.0, carbohydrate = 0.0;
     String recordDate = "";
+
+    String getDateDay(String date) throws ParseException {
+        String day = "";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date nDate = dateFormat.parse(date);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(nDate);
+        int dayNum = cal.get(Calendar.DAY_OF_WEEK);
+        switch (dayNum) {
+            case 1:
+                day = "일";
+                break;
+            case 2:
+                day = "월";
+                break;
+            case 3:
+                day = "화";
+                break;
+            case 4:
+                day = "수";
+                break;
+            case 5:
+                day = "목";
+                break;
+            case 6:
+                day = "금";
+                break;
+            case 7:
+                day = "토";
+                break;
+        }
+        return day;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +117,11 @@ public class FoodRecordsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // UI 작업 수행 가능
-                        recordDateTextView.setText(recordDate);
+                        try {
+                            recordDateTextView.setText(recordDate + " (" + getDateDay(recordDate) + ")");
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                         eatenCaloriesTextView.setText(Math.round(calories) + "kcal");
                         eatenFatTextView.setText(Math.round(fat) + "");
                         eatenProteinTextView.setText(Math.round(protein) + "");
