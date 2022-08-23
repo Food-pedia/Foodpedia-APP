@@ -1,6 +1,7 @@
 package kr.ac.cnu.computer.foodpedia_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -68,8 +69,13 @@ public class CalendarActivity extends AppCompatActivity {
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 // needs date click event login
 
-                eatLogView.setVisibility(View.VISIBLE);
-                eatLogInfo.setVisibility(View.VISIBLE);
+//                eatLogView.setVisibility(View.VISIBLE);
+//                eatLogInfo.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(getApplicationContext(), FoodRecordsActivity.class);
+                intent.putExtra("recordDate", date.getDate().toString());
+                intent.putExtra("mode", "DAY");
+                Log.e("=== selected date ",  date.getDate().toString());
+                startActivity(intent);
             }
         });
 
