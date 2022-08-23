@@ -25,7 +25,6 @@ public class FoodRecordsActivity extends AppCompatActivity {
     }
     Double calories = 0.0, fat = 0.0, protein = 0.0, carbohydrate = 0.0;
     String recordDate = "";
-    String selectedDate = "";
     String mode;
 
     String getDateFromTimeFormat(String time) {
@@ -77,17 +76,16 @@ public class FoodRecordsActivity extends AppCompatActivity {
         TextView eatenFatTextView = (TextView) findViewById(R.id.eatenFat);
         TextView eatenProteinTextView = (TextView) findViewById(R.id.eatenProtein);
         TextView eatenCarbohydrateTextView = (TextView) findViewById(R.id.eatenCarbohydrate);
+        Handler handler = new Handler();
 
-        switch (ViewMode.valueOf(mode)) {
-            case UPDATE:
-                Handler updateHandler = new Handler();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Looper.prepare();
-                        // UI 작업 수행 불가능
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                // UI 작업 수행 불가능
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                switch (ViewMode.valueOf(mode)) {
+                    case UPDATE:
                         db.collection("foodRecord").document(recordId).get().addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
 
@@ -119,54 +117,14 @@ public class FoodRecordsActivity extends AppCompatActivity {
                                 Log.w(TAG, "Error => ", task.getException());
                             }
                         });
-
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        updateHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // UI 작업 수행 가능
-                                try {
-                                    recordDateTextView.setText(recordDate + " (" + getDateDay(recordDate) + ")");
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                eatenCaloriesTextView.setText(Math.round(calories) + "kcal");
-                                eatenFatTextView.setText(Math.round(fat) + "");
-                                eatenProteinTextView.setText(Math.round(protein) + "");
-                                eatenCarbohydrateTextView.setText(Math.round(carbohydrate) + "");
-
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        });
-                        Looper.loop();
-                    }
-                }).start();
-
-            case DAY:
-                selectedDate = getIntent().getStringExtra("recordDate");
-                Handler dayHandler = new Handler();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Looper.prepare();
-                        // UI 작업 수행 불가능
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        break;
+                    case DAY:
+                        recordDate = getIntent().getStringExtra("recordDate");
                         db.collection("foodRecord").get().addOnSuccessListener( result -> {
                             for (QueryDocumentSnapshot document : result) {
                                 HashMap record = (HashMap) document.getData();
                                 if (!record.get("time").equals("")) { // test data에 time이 없는 데이터가 있으므로
-                                    if (getDateFromTimeFormat(record.get("time").toString()).equals(selectedDate)) {
+                                    if (getDateFromTimeFormat(record.get("time").toString()).equals(recordDate)) {
                                         ArrayList<String> foods = (ArrayList<String>) record.get("foods");
 
                                         for (int foodIdx = 0; foodIdx < foods.size(); foodIdx++) {
@@ -193,37 +151,39 @@ public class FoodRecordsActivity extends AppCompatActivity {
                         }).addOnFailureListener( exception -> {
                             Log.w("=== FoodRecords", "ViewMode.DAY" + exception);
                         });
+                        break;
+                }
+
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // UI 작업 수행 가능
                         try {
-                            Thread.sleep(3000);
+                            recordDateTextView.setText(recordDate + " (" + getDateDay(recordDate) + ")");
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        eatenCaloriesTextView.setText(Math.round(calories) + "kcal");
+                        eatenFatTextView.setText(Math.round(fat) + "");
+                        eatenProteinTextView.setText(Math.round(protein) + "");
+                        eatenCarbohydrateTextView.setText(Math.round(carbohydrate) + "");
+
+                        try {
+                            Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
 
-                        dayHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // UI 작업 수행 가능
-                                try {
-                                    recordDateTextView.setText(selectedDate + " (" + getDateDay(selectedDate) + ")");
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                                eatenCaloriesTextView.setText(Math.round(calories) + "kcal");
-                                eatenFatTextView.setText(Math.round(fat) + "");
-                                eatenProteinTextView.setText(Math.round(protein) + "");
-                                eatenCarbohydrateTextView.setText(Math.round(carbohydrate) + "");
-
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        });
-                        Looper.loop();
                     }
-                }).start();
-        }
+                });
+                Looper.loop();
+            }
+        }).start();
     }
 }
