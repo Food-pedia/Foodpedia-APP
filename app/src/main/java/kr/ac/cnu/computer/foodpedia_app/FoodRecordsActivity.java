@@ -2,12 +2,14 @@ package kr.ac.cnu.computer.foodpedia_app;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -16,16 +18,24 @@ import kr.ac.cnu.computer.foodpedia_app.tflite.Classifier;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class FoodRecordsActivity extends AppCompatActivity {
     final private static String TAG = "tag";
     public enum ViewMode {
-        UPDATE, DAY
+        UPDATE, DAY, TODAY
     }
     Double calories = 0.0, fat = 0.0, protein = 0.0, carbohydrate = 0.0;
     String recordDate = "";
     String mode;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    String getTodayFromLocalDate() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
 
     String getDateFromTimeFormat(String time) {
         return time.substring(0, 10);
@@ -69,7 +79,6 @@ public class FoodRecordsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodrecords);
 
-        String recordId = getIntent().getStringExtra("recordId");
         mode = getIntent().getStringExtra("mode");
         TextView recordDateTextView = (TextView) findViewById(R.id.recordDate);
         TextView eatenCaloriesTextView = (TextView) findViewById(R.id.eatenCalories);
@@ -79,6 +88,7 @@ public class FoodRecordsActivity extends AppCompatActivity {
         Handler handler = new Handler();
 
         new Thread(new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void run() {
                 Looper.prepare();
@@ -86,6 +96,7 @@ public class FoodRecordsActivity extends AppCompatActivity {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 switch (ViewMode.valueOf(mode)) {
                     case UPDATE:
+                        String recordId = getIntent().getStringExtra("recordId");
                         db.collection("foodRecord").document(recordId).get().addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
 
@@ -118,8 +129,8 @@ public class FoodRecordsActivity extends AppCompatActivity {
                             }
                         });
                         break;
-                    case DAY:
-                        recordDate = getIntent().getStringExtra("recordDate");
+                    case DAY: case TODAY:
+                        recordDate = (ViewMode.valueOf(mode) == ViewMode.DAY) ? getIntent().getStringExtra("recordDate") : getTodayFromLocalDate();
                         db.collection("foodRecord").get().addOnSuccessListener( result -> {
                             for (QueryDocumentSnapshot document : result) {
                                 HashMap record = (HashMap) document.getData();
