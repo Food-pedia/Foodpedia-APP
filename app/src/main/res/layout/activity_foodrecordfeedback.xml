@@ -35,10 +35,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:text="피드백을 남기시면\n식이요법에 도움이 될거에요"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
@@ -54,32 +54,32 @@
 
                 <RadioButton
                     android:id="@+id/radioButtonExcellent"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/feedback_emoji_excellent_selector"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/radioButtonGood"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/feedback_emoji_good_selector"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/radioButtonNeutral"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/feedback_emoji_neutral_selector"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/radioButtonBad"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/feedback_emoji_bad_selector"
                     android:button="@null"
@@ -87,8 +87,8 @@
 
                 <RadioButton
                     android:id="@+id/radioButtonTerrible"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/feedback_emoji_terrible_selector"
                     android:button="@null" />
@@ -100,10 +100,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:text="오늘 식사에 대해 알려주세요"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroupEmoji" />
 
@@ -111,10 +111,10 @@
                 android:id="@+id/chipGroup"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginStart="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginEnd="25dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView7">
@@ -161,10 +161,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:text="메모"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
 
