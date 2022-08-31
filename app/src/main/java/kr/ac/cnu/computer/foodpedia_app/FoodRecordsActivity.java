@@ -11,6 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,6 +36,8 @@ public class FoodRecordsActivity extends AppCompatActivity {
     Double calories = 0.0, fat = 0.0, protein = 0.0, carbohydrate = 0.0;
     String recordDate = "";
     String mode;
+//    PieChart pieChartFat, pieChartProtein, pieChartCarb;
+    // 일단 한번에 표현
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     String getTodayFromLocalDate() {
@@ -87,6 +95,10 @@ public class FoodRecordsActivity extends AppCompatActivity {
         TextView eatenCarbohydrateTextView = (TextView) findViewById(R.id.eatenCarbohydrate);
         Handler handler = new Handler();
 
+//        pieChartFat = (PieChart) findViewById(R.id.pieChartFat);
+//        pieChartProtein = (PieChart) findViewById(R.id.pieChartProtein);
+//        pieChartCarb = (PieChart) findViewById(R.id.pieChartCarb);
+
         new Thread(new Runnable() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -115,14 +127,12 @@ public class FoodRecordsActivity extends AppCompatActivity {
                                             fat += Double.parseDouble(String.valueOf(foodMap.get("fat")));
                                             protein += Double.parseDouble(String.valueOf(foodMap.get("protein")));
                                             carbohydrate += Double.parseDouble(String.valueOf(foodMap.get("carbohydrate")));
-                                            Log.e("=== DEBUG: ", calories + "");
                                         }
                                         else {
                                             Log.w(TAG, "Error => ", getFoodInfoTask.getException());
                                         }
                                     });
                                 }
-                                Log.e("=== DEBUG: ", calories + "");
                             }
                             else {
                                 Log.w(TAG, "Error => ", task.getException());
@@ -148,14 +158,12 @@ public class FoodRecordsActivity extends AppCompatActivity {
                                                     fat += Double.parseDouble(String.valueOf(foodMap.get("fat")));
                                                     protein += Double.parseDouble(String.valueOf(foodMap.get("protein")));
                                                     carbohydrate += Double.parseDouble(String.valueOf(foodMap.get("carbohydrate")));
-                                                    Log.e("=== DEBUG: ", calories + "");
                                                 }
                                                 else {
                                                     Log.w(TAG, "Error => ", getFoodInfoTask.getException());
                                                 }
                                             });
                                         }
-                                        Log.e("=== DEBUG: ", calories + "");
                                     }
                                 }
                             }
@@ -174,6 +182,9 @@ public class FoodRecordsActivity extends AppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+
+                        Log.e("=== DEBUG: ", calories + "");
+
                         // UI 작업 수행 가능
                         try {
                             recordDateTextView.setText(recordDate + " (" + getDateDay(recordDate) + ")");
@@ -184,6 +195,35 @@ public class FoodRecordsActivity extends AppCompatActivity {
                         eatenFatTextView.setText(Math.round(fat) + "");
                         eatenProteinTextView.setText(Math.round(protein) + "");
                         eatenCarbohydrateTextView.setText(Math.round(carbohydrate) + "");
+
+                        // pie chart 세팅하는 부분
+
+                        PieChart pieChart = (PieChart) findViewById(R.id.pieChart);
+                        ArrayList<PieEntry> numOfIntake = new ArrayList<>();
+
+                        numOfIntake.add(new PieEntry(Math.round(fat),"fat"));
+                        Log.e("=== DEBUG1: ", Math.round(fat) + "");
+                        numOfIntake.add(new PieEntry(Math.round(protein), "protein"));
+                        Log.e("=== DEBUG2: ", Math.round(protein) + "");
+                        numOfIntake.add(new PieEntry(Math.round(carbohydrate), "carbohydrate"));                                        Log.e("=== DEBUG: ", calories + "");
+                        Log.e("=== DEBUG3: ", Math.round(carbohydrate) + "");
+                        Log.e("=== numOfIntake", numOfIntake + "");
+
+                        Description description = new Description();
+                        description.setText("섭취 비율"); // label
+                        description.setTextSize(15);
+                        pieChart.setDescription(description);
+
+                        PieDataSet dataSet = new PieDataSet(numOfIntake, "");
+                        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+
+                        PieData data = new PieData(dataSet);
+                        pieChart.setData(data);
+                        pieChart.invalidate();
+                        pieChart.getDescription().setEnabled(false);
+                        pieChart.animate();
+                        pieChart.setNoDataText("No data");
+
 
                         try {
                             Thread.sleep(1000);
