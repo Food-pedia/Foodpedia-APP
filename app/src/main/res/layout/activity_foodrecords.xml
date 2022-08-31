@@ -53,11 +53,11 @@
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="273dp"
-                        android:layout_height="191dp"
+                        android:layout_height="50dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginStart="5dp" app:layout_constraintStart_toEndOf="@+id/linearLayout8"
-                        android:layout_marginTop="5dp" app:layout_constraintTop_toBottomOf="@+id/recordDate"
-                        app:layout_constraintBottom_toTopOf="@+id/encouragement" android:gravity="center">
+                        app:layout_constraintTop_toBottomOf="@+id/recordDate"
+                        android:gravity="center" android:layout_marginTop="5dp" android:id="@+id/linearLayout9">
                     <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="wrap_content"
@@ -73,14 +73,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" android:id="@+id/eatenFat"
                                 android:textAlignment="center"/>
-<!--                        <com.github.mikephil.charting.charts.PieChart-->
-<!--                                android:id="@+id/pieChartFat"-->
-<!--                                android:layout_width="match_parent"-->
-<!--                                android:layout_height="match_parent" />-->
-                        <com.github.mikephil.charting.charts.PieChart
-                                android:id="@+id/pieChart"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
+                        <!--                        <com.github.mikephil.charting.charts.PieChart-->
+                        <!--                                android:id="@+id/pieChartFat"-->
+                        <!--                                android:layout_width="match_parent"-->
+                        <!--                                android:layout_height="match_parent" />-->
                     </LinearLayout>
                     <LinearLayout
                             android:orientation="vertical"
@@ -97,10 +93,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" android:id="@+id/eatenProtein"
                                 android:textAlignment="center"/>
-                        <com.github.mikephil.charting.charts.PieChart
-                                android:id="@+id/pieChartProtein"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
+                        <!--                        <com.github.mikephil.charting.charts.PieChart-->
+                        <!--                                android:id="@+id/pieChartProtein"-->
+                        <!--                                android:layout_width="match_parent"-->
+                        <!--                                android:layout_height="match_parent" />-->
                     </LinearLayout>
                     <LinearLayout
                             android:orientation="vertical"
@@ -117,12 +113,19 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" android:id="@+id/eatenCarbohydrate"
                                 android:textAlignment="center"/>
-                        <com.github.mikephil.charting.charts.PieChart
-                                android:id="@+id/pieChartCarb"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
+                        <!--                        <com.github.mikephil.charting.charts.PieChart-->
+                        <!--                                android:id="@+id/pieChartCarb"-->
+                        <!--                                android:layout_width="match_parent"-->
+                        <!--                                android:layout_height="match_parent" />-->
                     </LinearLayout>
                 </LinearLayout>
+                <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/pieChart"
+                        android:layout_width="165dp"
+                        android:layout_height="145dp" app:layout_constraintStart_toEndOf="@+id/linearLayout8"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout9"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/encouragement"/>
                 <TextView
                         android:text="🎊 Keep the pace! You're doing great"
                         android:layout_width="wrap_content"
