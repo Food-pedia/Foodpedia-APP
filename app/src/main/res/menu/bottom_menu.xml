@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/searchItem"
+        android:icon="@drawable/sun"
+        android:title="Today" />
+    <item
+        android:id="@+id/cameraItem"
+        android:icon="@drawable/food"
+        android:title="Camera" />
+    <item
+        android:id="@+id/callItem"
+        android:icon="@drawable/calendar"
+        android:title="Records" />
+</menu>
