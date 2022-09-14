@@ -42,7 +42,8 @@ project.ext.ASSET_DIR = projectDir.toString() + '/src/main/assets'
 
 repositories {
     mavenCentral()
-    maven { url 'https://maven.google.com' }
+    maven { url 'https://maven.google.com'}
+//    maven { url "https://jitpack.io"}
 }
 
 dependencies {
@@ -83,11 +84,14 @@ dependencies {
     compile 'com.github.PhilJay:MpAndroidChart:v3.0.2'
 
     // constraintlayout
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.1'
 
     // Kakao
     implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
     implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
     implementation "com.kakao.sdk:v2-user:2.4.2" // 카카오 로그인
     implementation "com.kakao.sdk:v2-talk:2.4.2" // 친구, 메시지(카카오톡)
+
+    // MPChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2'
 }
