@@ -31,6 +31,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    viewBinding {
+        enabled true
+    }
 }
 
 // import DownloadModels task
@@ -77,4 +81,13 @@ dependencies {
 
     // pie chart
     compile 'com.github.PhilJay:MpAndroidChart:v3.0.2'
+
+    // constraintlayout
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+
+    // Kakao
+    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
+    implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
+    implementation "com.kakao.sdk:v2-user:2.4.2" // 카카오 로그인
+    implementation "com.kakao.sdk:v2-talk:2.4.2" // 친구, 메시지(카카오톡)
 }
