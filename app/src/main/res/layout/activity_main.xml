@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="56dp"
-            android:text="안녕하세요, 000"
+            android:text="Hi, 000"
             android:textColor="#000000"
             android:textSize="25dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,88 +49,268 @@
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_weight="1"
         android:layout_width="405dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@drawable/round_border"
-
-        android:orientation="vertical"
-        android:gravity="center">
+        android:background="@drawable/round_border">
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart1"
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="192dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart2"
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="80dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/chart1"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart3"
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-    </LinearLayout>
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="80dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/chart2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/daily_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Daily Progress"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/calorieIcon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.809"
+            app:srcCompat="@drawable/fire" />
+
+        <TextView
+            android:id="@+id/calories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="92dp"
+            android:text="Calories"
+            android:textColor="#7A7878"
+            android:textSize="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/calories_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="116dp"
+            android:text="1284"
+            android:textColor="#000000"
+            android:textSize="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:layout_width="0dp"
         android:layout_height="10dp"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_weight="1"
         android:layout_width="405dp"
         android:layout_height="match_parent"
-        android:gravity="center"
         android:background="@drawable/round_border"
-        android:layout_gravity="center"
-        android:orientation="horizontal">
-        <Button
+        android:layout_gravity="center">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/linechart"
+            android:layout_width="272dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/weight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="버튼3"/>
-        <Button
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="체중"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/weight_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="버튼4"/></LinearLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="68dp"
+            android:text="72.4 kg"
+            android:textColor="#000000"
+            android:textSize="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="390dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:text="체중 입력"
+            android:textSize="20dp"
+            android:backgroundTint="@color/red"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.466"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:layout_width="0dp"
         android:layout_height="10dp"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_weight="1"
         android:layout_width="405dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:background="@drawable/round_border"
-        android:gravity="center"
-        android:orientation="vertical">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="버튼5"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="버튼6"/>
-    </LinearLayout>
+        android:background="@drawable/round_border">
 
-    <View
-        android:layout_width="0dp"
-        android:layout_height="5dp"/>
+        <LinearLayout
+            android:id="@+id/camera_pop"
+            android:layout_width="157dp"
+            android:visibility="gone"
+            android:layout_height="108dp"
+            android:background="@color/red"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="카메라" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="갤러리" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/blood_sugar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="혈당량"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barchart"
+            android:layout_width="272dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+        </com.github.mikephil.charting.charts.BarChart>
+
+        <TextView
+            android:id="@+id/blood_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="68dp"
+            android:text="134"
+            android:textColor="#000000"
+            android:textSize="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/blood_num2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="80dp"
+            android:text="mg/dL"
+            android:textColor="#000000"
+            android:textSize="15dp"
+            app:layout_constraintStart_toEndOf="@+id/blood_num"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/bloodBtn"
+            android:layout_width="390dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/red"
+            android:text="혈당량 입력"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.466"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
-        app:itemBackground="@color/bottom"
+        app:itemBackground="@color/main"
         app:itemIconSize="@dimen/bottom_navigation_icon_size"
         app:itemIconTint="@drawable/menu_selector_color"
         app:itemTextColor="@drawable/menu_selector_color"
+        app:menu="@menu/bottom_menu" >
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 
-        app:menu="@menu/bottom_menu" />
 
 </LinearLayout>
