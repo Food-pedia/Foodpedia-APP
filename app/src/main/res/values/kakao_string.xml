@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <!--    안에 값들은 새로 생성한 값으로 수정해야 함!!!!!-->
-    <string name="kakao_app_key">cb90c97e08cd838fe63f3364dfbb3de6</string>
-    <string name="kakao_scheme">kakaocb90c97e08cd838fe63f3364dfbb3de6</string>
+    <string name="kakao_app_key">053489b1074ecb68c740377bf397003c</string>
+    <string name="kakao_scheme">kakao053489b1074ecb68c740377bf397003c</string>
     <string name="kakaolink_host">kakaolink</string>
 </resources>

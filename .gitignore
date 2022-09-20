@@ -26,6 +26,8 @@ render.experimental.xml
 /.idea/sonarlint/issuestore/index.pb
 /.gradle/workspace-id.txt
 /.gradle/workspace-id.txt.lock
+/.app/src/main/AndroidManifest.xml
+/.app/src/main/res/values/kakao_string.xml
 
 # Keystore files
 *.jks
