@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/main">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="330dp"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:layout_marginTop="300dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:layout_margin="5dp"
+            android:padding="15dp"
+            android:hint="이름"
+            android:textSize="15dp"
+            android:background="@drawable/round_border"/>
+
+        <EditText
+            android:id="@+id/user_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="left"
+            android:hint="이메일"
+            android:padding="15dp"
+            android:textSize="15dp"
+            android:background="@drawable/round_border"/>
+
+        <EditText
+            android:id="@+id/user_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="left"
+            android:hint="비밀번호 입력"
+            android:padding="15dp"
+            android:textSize="15dp"
+            android:background="@drawable/round_border"/>
+
+        <EditText
+            android:id="@+id/user_password_check"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="left"
+            android:hint="비밀번호 확인"
+            android:padding="15dp"
+            android:textSize="15dp"
+            android:background="@drawable/round_border"/>
+
+        <Button
+            android:id="@+id/check"
+            android:hint="회원가입"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/round_border"
+            android:backgroundTint="@color/red"
+            android:textColor="@color/black"
+            android:fontFamily="@font/"/>
+    </LinearLayout>
+</LinearLayout>

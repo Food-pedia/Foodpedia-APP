@@ -1,10 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".LoginActivity">
+
+    <EditText
+        android:id="@+id/edittext_email"
+        android:layout_width="250dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:hint="E-mail"
+        android:layout_marginTop="380dp"
+        android:padding="10dp"
+        android:background="@drawable/round_border"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/edittext_password"
+        android:layout_gravity="center"
+        android:layout_width="250dp"
+        android:layout_height="46dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/round_border"
+        android:padding="10dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp">
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/round_border"
+            android:backgroundTint="@color/red"
+            android:text="로그인" />
+
+        <Button
+            android:id="@+id/btn_signup"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_border"
+            android:backgroundTint="@color/red"
+            android:text="회원가입" />
+    </LinearLayout>
 
     <com.kakao.usermgmt.LoginButton
         android:id="@+id/com_kakao_login"
@@ -18,5 +73,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
