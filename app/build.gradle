@@ -97,4 +97,8 @@ dependencies {
 
     // firebase signup
     implementation 'com.google.firebase:firebase-auth:21.0.1'
+
+    // recyclerview
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
 }

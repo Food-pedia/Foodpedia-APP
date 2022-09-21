@@ -1,102 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="wrap_content"
-                                                   android:layout_height="wrap_content"
-                                                   tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".MainActivity">
 
     <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
             <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <kr.ac.cnu.computer.foodpedia_app.customview.OverlayView
-                        android:id="@+id/tracking_overlay"
-                        android:layout_width="416dp"
-                        android:layout_height="416dp"
-                        android:scaleType="fitStart"
-                />
+                    android:id="@+id/tracking_overlay"
+                    android:layout_width="416dp"
+                    android:layout_height="416dp"
+                    android:scaleType="fitStart" />
+
                 <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/lottie"
-                        android:layout_width="match_parent"
-                        android:layout_height="200sp"
-                        android:layout_marginTop="56dp"
-                />
+                    android:id="@+id/lottie"
+                    android:layout_width="match_parent"
+                    android:layout_height="200sp"
+                    android:layout_marginTop="56dp" />
+
                 <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="416dp"
-                        android:scaleType="fitStart"
-                        android:contentDescription="@string/image_view_description"/>
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="416dp"
+                    android:contentDescription="@string/image_view_description"
+                    android:scaleType="fitStart" />
             </FrameLayout>
+
             <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:id="@+id/radioGroupTimezone">
+                android:id="@+id/radioGroupTimezone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
                 <RadioButton
-                        android:id="@+id/radioButtonMorning"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/morning"
-                />
-                <RadioButton
-                        android:id="@+id/radioButtonLunch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lunch"
-                        android:layout_marginStart="60dp" android:layout_marginEnd="60dp"/>
-                <RadioButton
-                        android:id="@+id/radioButtonDinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dinner"
-                />
-            </RadioGroup>
-            <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:layout_marginTop="8dp"
-                    android:fontFamily="monospace"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="5dp"
-                    android:paddingRight="20dp"
-                    android:text="@string/record_description"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    android:textSize="12sp"
-                    app:autoSizeTextType="uniform"
-            />
-            <LinearLayout
-                    android:id="@+id/foodButtonLayout"
-                    android:layout_width="match_parent"
+                    android:id="@+id/radioButtonMorning"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    tools:ignore="MissingConstraints"
-            />
-            <SearchView
-                    android:id="@+id/searchView"
-                    android:layout_width="411dp"
-                    android:layout_height="49dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="#ECDEDE"
-            />
-            <Button
-                    android:id="@+id/updateBtn"
+                    android:text="@string/morning" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonLunch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginEnd="60dp"
+                    android:text="@string/lunch" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonDinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dinner" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="monospace"
+                android:paddingLeft="20dp"
+                android:paddingTop="5dp"
+                android:paddingRight="20dp"
+                android:text="@string/record_description"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textSize="12sp"
+                app:autoSizeTextType="uniform" />
+
+            <LinearLayout
+                android:id="@+id/foodButtonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:ignore="MissingConstraints">
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <android.widget.SearchView
+                    android:id="@+id/searchFood"
                     android:layout_width="match_parent"
-                    android:layout_height="62dp"
-                    android:layout_marginStart="4dp"
+                    android:layout_height="49dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginBottom="4dp"
-                    android:text="@string/update"
-            />
+                    android:background="@drawable/searchview_background"
+                    android:clickable="true"
+                    app:iconifiedByDefault="false"
+                    app:layout_constraintBottom_toTopOf="@id/recyclerview"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:queryHint="검색어를 입력하시오"
+                    tools:ignore="MissingConstraints" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:padding="10dp"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/searchFood"
+                    tools:listitem="@layout/item_food" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Button
+                android:id="@+id/updateBtn"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="4dp"
+                android:text="@string/update" />
         </LinearLayout>
     </ScrollView>
 

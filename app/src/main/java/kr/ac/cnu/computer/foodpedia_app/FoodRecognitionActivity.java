@@ -1,14 +1,16 @@
 package kr.ac.cnu.computer.foodpedia_app;
 
+import android.annotation.SuppressLint;
 import android.os.Looper;
 
 import android.widget.*;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -26,8 +28,6 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import kr.ac.cnu.computer.foodpedia_app.customview.OverlayView;
 import kr.ac.cnu.computer.foodpedia_app.env.BorderedText;
@@ -52,8 +52,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import com.bumptech.glide.Glide;
-
 public class FoodRecognitionActivity extends AppCompatActivity {
 
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.25f;
@@ -62,24 +60,31 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     Map<String, String> foodKorName = new HashMap<>();
     List<Button> foodButtons = new ArrayList<Button>(); //인식된 식품 버튼 저장할 배열
     List<Double> intake = new ArrayList<Double>();    //인식된 식품 이름별 섭취량 저장할 배열(foodName index에 맞춰)
-    Intent newIntent=null;
+    Intent newIntent = null;
+
+    ArrayList<FoodItem> foodItemArrayList, filteredList;
+    FoodAdapter foodAdapter;
+    RecyclerView recyclerView;
+    LinearLayoutManager linearLayoutManager;
+    SearchView searchView;
 
     String foodRecordId = "";
 
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if(result.getResultCode() == RESULT_OK) {
+                if (result.getResultCode() == RESULT_OK) {
                     newIntent = result.getData();
                     String modifiedIntakeFoodName = newIntent.getStringExtra("modifiedIntakeFoodName");
                     String modifiedIntake = newIntent.getStringExtra("modifiedIntake");
-                    if(foodName.contains(modifiedIntakeFoodName)){
+                    if (foodName.contains(modifiedIntakeFoodName)) {
                         intake.set(foodName.indexOf(modifiedIntakeFoodName), Double.parseDouble(modifiedIntake));
                     }
                 }
             }
     );
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +126,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             // 참고 : https://brunch.co.kr/@mystoryg/84
             new Thread(new Runnable() {
                 final List<Classifier.Recognition> results = detector.recognizeImage(cropBitmap);
+
                 @Override
                 public void run() {
                     Looper.prepare();
@@ -151,6 +157,74 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 }
             }).start();
         }
+
+        /* 검색창 구현*/
+        recyclerView = findViewById(R.id.recyclerview);
+        searchView = findViewById(R.id.searchFood);
+
+        filteredList=new ArrayList<>();
+        foodItemArrayList = new ArrayList<>();
+
+        foodAdapter = new FoodAdapter(foodItemArrayList, this);
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(foodAdapter);
+
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//        db.collection("food").document(result.getTitle()).get().addOnCompleteListener(task -> {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    HashMap foodMap = (HashMap) document.getData();
+//                    foodKorName.put(result.getTitle(), foodMap.get("korean").toString());
+//                    Log.e("=== getFoodKorName ", result.getTitle() + " " + foodMap.get("korean").toString());
+//                }
+//            });
+//        }
+        foodItemArrayList.add(new FoodItem("닭가슴살"));
+        foodItemArrayList.add(new FoodItem("피자"));
+        foodItemArrayList.add(new FoodItem("햄버"));
+        foodItemArrayList.add(new FoodItem("제육볶음"));
+        foodItemArrayList.add(new FoodItem("닭갈비"));
+        foodItemArrayList.add(new FoodItem("바지락 칼국수"));
+        foodItemArrayList.add(new FoodItem("닭볶음탕"));
+        foodAdapter.notifyDataSetChanged();
+
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchView.setIconified(false);
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // TODO Auto-generated method stub
+                // 검색 버튼이 눌리면
+                searchFilter(query);
+                Log.e("검색된 이름 query:",query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                // TODO Auto-generated method stub
+//                // 검색창에 글자를 쓰면 여기로 옴
+//
+//                searchFilter(newText);
+//                Log.e("검색된 이름 newText:",newText);
+//                return true;
+//            }
+        });
+
+
+
+
     }
 
     private static final Logger LOGGER = new Logger();
@@ -305,7 +379,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             }
         }
 
-        for(int i=0; i<foodName.size(); i++){   //인식된 식품 개수에 맞게 섭취량 배열 1로 초기화
+        for (int i = 0; i < foodName.size(); i++) {   //인식된 식품 개수에 맞게 섭취량 배열 1로 초기화
             intake.add(1.0);
         }
 
@@ -332,22 +406,22 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
                 Task<DocumentReference> addedDocRef = db.collection("foodRecord").add(result);
                 addedDocRef.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                foodRecordId = documentReference.getId();
-                                Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), FoodRecordsActivity.class);
-                                intent.putExtra("recordId", foodRecordId);
-                                intent.putExtra("mode", "UPDATE");
-                                startActivity(intent);
-                            }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        foodRecordId = documentReference.getId();
+                        Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), FoodRecordsActivity.class);
+                        intent.putExtra("recordId", foodRecordId);
+                        intent.putExtra("mode", "UPDATE");
+                        startActivity(intent);
+                    }
+                })
+                        .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Toast.makeText(getApplicationContext(), "저장에 실패했습니다", Toast.LENGTH_SHORT).show();
                             }
-                            });
+                        });
             }
         });
     }
@@ -377,13 +451,13 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), FoodNutritionInfoActivity.class);
                     updateIntake();
                     //foodButtonIntake = intake.get(foodName.indexOf(foodButtonEngName)).toString();
-                    System.out.println("foodName : "+foodName);
-                    System.out.println("foodKorName : "+foodKorName);
-                    System.out.println("foodButtonEngName : "+foodButtonEngName);
-                    System.out.println("updateIntake : "+intake);
+                    System.out.println("foodName : " + foodName);
+                    System.out.println("foodKorName : " + foodKorName);
+                    System.out.println("foodButtonEngName : " + foodButtonEngName);
+                    System.out.println("updateIntake : " + intake);
 
                     intent.putExtra("foodName", foodButtonEngName);   //다음 페이지로 해당 식품 이름 전달
-                    System.out.println("updateIntakeHere : "+intake.get(foodName.indexOf(foodButtonEngName)).toString());
+                    System.out.println("updateIntakeHere : " + intake.get(foodName.indexOf(foodButtonEngName)).toString());
                     intent.putExtra("foodIntake", intake.get(foodName.indexOf(foodButtonEngName)).toString());   //다음 페이지로 해당 식품 섭취량 전달
                     intent.putExtra("foodRecordId", foodRecordId);  //다음 페이지로 현재 식단 기록 id 전달
                     mStartForResult.launch(intent);
@@ -393,30 +467,46 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         }
     }
 
-    private void updateIntake(){
-        if (newIntent != null){
+    private void updateIntake() {
+        if (newIntent != null) {
             Log.e("updateIntake", "here");
             String modifiedIntakeFoodName = newIntent.getStringExtra("modifiedIntakeFoodName");
             String modifiedIntake = newIntent.getStringExtra("modifiedIntake");
             Log.e("modifiedIntakeFoodName", modifiedIntakeFoodName);
             Log.e("modifiedIntake", modifiedIntake);
-            if(foodName.contains(modifiedIntakeFoodName)){
+            if (foodName.contains(modifiedIntakeFoodName)) {
                 intake.set(foodName.indexOf(modifiedIntakeFoodName), Double.parseDouble(modifiedIntake));
             }
-        }
-        else {
+        } else {
             Log.e("updateIntake", "intentNull");
-            if(intake.size()!=foodName.size()){
-                for(int i=0; i<foodName.size(); i++) {
+            if (intake.size() != foodName.size()) {
+                for (int i = 0; i < foodName.size(); i++) {
                     intake.add(1.0);
                 }
-            }
-            else{
-                System.out.print("intake: "+intake);
+            } else {
+                System.out.print("intake: " + intake);
             }
 
         }
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    public void searchFilter(String searchText) {
+        filteredList.clear();
+        Log.e("searchFilter 1","도착");
+        for (int i = 0; i < foodItemArrayList.size(); i++) {
+            if (foodItemArrayList.get(i).getFoodName().toLowerCase().contains(searchText.toLowerCase())) {
+                Log.e("searchFilter 2","도착");
+                filteredList.add(foodItemArrayList.get(i));
+            }
+        }
+        Log.e("searchFilter 3", String.valueOf(filteredList.get(0)));
+        foodAdapter.filterList(filteredList);
     }
 
 }
