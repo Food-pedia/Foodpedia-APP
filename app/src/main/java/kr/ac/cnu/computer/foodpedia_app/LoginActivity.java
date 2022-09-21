@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.KakaoSDK;
@@ -56,6 +57,8 @@ public class LoginActivity extends AppCompatActivity {
     Date c;
     SimpleDateFormat df;
     String formattedDate;
+
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
 
@@ -207,15 +210,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onSessionOpened() {
             requestMe();
-            mHandler = new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-
-                    if (msg.what == 0) {
-//                        redirectSignupActivity();
-                    }
-                }
-            };
+//            redirectSignupActivity();
         }
 
         // 로그인에 실패한 상태
@@ -326,6 +321,9 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 Log.i("KAKAO_API", "onSuccess: kakaoAccount null");
                             }
+                            final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
                         }
                     });
         }
@@ -333,6 +331,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void redirectSignupActivity() {
         //로그인이 완료된 후 이동하는 액티비티 지정
+        Log.e("들어왔다","@@@@");
         final Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

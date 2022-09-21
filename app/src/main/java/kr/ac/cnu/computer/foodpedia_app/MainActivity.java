@@ -15,8 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -31,12 +35,28 @@ import static com.kakao.util.helper.Utility.getPackageInfo;
 
 public class MainActivity extends AppCompatActivity {
 
+    TextView userName;
+    ImageView profile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d("키 해쉬 : ", getKeyHash(this));
+        profile = findViewById(R.id.user_profile);
+        userName = findViewById(R.id.user_text);
+
+        // ***** 카카오 프로필 이미지 *****
+        String url = ((GlobalApplication) getApplication()).getKakaoProfile();
+        if (url != null) {
+            Glide.with(this).load(url).circleCrop().into(profile);
+        }
+
+        // ***** 카카오 연동 사용자 이름 *****
+        Log.e("카카오 이름 : "," "+((GlobalApplication)getApplication()).getKakaoName()+"");
+        userName.append(((GlobalApplication)getApplication()).getKakaoName()+"님");
+//        Log.d("키 해쉬 : ", getKeyHash(this));
+
 
 //        // PieChart 메소드
 //        PieChart pieChart = (PieChart) findViewById(R.id.chart1);
@@ -73,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 //                        return true;
 
                     case R.id.Camera:
-                        LinearLayout camera_pop = findViewById(R.id.camera_pop);
+                        View camera_pop = findViewById(R.id.camera_pop);
                         camera_pop.setVisibility(View.VISIBLE);
                         camera_pop.bringToFront();
 //                    case R.id.Records:

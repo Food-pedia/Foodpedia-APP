@@ -26,7 +26,7 @@
             app:srcCompat="@drawable/hamburger" />
 
         <ImageView
-            android:id="@+id/user"
+            android:id="@+id/user_profile"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginStart="16dp"
@@ -39,13 +39,12 @@
             android:id="@+id/user_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="56dp"
-            android:text="Hi, 000"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="50dp"
+            android:text="반가워요, "
             android:textColor="#000000"
             android:textSize="25dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.121"
-            app:layout_constraintStart_toEndOf="@+id/user"
+            app:layout_constraintStart_toEndOf="@+id/user_profile"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -127,7 +126,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="44dp"
-            android:layout_marginTop="116dp"
+            android:layout_marginTop="120dp"
             android:text="1284"
             android:textColor="#000000"
             android:textSize="25dp"
@@ -207,12 +206,12 @@
         android:layout_gravity="center"
         android:background="@drawable/round_border">
 
-        <LinearLayout
+        <Layout
             android:id="@+id/camera_pop"
             android:layout_width="157dp"
-            android:visibility="gone"
             android:layout_height="108dp"
-            android:background="@color/red"
+            android:visibility="gone"
+            android:background="@color/main"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -230,7 +229,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="갤러리" />
-        </LinearLayout>
+        </Layout>
 
         <TextView
             android:id="@+id/blood_sugar"
@@ -291,8 +290,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.466"
             app:layout_constraintStart_toStartOf="parent" />
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
