@@ -206,7 +206,7 @@
         android:layout_gravity="center"
         android:background="@drawable/round_border">
 
-        <Layout
+        <LinearLayout
             android:id="@+id/camera_pop"
             android:layout_width="157dp"
             android:layout_height="108dp"
@@ -229,7 +229,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="갤러리" />
-        </Layout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/blood_sugar"
