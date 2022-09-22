@@ -48,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="30dp"
+            android:fontFamily="@font/jalan"
             android:background="@drawable/round_border"
             android:backgroundTint="@color/red"
             android:text="로그인" />
@@ -58,6 +59,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/round_border"
             android:backgroundTint="@color/red"
+            android:fontFamily="@font/jalan"
             android:text="회원가입" />
     </LinearLayout>
 
