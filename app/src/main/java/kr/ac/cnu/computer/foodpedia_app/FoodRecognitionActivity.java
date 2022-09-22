@@ -7,6 +7,7 @@ import android.widget.*;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import kr.ac.cnu.computer.foodpedia_app.customview.OverlayView;
 import kr.ac.cnu.computer.foodpedia_app.env.BorderedText;
@@ -50,7 +52,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.okhttp.internal.DiskLruCache;
 
 public class FoodRecognitionActivity extends AppCompatActivity {
 
@@ -170,25 +177,10 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(foodAdapter);
 
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//
-//        db.collection("food").document(result.getTitle()).get().addOnCompleteListener(task -> {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    HashMap foodMap = (HashMap) document.getData();
-//                    foodKorName.put(result.getTitle(), foodMap.get("korean").toString());
-//                    Log.e("=== getFoodKorName ", result.getTitle() + " " + foodMap.get("korean").toString());
-//                }
-//            });
-//        }
-        foodItemArrayList.add(new FoodItem("닭가슴살"));
-        foodItemArrayList.add(new FoodItem("피자"));
-        foodItemArrayList.add(new FoodItem("햄버"));
-        foodItemArrayList.add(new FoodItem("제육볶음"));
-        foodItemArrayList.add(new FoodItem("닭갈비"));
-        foodItemArrayList.add(new FoodItem("바지락 칼국수"));
-        foodItemArrayList.add(new FoodItem("닭볶음탕"));
-        foodAdapter.notifyDataSetChanged();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
+
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,9 +192,54 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // TODO Auto-generated method stub
                 // 검색 버튼이 눌리면
-                searchFilter(query);
+//                foodItemArrayList.add(new FoodItem("닭가슴살"));
+//                foodItemArrayList.add(new FoodItem("피자"));
+//                foodItemArrayList.add(new FoodItem("햄버"));
+//                foodItemArrayList.add(new FoodItem("제육볶음"));
+//                foodItemArrayList.add(new FoodItem("닭갈비"));
+//                foodItemArrayList.add(new FoodItem("바지락 칼국수"));
+//                foodItemArrayList.add(new FoodItem("닭볶음탕"));
+//                foodAdapter.notifyDataSetChanged();
+
+//                db.collection("food").addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+//                        foodItemArrayList.clear();
+//                        foodAdapter.notifyDataSetChanged();
+//                        Snapshot snapshot;
+//                        for snapshot in value
+//                    }
+//                });
+
+                filteredList.clear();
+                db.collection("food")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        String koreanName = String.valueOf(document.get("korean"));
+                                        if (koreanName.contains(query)){
+
+                                            FoodItem foodItem = new FoodItem(koreanName,document.getId());
+                                            foodItemArrayList.add(foodItem);
+                                            foodAdapter.notifyDataSetChanged();
+                                            filteredList.add(foodItem);
+                                            Log.d(koreanName, koreanName);
+                                        }
+                                    }
+                                } else {
+                                    Log.d("FirebaseError", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+
+//                foodAdapter.notifyDataSetChanged();
+
+
+                foodAdapter.filterList(filteredList);
                 Log.e("검색된 이름 query:",query);
                 return true;
             }
@@ -213,7 +250,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             }
 //            @Override
 //            public boolean onQueryTextChange(String newText) {
-//                // TODO Auto-generated method stub
+//
 //                // 검색창에 글자를 쓰면 여기로 옴
 //
 //                searchFilter(newText);
@@ -507,17 +544,17 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public void searchFilter(String searchText) {
-        filteredList.clear();
-        Log.e("searchFilter 1","도착");
-        for (int i = 0; i < foodItemArrayList.size(); i++) {
-            if (foodItemArrayList.get(i).getFoodName().toLowerCase().contains(searchText.toLowerCase())) {
-                Log.e("searchFilter 2","도착");
-                filteredList.add(foodItemArrayList.get(i));
-            }
-        }
-        Log.e("searchFilter 3", String.valueOf(filteredList.get(0)));
-        foodAdapter.filterList(filteredList);
-    }
+//    public void searchFilter(String searchText) {
+//        filteredList.clear();
+//        Log.e("searchFilter 1","도착");
+//        for (int i = 0; i < foodItemArrayList.size(); i++) {
+//            if (foodItemArrayList.get(i).getFoodName().toLowerCase().contains(searchText.toLowerCase())) {
+//                Log.e("searchFilter 2","도착");
+//                filteredList.add(foodItemArrayList.get(i));
+//            }
+//        }
+////        Log.e("searchFilter 3", String.valueOf(filteredList.get(0)));
+//        foodAdapter.filterList(filteredList);
+//    }
 
 }
