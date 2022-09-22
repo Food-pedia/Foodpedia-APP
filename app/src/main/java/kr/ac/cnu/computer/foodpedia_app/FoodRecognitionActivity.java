@@ -324,14 +324,14 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         final Paint paint = new Paint();
 
         borderedText = new BorderedText(30.0f);
-        boxPaint.setColor(Color.RED);
+
         boxPaint.setStyle(Paint.Style.STROKE);
         boxPaint.setStrokeWidth(10.0f);
         boxPaint.setStrokeCap(Paint.Cap.ROUND);
         boxPaint.setStrokeJoin(Paint.Join.ROUND);
         boxPaint.setStrokeMiter(100);
 
-        paint.setColor(Color.RED);
+
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(2.0f);
 
@@ -341,6 +341,12 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         for (final Classifier.Recognition result : results) {
             final RectF location = result.getLocation();
             animationView.setVisibility(View.GONE);
+
+            // *** 랜덤 색깔 *** //
+            int randomC = getRandomColor();
+            boxPaint.setColor(randomC);
+            paint.setColor(randomC);
+
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                 Log.e("=== title : ", result.getTitle());
                 Log.e("=== location : ", location + "");
@@ -489,6 +495,11 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public int getRandomColor(){
+        Random rnd = new Random();
+        return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
     }
 
     @Override
