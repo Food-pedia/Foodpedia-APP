@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.ISessionCallback;
@@ -37,8 +38,10 @@ import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Thread.sleep;
@@ -59,8 +62,6 @@ public class LoginActivity extends AppCompatActivity {
     String formattedDate;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference databaseReference = firebaseDatabase.getReference();
 
     // 로그인
     ImageView loginBtn;
@@ -134,49 +135,6 @@ public class LoginActivity extends AppCompatActivity {
                         // email setter
                         String delEmail = email.substring(0, email.indexOf(".")) + "@" + email.substring(email.indexOf(".") + 1);
 
-                        databaseReference.child("EMAIL").child(delEmail).child("STEPS").child(formattedDate).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.getValue() != null) {
-                                    ((GlobalApplication) getApplication()).setSteps(snapshot.getValue(Integer.class));
-                                } else {
-                                    ((GlobalApplication) getApplication()).setSteps(0);
-                                }
-                                Log.e("오늘의 걸음수:", "" + ((GlobalApplication) getApplication()).getSteps());
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                                // 디비를 가져오던중 에러 발생 시
-                                //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
-                            }
-                        });
-
-
-                        databaseReference.child("EMAIL").child(delEmail).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                ((GlobalApplication) getApplication()).setBasicEmail(snapshot.getKey());
-                                Log.e("emaiiiiil : ", ((GlobalApplication) getApplication()).getBasicEmail());
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                            }
-                        });
-
-                        databaseReference.child("EMAIL").child(delEmail).child("NAME").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                ((GlobalApplication) getApplication()).setBasicName(snapshot.getValue(String.class));
-                                Log.e("이름 : ", ((GlobalApplication) getApplication()).getBasicName());
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                            }
-                        });
-
                     } else {
                         // 로그인 실패
                         Toast.makeText(LoginActivity.this, "아이디 또는 비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
@@ -239,26 +197,6 @@ public class LoginActivity extends AppCompatActivity {
                             String id = String.valueOf(result.getId());
                             UserAccount kakaoAccount = result.getKakaoAccount();
                             ((GlobalApplication) getApplication()).setKakaoID(id);
-                            // Firebase
-                            databaseReference.child("KAKAOID").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    Map<String, Object> map = (Map<String, Object>) snapshot.getValue();
-
-                                    if (map != null) {
-                                        // Toast.makeText(getApplicationContext(),"이미 존재하는 그룹명입니다.",Toast.LENGTH_SHORT).show();//토스메세지 출력
-                                    } else {
-                                        // addGroup(Gname_edit.getText().toString(),Gintro_edit.getText().toString(),Gcate_tv.getText().toString(), goaltime, gmp);
-                                        databaseReference.child("KAKAOID").child(id).push().setValue(id);
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    // 디비를 가져오던중 에러 발생 시
-                                    //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
-                                }
-                            });
 
                             c = Calendar.getInstance().getTime();
                             df = new SimpleDateFormat("yyyy-MM-dd");
@@ -318,6 +256,18 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     // 프로필 획득 불가
                                 }
+
+                                // Firebase
+                                HashMap<String, Object> userInfo = new HashMap<>();
+                                userInfo.put("kakaoName", profile.getNickname());
+
+                                db.collection("userInfo")
+                                        .get()
+                                        .addOnCompleteListener(task -> {
+                                            if (task.isSuccessful()) {
+                                                db.collection("userInfo").document(id).set(userInfo);
+                                            }
+                                        });
                             } else {
                                 Log.i("KAKAO_API", "onSuccess: kakaoAccount null");
                             }
