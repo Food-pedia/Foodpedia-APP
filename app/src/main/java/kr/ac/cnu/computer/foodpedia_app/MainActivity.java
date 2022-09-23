@@ -46,6 +46,7 @@ import static com.kakao.util.helper.Utility.getPackageInfo;
 public class MainActivity extends AppCompatActivity {
 
     TextView userName;
+    EditText date;
     ImageView profile;
     Button bloodBtn, btn_camera, btn_gallery;
     final static int TAKE_PICTURE = 1;
@@ -133,24 +134,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-//                    case R.id.Today:
-//                        final Intent intent = new Intent(StepCountChart.this, MainActivity.class);
-//                        startActivity(intent);
-//
-//                        finish();
-//                        overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
-//                        return true;
+                    case R.id.Today:
+                        final Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                        startActivity(intent);
+
+                        finish();
+                        overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
+                        return true;
 
                     case R.id.Camera:
                         View camera_pop = findViewById(R.id.camera_pop);
                         camera_pop.setVisibility(View.VISIBLE);
 //                        bloodBtn.setVisibility(View.GONE);
-//                    case R.id.Records:
-//                        final Intent intent3 = new Intent(StepCountChart.this, UserInfo.class);
-//                        startActivity(intent3);
-//                        finish();
-//                        overridePendingTransition(R.anim.slide_right_enter, R.anim.slide_right_exit);
-//                        return true;
+                    case R.id.Records:
+                        final Intent intent3 = new Intent(MainActivity.this, FoodRecordsActivity.class);
+                        startActivity(intent3);
+                        finish();
+                        overridePendingTransition(R.anim.slide_right_enter, R.anim.slide_right_exit);
+                        return true;
                 }
                 return false;
             }
