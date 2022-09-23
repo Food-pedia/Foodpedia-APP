@@ -63,7 +63,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.25f;
 
-    List<String> foodName = new ArrayList<String>();    //인식된 식품 이름들 저장할 배열
+    List<String> foodName = new ArrayList<String>();    //인식된 식품 이름들(영어) 저장할 배열
     Map<String, String> foodKorName = new HashMap<>();
     List<Button> foodButtons = new ArrayList<Button>(); //인식된 식품 버튼 저장할 배열
     List<Double> intake = new ArrayList<Double>();    //인식된 식품 이름별 섭취량 저장할 배열(foodName index에 맞춰)
@@ -74,6 +74,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     SearchView searchView;
+    LinearLayout.LayoutParams param;
+    LinearLayout foodButtonLayout;
 
     String foodRecordId = "";
 
@@ -82,11 +84,52 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
                     newIntent = result.getData();
-                    String modifiedIntakeFoodName = newIntent.getStringExtra("modifiedIntakeFoodName");
-                    String modifiedIntake = newIntent.getStringExtra("modifiedIntake");
-                    if (foodName.contains(modifiedIntakeFoodName)) {
-                        intake.set(foodName.indexOf(modifiedIntakeFoodName), Double.parseDouble(modifiedIntake));
+                    if (newIntent.getStringExtra("modifiedIntakeFoodName") != null){
+                        String modifiedIntakeFoodName = newIntent.getStringExtra("modifiedIntakeFoodName");
+                        String modifiedIntake = newIntent.getStringExtra("modifiedIntake");
+                        if (foodName.contains(modifiedIntakeFoodName)) {
+                            intake.set(foodName.indexOf(modifiedIntakeFoodName), Double.parseDouble(modifiedIntake));
+                        }
                     }
+                    else {
+                        String newFoodName = newIntent.getStringExtra("newFoodName");
+                        String newFoodEngName = newIntent.getStringExtra("newFoodEngName");
+                        String newFoodIntake = newIntent.getStringExtra("newFoodIntake");
+                        Log.e("newFood", newFoodName + " " + newFoodEngName+ " " + newFoodIntake);
+                        foodName.add(newFoodEngName);
+                        foodKorName.put(newFoodEngName, newFoodName);
+                        foodButtons.add(new Button(this));
+                        intake.add(Double.parseDouble(newFoodIntake));
+                        param.weight = 1;
+                        param.gravity = Gravity.CLIP_HORIZONTAL;
+
+                        int lastIdx = foodButtons.size() - 1;
+                        Log.e("lastIdx", String.valueOf(lastIdx));
+                        foodButtonLayout.addView(foodButtons.get(lastIdx), param);
+                        Log.e("성공!", "FoodRecognitionActivity 109줄");
+                        //AddNewFoodActivity에 mStartForResult를 써야 올듯
+                    }
+
+                }
+                if (result.getResultCode() == 123){
+                    Intent otherIntent = result.getData();
+                    String newFoodName = otherIntent.getStringExtra("newFoodName");
+                    String newFoodEngName = otherIntent.getStringExtra("newFoodEngName");
+                    String newFoodIntake = otherIntent.getStringExtra("newFoodIntake");
+                    Log.e("newFood", newFoodName + " " + newFoodEngName+ " " + newFoodIntake);
+                    foodName.add(newFoodEngName);
+                    foodKorName.put(newFoodEngName, newFoodName);
+                    foodButtons.add(new Button(this));
+                    intake.add(Double.parseDouble(newFoodIntake));
+                    param.weight = 1;
+                    param.gravity = Gravity.CLIP_HORIZONTAL;
+
+                    int lastIdx = foodButtons.size() - 1;
+                    Log.e("lastIdx", String.valueOf(lastIdx));
+                    foodButtonLayout.addView(foodButtons.get(lastIdx), param);
+                    Log.e("성공!", "FoodRecognitionActivity 129줄");
+
+
                 }
             }
     );
@@ -299,7 +342,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     private Button detectButton;
 
     private ImageView imageView;
-    private LinearLayout foodButtonLayout;
+
     private LottieAnimationView animationView;
 
     private void initBox() {
@@ -433,7 +476,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String getName = ""; // 나중에 사용자 이름이나 id 저장
-
+//              카카오id-yyyy-MM-dd-HH-mm-ss
                 RadioGroup timezoneGroup = (RadioGroup) findViewById(R.id.radioGroupTimezone);
                 RadioButton selectedTimezone = (RadioButton) findViewById(timezoneGroup.getCheckedRadioButtonId());
                 String getTimezone = selectedTimezone.getText().toString();
@@ -446,19 +489,20 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 result.put("timezone", getTimezone);
                 result.put("foods", foodName);
                 result.put("intake", intake);
-
-                Task<DocumentReference> addedDocRef = db.collection("foodRecord").add(result);
-                addedDocRef.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        foodRecordId = documentReference.getId();
-                        Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getApplicationContext(), FoodRecordsActivity.class);
-                        intent.putExtra("recordId", foodRecordId);
-                        intent.putExtra("mode", "UPDATE");
-                        startActivity(intent);
-                    }
-                })
+//db.collection("userInfo").document(id).set(userInfo);
+                //((GlobalApplication) getApplication()).getKakaoID();
+//                Task<DocumentReference> addedDocRef = db.collection("foodRecord").document(((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow).set(result);
+                db.collection("foodRecord").document(((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow).set(result)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), FoodRecordsActivity.class);
+                                intent.putExtra("recordId", foodRecordId);
+                                intent.putExtra("mode", "UPDATE");
+                                startActivity(intent);
+                            }
+                        })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
@@ -479,9 +523,10 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             foodButtons.add(new Button(this));
             foodButtons.get(idx).setText(curFoodKorName);
 
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             param.weight = 1;
             param.gravity = Gravity.CLIP_HORIZONTAL;
+
             foodButtonLayout.addView(foodButtons.get(idx), param);
 
             //식품 버튼 누르면 해당 식품영양정보 페이지로 이동

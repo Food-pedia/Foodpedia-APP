@@ -20,10 +20,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
-public class FoodNutritionInfoActivity extends AppCompatActivity {
+public class AddNewFoodActivity extends AppCompatActivity {
     final private static String TAG = "tag";
 
     String foodName = "";
+    String foodEngName ="";
     String foodIntake = "";
     String energy = "";
     String protein = "";
@@ -45,10 +46,6 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
 //                    Button foodNutSaveBtn = findViewById(R.id.foodNutSaveBtn);
 //                    foodNutSaveBtn.setText("추가");
 //                }
-//                if (result.getResultCode() == 123){
-//                    Intent otherIntent = result.getData();
-//
-//                }
 //            }
 //    );
 
@@ -57,8 +54,9 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodnutritioninfo);
 
-        foodName = getIntent().getStringExtra("foodName");
-        foodIntake = getIntent().getStringExtra("foodIntake");
+        foodName = getIntent().getStringExtra("newFoodName");
+        foodEngName = getIntent().getStringExtra("newFoodEngName");
+        foodIntake = getIntent().getStringExtra("newFoodIntake");
         intake = isInteger(foodIntake)? (double) Integer.parseInt(foodIntake) :Double.parseDouble(foodIntake);
         //String foodName = "gimbap";
 
@@ -71,33 +69,34 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
         EditText intakeInput = findViewById(R.id.intakeInput);
         Button intakeModifyBtn = findViewById(R.id.intakeModifyBtn);
         Button foodNutSaveBtn = findViewById(R.id.foodNutSaveBtn);
+        foodNutSaveBtn.setText("추가");
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("food").document(foodName).get().addOnCompleteListener(task->{
-                //작업이 성공적으로 마쳤을때
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    HashMap foodMap = (HashMap)document.getData();
+        db.collection("food").document(foodEngName).get().addOnCompleteListener(task->{
+            //작업이 성공적으로 마쳤을때
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                HashMap foodMap = (HashMap)document.getData();
 
-                    energy = foodMap.get("energy").toString();
-                    protein = foodMap.get("protein").toString();
-                    carbs = foodMap.get("carbohydrate").toString();
-                    fat = foodMap.get("fat").toString();
-                    sugar = foodMap.get("total-sugar").toString();
+                energy = foodMap.get("energy").toString();
+                protein = foodMap.get("protein").toString();
+                carbs = foodMap.get("carbohydrate").toString();
+                fat = foodMap.get("fat").toString();
+                sugar = foodMap.get("total-sugar").toString();
 
-                    foodNameTextView.setText(foodMap.get("korean").toString()); //식품 이름 맞게 출력
-                    energyTextView.setText(NutToText(energy, intake) + "kcal");   //칼로리 맞게 출력
-                    proteinTextView.setText(NutToText(protein, intake)+"g");
-                    carbsTextView.setText(NutToText(carbs, intake)+"g");
-                    fatTextView.setText(NutToText(fat, intake)+"g");
-                    sugarTextView.setText(NutToText(sugar, intake)+"g");
+                foodNameTextView.setText(foodMap.get("korean").toString()); //식품 이름 맞게 출력
+                energyTextView.setText(NutToText(energy, intake) + "kcal");   //칼로리 맞게 출력
+                proteinTextView.setText(NutToText(protein, intake)+"g");
+                carbsTextView.setText(NutToText(carbs, intake)+"g");
+                fatTextView.setText(NutToText(fat, intake)+"g");
+                sugarTextView.setText(NutToText(sugar, intake)+"g");
 
-                    intakeInput.setText(foodIntake);
-                }
-                // 데이터를 가져오는 작업이 에러났을 때
-                 else {
-                 Log.w(TAG, "Error => ", task.getException());
-                 }
+                intakeInput.setText(foodIntake);
+            }
+            // 데이터를 가져오는 작업이 에러났을 때
+            else {
+                Log.w(TAG, "Error => ", task.getException());
+            }
 
         });
 
@@ -124,9 +123,12 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), FoodRecognitionActivity.class);
-                intent.putExtra("modifiedIntakeFoodName", foodName);   //다음 페이지로 식품 이름 전달
-                intent.putExtra("modifiedIntake", String.valueOf(intake));  //다음 페이지로 섭취량 전달
-                setResult(RESULT_OK, intent);
+                intent.putExtra("newFoodName", foodName);   //다음 페이지로 식품 이름
+                intent.putExtra("newFoodEngName", foodEngName);
+                intent.putExtra("newFoodIntake", String.valueOf(intake));  //다음 페이지로 섭취량 전달
+                setResult(123, intent);
+                Log.e("성공!!", "AddNewFoodActivity 130줄");
+
                 finish();
             }
         });
@@ -154,8 +156,4 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
         return df.format(decimalizedValue);
     }
 
-//    private String intakeToText(String intake){
-//        DecimalFormat df = new DecimalFormat("#.##");
-//        return df.format(intake);
-//    }
 }

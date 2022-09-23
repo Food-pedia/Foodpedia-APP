@@ -17,6 +17,10 @@
         android:theme="@style/Theme.FoodpediaAPP">
         <activity android:name=".SignupActivity"></activity>
         <activity android:name=".MainActivity" />
+        <activity
+            android:name=".AddNewFoodActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -32,10 +36,10 @@
             android:name=".FoodRecognitionActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
-<!--        <activity-->
-<!--            android:name=".MainActivity3"-->
-<!--            android:exported="true"-->
-<!--            android:screenOrientation="portrait" />-->
+        <!--        <activity-->
+        <!--            android:name=".MainActivity3"-->
+        <!--            android:exported="true"-->
+        <!--            android:screenOrientation="portrait" />-->
         <activity
             android:name=".FoodNutritionInfoActivity"
             android:exported="true"
