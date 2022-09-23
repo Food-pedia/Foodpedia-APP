@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         // ***** 카카오 연동 사용자 이름 *****
         Log.e("카카오 이름 : "," "+((GlobalApplication)getApplication()).getKakaoName()+"");
         userName.append(((GlobalApplication)getApplication()).getKakaoName()+"님");
-//        Log.d("키 해쉬 : ", getKeyHash(this));
+        Log.e("키 해쉬 : ", getKeyHash(this));
 
         // ***** 카메라, 갤러리 *****
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
