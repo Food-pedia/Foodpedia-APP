@@ -32,22 +32,6 @@ public class AddNewFoodActivity extends AppCompatActivity {
     String fat = "";
     String sugar = "";
     double intake = 1;
-    Intent newIntent = null;
-
-//    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
-//            new ActivityResultContracts.StartActivityForResult(),
-//            result -> {
-//                if (result.getResultCode() == RESULT_OK) {
-//                    newIntent = result.getData();
-//                    String newFoodName = newIntent.getStringExtra("foodName");
-//                    String newFoodIntake = newIntent.getStringExtra("foodIntake");
-//                    foodName = newFoodName;
-//                    foodIntake = newFoodIntake;
-//                    Button foodNutSaveBtn = findViewById(R.id.foodNutSaveBtn);
-//                    foodNutSaveBtn.setText("추가");
-//                }
-//            }
-//    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,9 +110,7 @@ public class AddNewFoodActivity extends AppCompatActivity {
                 intent.putExtra("newFoodName", foodName);   //다음 페이지로 식품 이름
                 intent.putExtra("newFoodEngName", foodEngName);
                 intent.putExtra("newFoodIntake", String.valueOf(intake));  //다음 페이지로 섭취량 전달
-                setResult(123, intent);
-                Log.e("성공!!", "AddNewFoodActivity 130줄");
-
+                setResult(RESULT_OK ,intent);
                 finish();
             }
         });

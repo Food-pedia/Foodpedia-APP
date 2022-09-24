@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-android:layout_height="match_parent"
-xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent"
+    android:backgroundTint="@android:color/white"
+    android:textAlignment="viewStart">
 
     <TextView
         android:id="@+id/foodName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/foodlist_background"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:padding="10dp"
+        android:layout_width="370dp"
+        android:layout_height="40dp"
+        android:backgroundTint="@color/white"
+
+
+
         android:textColor="#111111"
         android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:textAlignment="viewStart"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
