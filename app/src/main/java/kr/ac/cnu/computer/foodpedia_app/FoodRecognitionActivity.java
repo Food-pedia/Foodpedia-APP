@@ -130,6 +130,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                             System.out.println("updateIntakeHere : " + intake.get(foodName.indexOf(newFoodEngName)).toString());
                             intent.putExtra("foodIntake", intake.get(foodName.indexOf(newFoodEngName)).toString());   //다음 페이지로 해당 식품 섭취량 전달
                             intent.putExtra("foodRecordId", foodRecordId);  //다음 페이지로 현재 식단 기록 id 전달
+                            // TODO  다연
+                            // 위 코드에서 foodRecordId가 빈 문자열인 것 같음
                             mStartForResult.launch(intent);
                         }
                     });
@@ -502,12 +504,17 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+//              카카오id-yyyy-MM-dd-HH-mm-ss
+                LocalDateTime now = LocalDateTime.now();
+                String getFormatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+                foodRecordId = ((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow;
+
                 // upload image
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 // Create a storage reference from our app
                 StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
                 //Create a reference to image
-                StorageReference imageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + foodRecordId + ".jpg");
+                StorageReference imageReference = storageReference.child("images/" + foodRecordId + ".jpg");
 
                 imageView.setDrawingCacheEnabled(true);
                 imageView.buildDrawingCache();
@@ -534,12 +541,9 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
                 String getName = ((GlobalApplication)getApplication()).getKakaoID(); // 나중에 사용자 이름이나 id 저장
 
-//              카카오id-yyyy-MM-dd-HH-mm-ss
                 RadioGroup timezoneGroup = (RadioGroup) findViewById(R.id.radioGroupTimezone);
                 RadioButton selectedTimezone = (RadioButton) findViewById(timezoneGroup.getCheckedRadioButtonId());
                 String getTimezone = selectedTimezone.getText().toString();
-                LocalDateTime now = LocalDateTime.now();
-                String getFormatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
 
                 HashMap<String, Object> result = new HashMap<>();
                 result.put("member", getName);
@@ -550,12 +554,12 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
                 if(feedbackIntent != null){
                     HashMap<String, Object> feedbackResult = new HashMap<>();
-                    feedbackResult.put("foodRecordId", ((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow);
+                    feedbackResult.put("foodRecordId", foodRecordId);
                     feedbackResult.put("emoji", selectedEmoji);
                     feedbackResult.put("feedback", selectedFeedback);
                     feedbackResult.put("memo", memoText);
 
-                    db.collection("feedback").document(((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow+"-"+"feedback").set(feedbackResult)
+                    db.collection("feedback").document(foodRecordId).set(feedbackResult)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -570,10 +574,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                             });
                 }
 
-//db.collection("userInfo").document(id).set(userInfo);
-                //((GlobalApplication) getApplication()).getKakaoID();
-//                Task<DocumentReference> addedDocRef = db.collection("foodRecord").document(((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow).set(result);
-                db.collection("foodRecord").document(((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow).set(result)
+                db.collection("foodRecord").document(foodRecordId).set(result)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
