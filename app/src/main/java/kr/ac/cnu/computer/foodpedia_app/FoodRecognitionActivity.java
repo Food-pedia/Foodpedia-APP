@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,6 +67,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     List<Double> intake = new ArrayList<Double>();    //인식된 식품 이름별 섭취량 저장할 배열(foodName index에 맞춰)
     Intent newIntent = null;
     Intent otherIntent = null;
+    Intent feedbackIntent = null;
 
     ArrayList<FoodItem> foodItemArrayList, filteredList;
     FoodAdapter foodAdapter;
@@ -76,6 +78,9 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     LinearLayout foodButtonLayout;
 
     String foodRecordId = "";
+    int selectedEmoji;
+    List<Integer> selectedFeedback;
+    String memoText = "";
 
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -129,6 +134,22 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                         }
                     });
 
+                }
+            }
+    );
+
+    ActivityResultLauncher<Intent> feedbackStartForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    feedbackIntent = result.getData();
+                    if (feedbackIntent != null){
+                        selectedEmoji=feedbackIntent.getIntExtra("selectedEmoji", 1);
+                        selectedFeedback=feedbackIntent.getIntegerArrayListExtra("selectedFeedback");
+                        memoText = feedbackIntent.getStringExtra("memo");
+
+
+                    }
                 }
             }
     );
@@ -218,6 +239,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(foodAdapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, 1));
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -300,7 +322,14 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 //            }
         });
 
-
+        Button feedbackBtn = findViewById(R.id.feedbackBtn);
+        feedbackBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), FoodRecordFeedbackActivity.class);
+                feedbackStartForResult.launch(intent);
+            }
+        });
 
 
     }
@@ -518,6 +547,29 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 result.put("timezone", getTimezone);
                 result.put("foods", foodName);
                 result.put("intake", intake);
+
+                if(feedbackIntent != null){
+                    HashMap<String, Object> feedbackResult = new HashMap<>();
+                    feedbackResult.put("foodRecordId", ((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow);
+                    feedbackResult.put("emoji", selectedEmoji);
+                    feedbackResult.put("feedback", selectedFeedback);
+                    feedbackResult.put("memo", memoText);
+
+                    db.collection("feedback").document(((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow+"-"+"feedback").set(feedbackResult)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e("DB 저장 완료", "피드백 저장 성공");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e("DB 저장 실패", "피드백 저장 실패");
+                                }
+                            });
+                }
+
 //db.collection("userInfo").document(id).set(userInfo);
                 //((GlobalApplication) getApplication()).getKakaoID();
 //                Task<DocumentReference> addedDocRef = db.collection("foodRecord").document(((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow).set(result);

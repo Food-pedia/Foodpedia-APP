@@ -21,6 +21,14 @@
             android:name=".AddNewFoodActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".FoodRecordFeedbackActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FoodRecordDetailActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -36,6 +44,7 @@
             android:name=".FoodRecognitionActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
+
         <!--        <activity-->
         <!--            android:name=".MainActivity3"-->
         <!--            android:exported="true"-->

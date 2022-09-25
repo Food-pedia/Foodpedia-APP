@@ -2,6 +2,7 @@ package kr.ac.cnu.computer.foodpedia_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +34,8 @@ public class FoodRecordFeedbackActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodrecordfeedback);
 
-        //String getfoodRecordId = getIntent().getStringExtra("recordId");    //나중에 식품인식페이지랑 연결해서 intent값 가져오기
-        String getfoodRecordId = "foodRecordid";
+        String recordId = getIntent().getStringExtra("recordId");    //나중에 식품인식페이지랑 연결해서 intent값 가져오기
+        //String getfoodRecordId = "foodRecordid";
 
         RadioGroup emojiGroup = (RadioGroup) findViewById(R.id.radioGroupEmoji);
         ChipGroup feedbackGroup = (ChipGroup) findViewById(R.id.chipGroupFeedback);
@@ -49,25 +51,34 @@ public class FoodRecordFeedbackActivity extends AppCompatActivity {
                 List<Integer> selectedFeedback = feedbackGroup.getCheckedChipIds();
                 String memoText = memoEditText.getText().toString();
 
-                HashMap<String, Object> feedbackResult = new HashMap<>();
-                feedbackResult.put("foodRecordId", getfoodRecordId);
-                feedbackResult.put("emoji", selectedEmoji);
-                feedbackResult.put("feedback", selectedFeedback);
-                feedbackResult.put("memo", memoText);
+                Intent intent = new Intent(getApplicationContext(), FoodRecognitionActivity.class);
+                intent.putExtra("selectedEmoji", selectedEmoji);   //다음 페이지로 식품 이름
+                intent.putIntegerArrayListExtra("selectedFeedback", (ArrayList<Integer>) selectedFeedback);
+                intent.putExtra("memoText", memoText);  //다음 페이지로 섭취량 전달
+                setResult(RESULT_OK ,intent);
+                finish();
 
-                Task<DocumentReference> addedDocRef = db.collection("feedback").add(feedbackResult);
-                addedDocRef.addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(), "저장에 실패했습니다", Toast.LENGTH_SHORT).show();
-                    }
-                });
+//                HashMap<String, Object> feedbackResult = new HashMap<>();
+//                feedbackResult.put("foodRecordId", recordId);
+//                feedbackResult.put("emoji", selectedEmoji);
+//                feedbackResult.put("feedback", selectedFeedback);
+//                feedbackResult.put("memo", memoText);
+//
+//                db.collection("feedback").document(recordId+"-"+"feedback").set(feedbackResult)
+//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
+//                                finish();
+//                            }
+//                        })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Toast.makeText(getApplicationContext(), "저장에 실패했습니다", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+
             }
         });
 

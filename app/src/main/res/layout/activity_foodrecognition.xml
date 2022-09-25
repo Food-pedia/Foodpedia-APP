@@ -134,13 +134,30 @@
                     tools:listitem="@layout/item_food" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <Button
-                android:id="@+id/updateBtn"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="62dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginBottom="4dp"
-                android:text="@string/update" />
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/updateBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="62dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/update" />
+
+                <Button
+                    android:id="@+id/feedbackBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="62dp"
+                    android:text="@string/feedback"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="4dp"/>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
