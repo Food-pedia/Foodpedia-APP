@@ -1,7 +1,9 @@
 package kr.ac.cnu.computer.foodpedia_app;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +11,10 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import com.github.mikephil.charting.charts.PieChart;
@@ -38,6 +44,9 @@ public class FoodRecordsActivity extends AppCompatActivity {
     String mode;
 //    PieChart pieChartFat, pieChartProtein, pieChartCarb;
     // 일단 한번에 표현
+
+    ImageView imageView;
+    private Uri imageUri;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     String getTodayFromLocalDate() {
@@ -82,10 +91,30 @@ public class FoodRecordsActivity extends AppCompatActivity {
         return day;
     }
 
+    // get image
+    ActivityResultLauncher<Intent> activityResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        imageUri = result.getData().getData();
+                        imageView.setImageURI(imageUri);
+                    }
+                }
+            }
+    );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodrecords);
+
+        imageView = (ImageView) findViewById(R.id.imageView1);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/");
+        activityResult.launch(intent);
 
         mode = getIntent().getStringExtra("mode");
         TextView recordDateTextView = (TextView) findViewById(R.id.recordDate);
