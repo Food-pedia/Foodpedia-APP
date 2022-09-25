@@ -103,9 +103,14 @@ public class FoodRecordsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodrecords);
 
+        mode = getIntent().getStringExtra("mode");
         imageView = (ImageView) findViewById(R.id.imageView1);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
+//        String foodRecordId = getIntent().getStringExtra("recordId");
+        String foodRecordId = "2442704157-2022-09-26-01-24-58";
+        Log.e("=== download the image" , foodRecordId + "");
+        storageReference = storageReference.child("images/" + foodRecordId + ".jpg");
 
         try {
             final File localFile = File.createTempFile("images", "jpg");

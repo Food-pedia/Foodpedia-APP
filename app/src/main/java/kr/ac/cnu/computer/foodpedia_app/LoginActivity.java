@@ -294,8 +294,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        Log.e("=== firebase auth", currentUser + "");
+
         if (currentUser == null) {
+            Log.e("=== firebase auth", "null");
             firebaseAuth.signInAnonymously()
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override

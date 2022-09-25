@@ -514,7 +514,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 // Create a storage reference from our app
                 StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
                 //Create a reference to image
-                StorageReference imageReference = storageReference.child("images/" + foodRecordId + ".jpg");
+                StorageReference imageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + getFormatedNow + ".jpg");
 
                 imageView.setDrawingCacheEnabled(true);
                 imageView.buildDrawingCache();
