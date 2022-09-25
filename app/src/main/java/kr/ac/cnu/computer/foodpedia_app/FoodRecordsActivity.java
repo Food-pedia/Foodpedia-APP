@@ -148,7 +148,10 @@ public class FoodRecordsActivity extends AppCompatActivity {
                 switch (ViewMode.valueOf(mode)) {
                     case UPDATE:
                         String recordId = getIntent().getStringExtra("recordId");
-                        db.collection("foodRecord").document(recordId).get().addOnCompleteListener(task -> {
+
+                        LocalDateTime now = LocalDateTime.now();
+                        String getFormatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+                        db.collection("foodRecord").document(((GlobalApplication) getApplication()).getKakaoID() + "-" + getFormatedNow) .get().addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
 
                                 DocumentSnapshot documentSnapshot = task.getResult();
