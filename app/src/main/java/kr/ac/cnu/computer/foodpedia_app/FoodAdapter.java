@@ -1,11 +1,16 @@
 package kr.ac.cnu.computer.foodpedia_app;
 
+import static kr.ac.cnu.computer.foodpedia_app.R.color.hover;
+import static kr.ac.cnu.computer.foodpedia_app.R.color.white;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,15 +44,27 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(activity.getApplicationContext(), AddNewFoodActivity.class);
-                //foodButtonIntake = intake.get(foodName.indexOf(foodButtonEngName)).toString();
                 intent.putExtra("newFoodName", foodItemArrayList.get(position).getFoodName());
                 intent.putExtra("newFoodEngName", foodItemArrayList.get(position).getFoodEngName());   //다음 페이지로 해당 식품 이름 전달
                 intent.putExtra("newFoodIntake", "1");   //다음 페이지로 해당 식품 섭취량 전달
-                //activity.setResult(Activity.RESULT_OK ,intent);
-//                mStartForResult.launch(intent);
-                activity.startActivity(intent);
+                ((FoodRecognitionActivity)FoodRecognitionActivity.contextFoodRecognition).addNewFoodStartForResult.launch(intent);
             }
         });
+
+//        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+//            @SuppressLint("ResourceAsColor")
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                int action = event.getAction();
+//                switch(action){
+//                    case MotionEvent.ACTION_DOWN: case MotionEvent.ACTION_MOVE:
+//                        holder.itemView.setBackgroundColor(hover);
+//                    case MotionEvent.ACTION_UP: case MotionEvent.ACTION_CANCEL: case MotionEvent.ACTION_OUTSIDE:
+//                        holder.itemView.setBackgroundColor(white);
+//                }
+//                return false;
+//            }
+//        });
     }
 
     @Override
