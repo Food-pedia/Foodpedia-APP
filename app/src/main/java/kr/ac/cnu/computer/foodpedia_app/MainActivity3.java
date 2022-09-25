@@ -94,7 +94,6 @@ public class MainActivity3 extends AppCompatActivity {
                        Intent intent2 = new Intent(this, FoodRecognitionActivity.class);
                        intent2.putExtra("image", bitmap);
                        String imageSaveUri = MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "사진 저장", "찍은 사진이 저장되었습니다.");
-                       intent2.putExtra("imageUri", Uri.parse(imageSaveUri));
                        startActivity(intent2);
                     }
                 break;

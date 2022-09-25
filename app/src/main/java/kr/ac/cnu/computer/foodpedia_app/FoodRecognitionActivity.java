@@ -2,16 +2,12 @@ package kr.ac.cnu.computer.foodpedia_app;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.net.Uri;
+import android.graphics.*;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Looper;
 
-import android.webkit.MimeTypeMap;
 import android.widget.*;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -23,12 +19,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,8 +27,6 @@ import android.view.Gravity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -51,6 +39,7 @@ import kr.ac.cnu.computer.foodpedia_app.tflite.Classifier;
 import kr.ac.cnu.computer.foodpedia_app.tflite.YoloV5Classifier;
 import kr.ac.cnu.computer.foodpedia_app.tracking.MultiBoxTracker;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -70,7 +59,6 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
     public static Context contextFoodRecognition;
     public static final float MINIMUM_CONFIDENCE_TF_OD_API = 0.25f;
-    private Uri imageUri = null;
 
     List<String> foodName = new ArrayList<String>();    //인식된 식품 이름들(영어) 저장할 배열
     Map<String, String> foodKorName = new HashMap<>();
@@ -154,8 +142,6 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
         // MainActivity3 -> MainActivity2 intent image
         Intent takePicture = getIntent();
-        System.out.println("DEBUG : " + takePicture.toString());
-        imageUri = Uri.parse(takePicture.getStringExtra("imageUri"));  // 첨부된 이미지 uri
 
         imageView = findViewById(R.id.imageView);
 
@@ -488,25 +474,35 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 // upload image
-                FirebaseStorage storage = FirebaseStorage.getInstance("gs://food-pedia-d2bbc.appspot.com/");
-                StorageReference storageReference = storage.getReference();
-                String filename = foodRecordId + ".jpg";
-                Uri file = imageUri;
-                Log.e("=== uri", String.valueOf(file));
-                StorageReference riversRef = storageReference.child("image/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + filename);
-                UploadTask uploadTask = riversRef.putFile(file);
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                // Create a storage reference from our app
+                StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
+                //Create a reference to image
+                StorageReference imageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + foodRecordId + ".jpg");
 
+                imageView.setDrawingCacheEnabled(true);
+                imageView.buildDrawingCache();
+                Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                byte[] data = baos.toByteArray();
+
+                UploadTask uploadTask = imageReference.putBytes(data);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Log.e("=== upload image", "fail to upload the image");
                     }
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(getApplicationContext(), "서버에 이미지 저장 완료!", Toast.LENGTH_SHORT).show();
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                        Log.e("=== upload image", "success to upload the image");
                     }
                 });
+
                 String getName = ((GlobalApplication)getApplication()).getKakaoID(); // 나중에 사용자 이름이나 id 저장
 
 //              카카오id-yyyy-MM-dd-HH-mm-ss
