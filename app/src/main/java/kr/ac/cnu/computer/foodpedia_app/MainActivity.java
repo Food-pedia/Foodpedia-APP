@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     final static int TAKE_PICTURE = 1;
     final static int GET_FROM_GALLERY = 2;
     Intent intent;
+    View camera_pop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         bloodBtn = findViewById(R.id.bloodBtn);
         btn_camera = findViewById(R.id.btn_camera);
         btn_gallery = findViewById(R.id.btn_gallery);
+        camera_pop = findViewById(R.id.camera_pop);
+        camera_pop.setVisibility(View.GONE);
 
         // ***** 카카오 프로필 이미지 *****
         String url = ((GlobalApplication) getApplication()).getKakaoProfile();
@@ -143,9 +146,9 @@ public class MainActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.Camera:
-                        View camera_pop = findViewById(R.id.camera_pop);
                         camera_pop.setVisibility(View.VISIBLE);
 //                        bloodBtn.setVisibility(View.GONE);
+                        return true;
                     case R.id.Records:
                         final Intent intent3 = new Intent(MainActivity.this, FoodRecordsActivity.class);
                         startActivity(intent3);
