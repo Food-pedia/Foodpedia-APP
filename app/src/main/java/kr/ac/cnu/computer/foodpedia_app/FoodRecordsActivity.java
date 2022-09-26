@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
@@ -113,8 +114,8 @@ public class FoodRecordsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_foodrecords);
 
         mode = getIntent().getStringExtra("mode");
-        recordDate = (ViewMode.valueOf(mode) == ViewMode.DAY) ? getIntent().getStringExtra("recordDate") : getTodayFromLocalDate();
         imageView = (ImageView) findViewById(R.id.imageView1);
+        recordDate = (ViewMode.valueOf(mode) == ViewMode.DAY) ? getIntent().getStringExtra("recordDate") : getTodayFromLocalDate();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
         Log.e("=== download the image" , ((GlobalApplication) getApplication()).getKakaoID() + "");
@@ -172,35 +173,61 @@ public class FoodRecordsActivity extends AppCompatActivity {
                 // UI 작업 수행 불가능
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                db.collection("foodRecord").get().addOnSuccessListener( result -> {
-                    for (QueryDocumentSnapshot document : result) {
-                        HashMap record = (HashMap) document.getData();
-                        if (!record.get("time").equals("")) { // test data에 time이 없는 데이터가 있으므로
-                            if (getDateFromTimeFormat(record.get("time").toString()).equals(recordDate)) {
-                                ArrayList<String> foods = (ArrayList<String>) record.get("foods");
+                List<String> foods = new ArrayList<>();
+                List<Double> intake = new ArrayList<>();
 
-                                for (int foodIdx = 0; foodIdx < foods.size(); foodIdx++) {
-                                    db.collection("food").document(foods.get(foodIdx)).get().addOnCompleteListener(getFoodInfoTask -> {
-                                        if (getFoodInfoTask.isSuccessful()) {
-                                            DocumentSnapshot foodSnapshot = getFoodInfoTask.getResult();
-                                            HashMap foodMap = (HashMap) foodSnapshot.getData();
+                db.collection("foodRecord").whereEqualTo("member", ((GlobalApplication) getApplication()).getKakaoID())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                    String key = document.getId(); // -> document id?
+                                    if (key.contains(((GlobalApplication) getApplication()).getKakaoID() + "-" + recordDate)) {
+                                        HashMap record = (HashMap) document.getData();
+                                        for (Object foodName : (ArrayList)record.get("foods")) {
+                                            foods.add((String) foodName);
+                                        }
+                                        for (Object amount : (ArrayList)record.get("intake")) {
+                                            intake.add((Double) amount);
+                                        }
 
-                                            calories += Double.parseDouble(String.valueOf(foodMap.get("energy")));
-                                            fat += Double.parseDouble(String.valueOf(foodMap.get("fat")));
-                                            protein += Double.parseDouble(String.valueOf(foodMap.get("protein")));
-                                            carbohydrate += Double.parseDouble(String.valueOf(foodMap.get("carbohydrate")));
-                                        }
-                                        else {
-                                            Log.w(TAG, "Error => ", getFoodInfoTask.getException());
-                                        }
-                                    });
+                                    }
                                 }
                             }
+                        });
+
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                for (int index = 0; index< foods.size(); index++) {
+
+                    int finalIndex = index;
+                    db.collection("food").document(foods.get(index)).get().addOnCompleteListener(task -> {
+                        //작업이 성공적으로 마쳤을때
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            HashMap foodMap = (HashMap) document.getData();
+
+                            calories += Double.parseDouble(String.valueOf(foodMap.get("energy"))) * Double.parseDouble(String.valueOf(intake.get(finalIndex)));
+                            fat += (Double.parseDouble(String.valueOf(foodMap.get("fat"))) * Double.parseDouble(String.valueOf(intake.get(finalIndex))));
+                            protein += (Double.parseDouble(String.valueOf(foodMap.get("protein"))) * Double.parseDouble(String.valueOf(intake.get(finalIndex))));
+                            carbohydrate += (Double.parseDouble(String.valueOf(foodMap.get("carbohydrate"))) * Double.parseDouble(String.valueOf(intake.get(finalIndex))));
+                            Log.e("칼로리 : ", calories + "");
+                            Log.e("지방 : ", fat + "");
+                            Log.e("단백질 : ", protein + "");
+                            Log.e("탄수화물 : ", carbohydrate + "");
+
                         }
-                    }
-                }).addOnFailureListener( exception -> {
-                    Log.w("=== FoodRecords", "ViewMode.DAY" + exception);
-                });
+                        // 데이터를 가져오는 작업이 에러났을 때
+                        else {
+                            Log.w("", "Error => ", task.getException());
+                        }
+                    });
+                }
 
                 try {
                     Thread.sleep(3000);
