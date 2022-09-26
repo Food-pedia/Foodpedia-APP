@@ -150,23 +150,19 @@ public class FoodRecordsActivity extends AppCompatActivity {
                 Looper.prepare();
                 // UI 작업 수행 불가능
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                switch (ViewMode.valueOf(mode)) {
-                    case UPDATE:
-                        String recordId = getIntent().getStringExtra("recordId");
-
-                        db.collection("foodRecord").document(recordId).get().addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-
-                                DocumentSnapshot documentSnapshot = task.getResult();
-                                HashMap recordMap = (HashMap) documentSnapshot.getData();
-                                ArrayList<String> foods = (ArrayList<String>) recordMap.get("foods");
-                                recordDate = getDateFromTimeFormat(recordMap.get("time").toString());
+                recordDate = (ViewMode.valueOf(mode) == ViewMode.DAY) ? getIntent().getStringExtra("recordDate") : getTodayFromLocalDate();
+                db.collection("foodRecord").get().addOnSuccessListener( result -> {
+                    for (QueryDocumentSnapshot document : result) {
+                        HashMap record = (HashMap) document.getData();
+                        if (!record.get("time").equals("")) { // test data에 time이 없는 데이터가 있으므로
+                            if (getDateFromTimeFormat(record.get("time").toString()).equals(recordDate)) {
+                                ArrayList<String> foods = (ArrayList<String>) record.get("foods");
 
                                 for (int foodIdx = 0; foodIdx < foods.size(); foodIdx++) {
                                     db.collection("food").document(foods.get(foodIdx)).get().addOnCompleteListener(getFoodInfoTask -> {
                                         if (getFoodInfoTask.isSuccessful()) {
-                                            DocumentSnapshot document = getFoodInfoTask.getResult();
-                                            HashMap foodMap = (HashMap) document.getData();
+                                            DocumentSnapshot foodSnapshot = getFoodInfoTask.getResult();
+                                            HashMap foodMap = (HashMap) foodSnapshot.getData();
 
                                             calories += Double.parseDouble(String.valueOf(foodMap.get("energy")));
                                             fat += Double.parseDouble(String.valueOf(foodMap.get("fat")));
@@ -179,44 +175,11 @@ public class FoodRecordsActivity extends AppCompatActivity {
                                     });
                                 }
                             }
-                            else {
-                                Log.w(TAG, "Error => ", task.getException());
-                            }
-                        });
-                        break;
-                    case DAY: case TODAY:
-                        recordDate = (ViewMode.valueOf(mode) == ViewMode.DAY) ? getIntent().getStringExtra("recordDate") : getTodayFromLocalDate();
-                        db.collection("foodRecord").get().addOnSuccessListener( result -> {
-                            for (QueryDocumentSnapshot document : result) {
-                                HashMap record = (HashMap) document.getData();
-                                if (!record.get("time").equals("")) { // test data에 time이 없는 데이터가 있으므로
-                                    if (getDateFromTimeFormat(record.get("time").toString()).equals(recordDate)) {
-                                        ArrayList<String> foods = (ArrayList<String>) record.get("foods");
-
-                                        for (int foodIdx = 0; foodIdx < foods.size(); foodIdx++) {
-                                            db.collection("food").document(foods.get(foodIdx)).get().addOnCompleteListener(getFoodInfoTask -> {
-                                                if (getFoodInfoTask.isSuccessful()) {
-                                                    DocumentSnapshot foodSnapshot = getFoodInfoTask.getResult();
-                                                    HashMap foodMap = (HashMap) foodSnapshot.getData();
-
-                                                    calories += Double.parseDouble(String.valueOf(foodMap.get("energy")));
-                                                    fat += Double.parseDouble(String.valueOf(foodMap.get("fat")));
-                                                    protein += Double.parseDouble(String.valueOf(foodMap.get("protein")));
-                                                    carbohydrate += Double.parseDouble(String.valueOf(foodMap.get("carbohydrate")));
-                                                }
-                                                else {
-                                                    Log.w(TAG, "Error => ", getFoodInfoTask.getException());
-                                                }
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-                        }).addOnFailureListener( exception -> {
-                            Log.w("=== FoodRecords", "ViewMode.DAY" + exception);
-                        });
-                        break;
-                }
+                        }
+                    }
+                }).addOnFailureListener( exception -> {
+                    Log.w("=== FoodRecords", "ViewMode.DAY" + exception);
+                });
 
                 try {
                     Thread.sleep(3000);

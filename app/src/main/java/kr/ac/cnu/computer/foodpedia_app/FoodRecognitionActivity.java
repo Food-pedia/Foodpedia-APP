@@ -579,10 +579,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), FoodRecordsActivity.class);
-                                intent.putExtra("recordId", foodRecordId);
-                                intent.putExtra("mode", "UPDATE");
-                                startActivity(intent);
+                                finish();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
