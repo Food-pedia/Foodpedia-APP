@@ -114,7 +114,6 @@ public class FoodRecordsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_foodrecords);
 
         mode = getIntent().getStringExtra("mode");
-        imageView = (ImageView) findViewById(R.id.imageView1);
         recordDate = (ViewMode.valueOf(mode) == ViewMode.DAY) ? getIntent().getStringExtra("recordDate") : getTodayFromLocalDate();
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
