@@ -106,17 +106,19 @@ public class FoodRecordsActivity extends AppCompatActivity {
         return day;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodrecords);
 
         mode = getIntent().getStringExtra("mode");
+        recordDate = (ViewMode.valueOf(mode) == ViewMode.DAY) ? getIntent().getStringExtra("recordDate") : getTodayFromLocalDate();
         imageView = (ImageView) findViewById(R.id.imageView1);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
         Log.e("=== download the image" , ((GlobalApplication) getApplication()).getKakaoID() + "");
-        storageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/");
+        storageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + recordDate + "/");
 
 
         storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
@@ -151,26 +153,6 @@ public class FoodRecordsActivity extends AppCompatActivity {
             }
         });
 
-//        try {
-//            final File localFile = File.createTempFile("images", "jpg");
-//            storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                @Override
-//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-//                    imageView.setImageBitmap(bitmap);
-//                    Log.e("=== download image", "success to download the image");
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull @NotNull Exception e) {
-//                    Log.e("=== download image", "fail to download the image");
-//                }
-//            });
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-        mode = getIntent().getStringExtra("mode");
         TextView recordDateTextView = (TextView) findViewById(R.id.recordDate);
         TextView eatenCaloriesTextView = (TextView) findViewById(R.id.eatenCalories);
         TextView eatenFatTextView = (TextView) findViewById(R.id.eatenFat);
@@ -189,7 +171,7 @@ public class FoodRecordsActivity extends AppCompatActivity {
                 Looper.prepare();
                 // UI 작업 수행 불가능
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                recordDate = (ViewMode.valueOf(mode) == ViewMode.DAY) ? getIntent().getStringExtra("recordDate") : getTodayFromLocalDate();
+
                 db.collection("foodRecord").get().addOnSuccessListener( result -> {
                     for (QueryDocumentSnapshot document : result) {
                         HashMap record = (HashMap) document.getData();

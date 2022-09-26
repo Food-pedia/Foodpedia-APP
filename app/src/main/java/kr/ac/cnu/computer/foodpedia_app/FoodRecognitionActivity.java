@@ -507,6 +507,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 //              카카오id-yyyy-MM-dd-HH-mm-ss
                 LocalDateTime now = LocalDateTime.now();
                 String getFormatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+                String getDate = getFormatedNow.substring(0, 10);
                 foodRecordId = ((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow;
 
                 // upload image
@@ -514,7 +515,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                 // Create a storage reference from our app
                 StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
                 //Create a reference to image
-                StorageReference imageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + getFormatedNow + ".jpg");
+                StorageReference imageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + getDate + "/" + getFormatedNow + ".jpg");
 
                 imageView.setDrawingCacheEnabled(true);
                 imageView.buildDrawingCache();
