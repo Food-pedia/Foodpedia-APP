@@ -56,35 +56,13 @@
         android:layout_gravity="center"
         android:background="@drawable/round_border">
 
+
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart1"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="192dp"
+            android:layout_width="232dp"
+            android:layout_height="189dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/chart2"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="80dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/chart1"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/chart3"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="80dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/chart2"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -93,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Daily Progress"
+            android:text="오늘의 영양소"
             android:fontFamily="@font/jalan"
             android:textColor="#000000"
             android:textSize="20dp"
@@ -108,8 +86,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.809"
-            app:srcCompat="@drawable/fire" />
+            app:layout_constraintVertical_bias="0.809" />
 
         <TextView
             android:id="@+id/calories"
@@ -128,9 +105,9 @@
             android:id="@+id/calories_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="44dp"
-            android:layout_marginTop="120dp"
-            android:text="1284"
+            android:layout_marginStart="55dp"
+            android:layout_marginTop="126dp"
+            android:text=""
             android:fontFamily="@font/jalan"
             android:textColor="#000000"
             android:textSize="25dp"
@@ -186,7 +163,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/input_weightBtn"
             android:layout_width="390dp"
             android:layout_height="50dp"
             android:layout_marginBottom="5dp"
@@ -289,7 +266,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/bloodBtn"
+            android:id="@+id/input_bloodBtn"
             android:layout_width="390dp"
             android:layout_height="50dp"
             android:layout_marginBottom="5dp"

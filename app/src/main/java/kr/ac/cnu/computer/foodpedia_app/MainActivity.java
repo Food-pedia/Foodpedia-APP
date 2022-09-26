@@ -2,27 +2,35 @@ package kr.ac.cnu.computer.foodpedia_app;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.Layout;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,28 +39,60 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.kakao.util.helper.Utility.getPackageInfo;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView userName;
-    EditText date;
-    ImageView profile;
-    Button bloodBtn, btn_camera, btn_gallery;
+    TextView userName, calories_num;
+    EditText weight_date_text, weight_text, blood_date_text, blood_text;
+    ImageView profile, calorieIcon;
+    Button bloodBtn, btn_camera, btn_gallery, input_weightBtn, input_bloodBtn, weight_saveBtn, weight_cancleBtn, blood_cancleBtn, blood_saveBtn;
     final static int TAKE_PICTURE = 1;
     final static int GET_FROM_GALLERY = 2;
     Intent intent;
     View camera_pop;
+    PieChart pieChart;
+    LineChart linechart;
+    Double calories = 0.0, fat = 0.0, protein = 0.0, carbohydrate = 0.0;
+    DatePickerDialog datePickerDialog;
+
+    long now = System.currentTimeMillis();
+    Date now_date = new Date(now);
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String getTime = sdf.format(now_date);
+
+    List foodName = new ArrayList<String>();
+    List<String> intake = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +101,19 @@ public class MainActivity extends AppCompatActivity {
 
         profile = findViewById(R.id.user_profile);
         userName = findViewById(R.id.user_text);
-        bloodBtn = findViewById(R.id.bloodBtn);
+        input_bloodBtn = findViewById(R.id.input_bloodBtn);
+        input_weightBtn = findViewById(R.id.input_weightBtn);
         btn_camera = findViewById(R.id.btn_camera);
         btn_gallery = findViewById(R.id.btn_gallery);
         camera_pop = findViewById(R.id.camera_pop);
         camera_pop.setVisibility(View.GONE);
+        pieChart = findViewById(R.id.chart1);
+        calories_num = findViewById(R.id.calories_num);
+        linechart = findViewById(R.id.linechart);
+        calorieIcon = findViewById(R.id.calorieIcon);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Glide.with(this).load(R.raw.fire).into(calorieIcon);
 
         // ***** 카카오 프로필 이미지 *****
         String url = ((GlobalApplication) getApplication()).getKakaoProfile();
@@ -74,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // ***** 카카오 연동 사용자 이름 *****
-        Log.e("카카오 이름 : "," "+((GlobalApplication)getApplication()).getKakaoName()+"");
-        userName.append(((GlobalApplication)getApplication()).getKakaoName()+"님");
+        Log.e("카카오 이름 : ", " " + ((GlobalApplication) getApplication()).getKakaoName() + "");
+        userName.append(((GlobalApplication) getApplication()).getKakaoName() + "님");
         Log.e("키 해쉬 : ", getKeyHash(this));
 
         // ***** 카메라, 갤러리 *****
@@ -99,35 +147,179 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        btn_gallery.setOnClickListener(v -> {
-            switch (v.getId()) {
-                case R.id.btn_gallery:
-                    intent = new Intent(Intent.ACTION_PICK);
-                    intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                    intent.setType("image/*");
-                    startActivityForResult(intent, GET_FROM_GALLERY);
-                    break;
+        btn_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_gallery:
+                        Log.e("갤러리 : ", "들어옴");
+                        intent = new Intent(Intent.ACTION_PICK);
+                        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                        intent.setType("image/*");
+                        startActivityForResult(intent, GET_FROM_GALLERY);
+                        break;
+                }
             }
         });
 
+        Handler handler = new Handler();
 
-//        // PieChart 메소드
-//        PieChart pieChart = (PieChart) findViewById(R.id.chart1);
-//        ArrayList<Entry> entries = new ArrayList<>();
-//        for(int i=0; i < valList.size();i++){
-//            entries.add(new Entry((Integer) valList.get(i), i));
-//        }
-//        PieDataSet depenses = new PieDataSet (entries, "월별 가입자수");
-//        depenses.setAxisDependency(YAxis.AxisDependency.LEFT);
-//        ArrayList<String> labels = new ArrayList<String>();
-//        for(int i=0; i < labelList.size(); i++){
-//            labels.add((String) labelList.get(i));
-//        }
-//        PieData data = new PieData(labels,depenses); // 라이브러리 v3.x 사용하면 에러 발생함
-//        depenses.setColors(ColorTemplate.COLORFUL_COLORS);
-//        pieChart.setData(data);
-//        pieChart.animateXY(1000,1000);
-//        pieChart.invalidate();
+        new Thread(new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void run() {
+                Looper.prepare();
+                // UI 작업 수행 불가능
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                List<String> foods = new ArrayList<>();
+                List<Double> intake = new ArrayList<>();
+                List<Float> weight = new ArrayList<>();
+
+                db.collection("foodRecord").whereEqualTo("member", ((GlobalApplication) getApplication()).getKakaoID())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                    String key = document.getId(); // -> document id?
+                                    if (key.contains(((GlobalApplication) getApplication()).getKakaoID() + "-" + getTime)) {
+                                        HashMap record = (HashMap) document.getData();
+                                        for (Object foodName : (ArrayList) record.get("foods")) {
+                                            foods.add((String) foodName);
+                                        }
+                                        for (Object amount : (ArrayList) record.get("intake")) {
+                                            intake.add((Double) amount);
+                                        }
+
+                                    }
+                                }
+                            }
+                        });
+
+                db.collection("weight").whereEqualTo("user", ((GlobalApplication) getApplication()).getKakaoID())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                    HashMap record = (HashMap) document.getData();
+                                    Log.e("record : ", record.get("weight").toString());
+                                    weight.add(Float.parseFloat(record.get("weight").toString()));
+                                }
+                            }
+                        });
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Log.e("foods ", foods + "");
+                Log.e("intake ", intake + "");
+
+                for (int index = 0; index < foods.size(); index++) {
+
+                    int finalIndex = index;
+                    db.collection("food").document(foods.get(index)).get().addOnCompleteListener(task -> {
+                        //작업이 성공적으로 마쳤을때
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            HashMap foodMap = (HashMap) document.getData();
+
+                            calories += Double.parseDouble(String.valueOf(foodMap.get("energy"))) * Double.parseDouble(String.valueOf(intake.get(finalIndex)));
+                            fat += (Double.parseDouble(String.valueOf(foodMap.get("fat"))) * Double.parseDouble(String.valueOf(intake.get(finalIndex))));
+                            protein += (Double.parseDouble(String.valueOf(foodMap.get("protein"))) * Double.parseDouble(String.valueOf(intake.get(finalIndex))));
+                            carbohydrate += (Double.parseDouble(String.valueOf(foodMap.get("carbohydrate"))) * Double.parseDouble(String.valueOf(intake.get(finalIndex))));
+                            Log.e("칼로리 : ", calories + "");
+                            Log.e("지방 : ", fat + "");
+                            Log.e("단백질 : ", protein + "");
+                            Log.e("탄수화물 : ", carbohydrate + "");
+
+                        }
+                        // 데이터를 가져오는 작업이 에러났을 때
+                        else {
+                            Log.w("", "Error => ", task.getException());
+                        }
+
+                    });
+                }
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // pie chart 세팅하는 부분
+                        ArrayList<PieEntry> numOfIntake1 = new ArrayList<>();
+
+                        numOfIntake1.add(new PieEntry(Math.round(fat), "지방"));
+                        numOfIntake1.add(new PieEntry(Math.round(protein), "단백질"));
+                        numOfIntake1.add(new PieEntry(Math.round(carbohydrate), "탄수화물"));
+
+                        Description description = new Description();
+                        description.setText("섭취 비율"); // label
+                        description.setTextSize(12);
+                        pieChart.setDescription(description);
+
+                        PieDataSet dataSet1 = new PieDataSet(numOfIntake1, "");
+                        dataSet1.setValueTextSize(15);
+
+                        dataSet1.setColors(ColorTemplate.COLORFUL_COLORS);
+
+                        PieData data1 = new PieData(dataSet1);
+
+                        pieChart.setData(data1);
+                        pieChart.invalidate();
+                        pieChart.getDescription().setEnabled(false);
+                        pieChart.animate();
+                        pieChart.setNoDataText("No data");
+                        Legend leg = pieChart.getLegend();
+                        leg.setEnabled(false);
+
+                        calories_num.setText(Integer.parseInt(String.valueOf(Math.round(calories))) + "kcal");
+
+                        /*** 체중 linechart ***/
+                        ArrayList<Entry> values = new ArrayList<>();
+
+                        for (int i = 0; i < weight.size(); i++) {
+                            Log.e("확인 : ", weight.get(i)+"");
+                            values.add(new Entry(i, weight.get(i)));
+                        }
+                        LineDataSet set1;
+                        set1 = new LineDataSet(values, "DataSet 1");
+
+                        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+                        dataSets.add(set1); // add the data sets
+
+                        // create a data object with the data sets
+                        LineData data = new LineData(dataSets);
+
+                        // black lines and points
+                        set1.setColor(Color.BLACK);
+                        set1.setCircleColor(Color.BLACK);
+
+                        // set data
+                        linechart.setData(data);
+
+
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+                Looper.loop();
+            }
+        }).start();
 
         /************* 하단바 *************/
         BottomNavigationView bottomNav = findViewById(R.id.navigationView);
@@ -160,8 +352,157 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         /************* 하단바 *************/
-    }
 
+        /*** 체중, 혈당량 입력 ***/
+        input_weightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.input_weight, null);
+
+                ll.setFocusable(true); // 외부 영역 선택시 PopUp 종료
+
+                LinearLayout.LayoutParams paramll = new LinearLayout.LayoutParams
+                        (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+
+                addContentView(ll, paramll);
+
+
+                weight_date_text = ll.findViewById(R.id.weight_date_text);
+                weight_text = ll.findViewById(R.id.weight_text);
+                weight_saveBtn = ll.findViewById(R.id.weight_saveBtn);
+                weight_cancleBtn = ll.findViewById(R.id.weight_cancleBtn);
+
+                weight_date_text.setOnClickListener(new View.OnClickListener() {
+                    String date2;
+
+                    @Override
+                    public void onClick(View view) {
+                        if (weight_date_text.isClickable()) {
+                            //오늘 날짜(년,월,일) 변수에 담기
+                            Calendar calendar = Calendar.getInstance();
+                            int pYear = calendar.get(Calendar.YEAR); //년
+                            int pMonth = calendar.get(Calendar.MONTH);//월
+                            int pDay = calendar.get(Calendar.DAY_OF_MONTH);//일
+
+
+                            datePickerDialog = new DatePickerDialog(MainActivity.this,
+                                    new DatePickerDialog.OnDateSetListener() {
+                                        @Override
+                                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+
+                                            //1월은 0부터 시작하기 때문에 +1을 해준다.
+                                            month = month + 1;
+                                            String date = year + "/" + month + "/" + day;
+                                            date2 = year + "-" + month + "-" + day;
+
+                                            weight_date_text.setText(date);
+                                        }
+                                    }, pYear, pMonth, pDay);
+                            datePickerDialog.show();
+                        }
+                        weight_saveBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                HashMap<String, Object> weightHash = new HashMap<>();
+                                weightHash.put("user", ((GlobalApplication) getApplication()).getKakaoID());
+                                weightHash.put("weight", weight_text.getText().toString());
+                                weightHash.put("date", date2);
+
+                                db.collection("weight").document(((GlobalApplication) getApplication()).getKakaoID() + "-" + date2)
+                                        .set(weightHash)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                ((ViewManager) ll.getParent()).removeView(ll);
+                                            }
+                                        });
+
+                            }
+                        });
+                        weight_cancleBtn.setOnClickListener(v -> ((ViewManager) ll.getParent()).removeView(ll));
+                    }
+
+                });
+
+            }
+        });
+
+        input_bloodBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+                LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.input_blood, null);
+
+                ll.setFocusable(true); // 외부 영역 선택시 PopUp 종료
+
+                LinearLayout.LayoutParams paramll = new LinearLayout.LayoutParams
+                        (LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+
+                addContentView(ll, paramll);
+
+
+                blood_date_text = ll.findViewById(R.id.blood_date_text);
+                blood_text = ll.findViewById(R.id.blood_text);
+                blood_saveBtn = ll.findViewById(R.id.blood_saveBtn);
+                blood_cancleBtn = ll.findViewById(R.id.blood_cancleBtn);
+
+                blood_date_text.setOnClickListener(new View.OnClickListener() {
+                    String date2;
+
+                    @Override
+                    public void onClick(View view) {
+                        if (blood_date_text.isClickable()) {
+                            //오늘 날짜(년,월,일) 변수에 담기
+                            Calendar calendar = Calendar.getInstance();
+                            int pYear = calendar.get(Calendar.YEAR); //년
+                            int pMonth = calendar.get(Calendar.MONTH);//월
+                            int pDay = calendar.get(Calendar.DAY_OF_MONTH);//일
+
+
+                            datePickerDialog = new DatePickerDialog(MainActivity.this,
+                                    new DatePickerDialog.OnDateSetListener() {
+                                        @Override
+                                        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+
+                                            //1월은 0부터 시작하기 때문에 +1을 해준다.
+                                            month = month + 1;
+                                            String date = year + "/" + month + "/" + day;
+                                            date2 = year + "-" + month + "-" + day;
+
+                                            blood_date_text.setText(date);
+                                        }
+                                    }, pYear, pMonth, pDay);
+                            datePickerDialog.show();
+                        }
+                        blood_saveBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                HashMap<String, Object> weightHash = new HashMap<>();
+                                weightHash.put("user", ((GlobalApplication) getApplication()).getKakaoID());
+                                weightHash.put("blood", blood_text.getText().toString());
+                                weightHash.put("date", date2);
+
+                                db.collection("blood").document(((GlobalApplication) getApplication()).getKakaoID() + "-" + date2)
+                                        .set(weightHash)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                ((ViewManager) ll.getParent()).removeView(ll);
+                                            }
+                                        });
+                            }
+                        });
+                        blood_cancleBtn.setOnClickListener(v -> ((ViewManager) ll.getParent()).removeView(ll));
+                    }
+
+                });
+
+            }
+        });
+    }
 
     public static String getKeyHash(final Context context) {
         PackageInfo packageInfo = getPackageInfo(context, PackageManager.GET_SIGNATURES);
@@ -178,6 +519,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return null;
+    }
+
+    String getDateFromTimeFormat(String time) {
+        return time.substring(0, 10);
     }
 
     @Override
