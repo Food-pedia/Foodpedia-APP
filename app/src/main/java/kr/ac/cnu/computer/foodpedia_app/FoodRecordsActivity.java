@@ -3,13 +3,17 @@ package kr.ac.cnu.computer.foodpedia_app;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,19 +21,23 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import kr.ac.cnu.computer.foodpedia_app.tflite.Classifier;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +53,7 @@ import java.util.*;
 public class FoodRecordsActivity extends AppCompatActivity {
     final private static String TAG = "tag";
     public enum ViewMode {
-        UPDATE, DAY, TODAY
+        DAY, TODAY
     }
     Double calories = 0.0, fat = 0.0, protein = 0.0, carbohydrate = 0.0;
     String recordDate = "";
@@ -107,29 +115,60 @@ public class FoodRecordsActivity extends AppCompatActivity {
         imageView = (ImageView) findViewById(R.id.imageView1);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
-//        String foodRecordId = getIntent().getStringExtra("recordId");
-        String foodRecordId = "2442704157-2022-09-26-01-24-58";
-        Log.e("=== download the image" , foodRecordId + "");
-        storageReference = storageReference.child("images/" + foodRecordId + ".jpg");
+        Log.e("=== download the image" , ((GlobalApplication) getApplication()).getKakaoID() + "");
+        storageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/");
 
-        try {
-            final File localFile = File.createTempFile("images", "jpg");
-            storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    imageView.setImageBitmap(bitmap);
-                    Log.e("=== download image", "success to download the image");
+
+        storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+            @Override
+            public void onSuccess(ListResult listResult) {
+                for (StorageReference item: listResult.getItems()) {
+                    LinearLayout imageView = (LinearLayout) findViewById(R.id.imageView);
+
+                    // image view 동적 생성
+                    ImageView iv = new ImageView(FoodRecordsActivity.this);
+                    iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    imageView.addView(iv);
+
+                    item.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<Uri> task) {
+                            if (task.isSuccessful()) {
+                                Glide.with(FoodRecordsActivity.this)
+                                        .load(task.getResult())
+                                        .into(iv);
+                            } else {
+                                Toast.makeText(FoodRecordsActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull @NotNull Exception e) {
+                            Log.w("=== download image", "error!");
+                        }
+                    });
                 }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull @NotNull Exception e) {
-                    Log.e("=== download image", "fail to download the image");
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            }
+        });
+
+//        try {
+//            final File localFile = File.createTempFile("images", "jpg");
+//            storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+//                    imageView.setImageBitmap(bitmap);
+//                    Log.e("=== download image", "success to download the image");
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull @NotNull Exception e) {
+//                    Log.e("=== download image", "fail to download the image");
+//                }
+//            });
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         mode = getIntent().getStringExtra("mode");
         TextView recordDateTextView = (TextView) findViewById(R.id.recordDate);
@@ -191,8 +230,6 @@ public class FoodRecordsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        Log.e("=== DEBUG: ", calories + "");
-
                         // UI 작업 수행 가능
                         try {
                             recordDateTextView.setText(recordDate + " (" + getDateDay(recordDate) + ")");
@@ -210,12 +247,9 @@ public class FoodRecordsActivity extends AppCompatActivity {
                         ArrayList<PieEntry> numOfIntake = new ArrayList<>();
 
                         numOfIntake.add(new PieEntry(Math.round(fat),"fat"));
-                        Log.e("=== DEBUG1: ", Math.round(fat) + "");
                         numOfIntake.add(new PieEntry(Math.round(protein), "protein"));
-                        Log.e("=== DEBUG2: ", Math.round(protein) + "");
-                        numOfIntake.add(new PieEntry(Math.round(carbohydrate), "carbohydrate"));                                        Log.e("=== DEBUG: ", calories + "");
-                        Log.e("=== DEBUG3: ", Math.round(carbohydrate) + "");
-                        Log.e("=== numOfIntake", numOfIntake + "");
+                        numOfIntake.add(new PieEntry(Math.round(carbohydrate), "carbohydrate"));
+                        Log.e("=== DEBUG", numOfIntake + "");
 
                         Description description = new Description();
                         description.setText("섭취 비율"); // label
