@@ -9,14 +9,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -132,6 +132,17 @@ public class FoodRecordsActivity extends AppCompatActivity {
                     ImageView iv = new ImageView(FoodRecordsActivity.this);
                     iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     imageView.addView(iv);
+                    imageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+//                            Intent intent = new Intent(getApplicationContext(), FoodRecordsActivity.class);
+//                            intent.putExtra("foodRecordId", "");
+//                            // TODO
+//                            // intent destination 변경 필요
+//                            startActivity(intent);
+                            // document id는 item.getName().split("\\.")[0]
+                        }
+                    });
 
                     item.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
