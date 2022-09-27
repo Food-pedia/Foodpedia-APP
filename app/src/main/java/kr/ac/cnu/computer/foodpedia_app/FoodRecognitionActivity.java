@@ -170,9 +170,9 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
         foodButtonLayout = findViewById(R.id.foodButtonLayout);
         animationView = findViewById(R.id.lottie);
-        animationView.setAnimation("loading2.json");
-        animationView.playAnimation();
-        animationView.setRepeatCount(ValueAnimator.INFINITE);
+//        animationView.setAnimation("loading2.json");
+//        animationView.playAnimation();
+//        animationView.setRepeatCount(ValueAnimator.INFINITE);
 
 //        cameraButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, DetectorActivity.class)));
 
