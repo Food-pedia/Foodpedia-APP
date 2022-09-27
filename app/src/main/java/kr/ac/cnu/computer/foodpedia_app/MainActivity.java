@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,18 +40,28 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -61,6 +72,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,7 +85,7 @@ import static com.kakao.util.helper.Utility.getPackageInfo;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView userName, calories_num;
+    TextView userName, calories_num, blood_num, weight_num;
     EditText weight_date_text, weight_text, blood_date_text, blood_text;
     ImageView profile, calorieIcon;
     Button bloodBtn, btn_camera, btn_gallery, input_weightBtn, input_bloodBtn, weight_saveBtn, weight_cancleBtn, blood_cancleBtn, blood_saveBtn;
@@ -82,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
     Intent intent;
     View camera_pop;
     PieChart pieChart;
-    LineChart linechart;
+    LineChart lineChart;
+    BarChart barChart;
     Double calories = 0.0, fat = 0.0, protein = 0.0, carbohydrate = 0.0;
     DatePickerDialog datePickerDialog;
 
@@ -109,8 +122,11 @@ public class MainActivity extends AppCompatActivity {
         camera_pop.setVisibility(View.GONE);
         pieChart = findViewById(R.id.chart1);
         calories_num = findViewById(R.id.calories_num);
-        linechart = findViewById(R.id.linechart);
+        lineChart = findViewById(R.id.linechart);
+        barChart = findViewById(R.id.barchart);
         calorieIcon = findViewById(R.id.calorieIcon);
+        blood_num = findViewById(R.id.blood_num);
+        weight_num = findViewById(R.id.weight_num);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Glide.with(this).load(R.raw.fire).into(calorieIcon);
@@ -175,6 +191,8 @@ public class MainActivity extends AppCompatActivity {
                 List<String> foods = new ArrayList<>();
                 List<Double> intake = new ArrayList<>();
                 List<Float> weight = new ArrayList<>();
+                List<Float> blood = new ArrayList<>();
+                List<String> blood_date = new ArrayList<>();
 
                 db.collection("foodRecord").whereEqualTo("member", ((GlobalApplication) getApplication()).getKakaoID())
                         .get()
@@ -206,6 +224,20 @@ public class MainActivity extends AppCompatActivity {
                                     HashMap record = (HashMap) document.getData();
                                     Log.e("record : ", record.get("weight").toString());
                                     weight.add(Float.parseFloat(record.get("weight").toString()));
+                                }
+                            }
+                        });
+
+                db.collection("blood").whereEqualTo("user", ((GlobalApplication) getApplication()).getKakaoID())
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                    HashMap record = (HashMap) document.getData();
+                                    Log.e("record : ", record.get("blood").toString());
+                                    blood.add(Float.parseFloat(record.get("blood").toString()));
+                                    blood_date.add( record.get("date").toString());
                                 }
                             }
                         });
@@ -256,6 +288,9 @@ public class MainActivity extends AppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        // label font
+                        Typeface tf = Typeface.createFromAsset(getAssets(), "welcome.ttf");
+
                         // pie chart 세팅하는 부분
                         ArrayList<PieEntry> numOfIntake1 = new ArrayList<>();
 
@@ -286,10 +321,12 @@ public class MainActivity extends AppCompatActivity {
                         calories_num.setText(Integer.parseInt(String.valueOf(Math.round(calories))) + "kcal");
 
                         /*** 체중 linechart ***/
+                        float weight_mean = 0;
                         ArrayList<Entry> values = new ArrayList<>();
 
                         for (int i = 0; i < weight.size(); i++) {
-                            Log.e("확인 : ", weight.get(i)+"");
+                            Log.e("확인 : ", weight.get(i) + "");
+                            weight_mean += weight.get(i);
                             values.add(new Entry(i, weight.get(i)));
                         }
                         LineDataSet set1;
@@ -306,7 +343,117 @@ public class MainActivity extends AppCompatActivity {
                         set1.setCircleColor(Color.BLACK);
 
                         // set data
-                        linechart.setData(data);
+                        lineChart.setData(data);
+
+                        set1.setLineWidth(2);
+                        set1.setCircleRadius(6);
+                        set1.setCircleColor(Color.parseColor("#FFA1B4DC"));
+                        set1.setCircleColorHole(Color.BLUE);
+                        set1.setColor(Color.parseColor("#FFA1B4DC"));
+                        set1.setDrawCircleHole(true);
+                        set1.setDrawCircles(true);
+                        set1.setDrawHorizontalHighlightIndicator(false);
+                        set1.setDrawHighlightIndicators(false);
+                        set1.setValueTextSize(10f);
+                        set1.setValueTypeface(tf);
+                        set1.setValueFormatter(new MyValueFormatter2());
+//                        set1.setDrawValues(false);
+
+                        XAxis xAxis = lineChart.getXAxis();
+                        xAxis.setDrawLabels(false);
+                        xAxis.setDrawAxisLine(false);
+//                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//                        xAxis.setTextColor(Color.BLACK);
+//                        xAxis.enableGridDashedLine(8, 24, 0);
+
+                        YAxis yLAxis = lineChart.getAxisLeft();
+                        yLAxis.setDrawLabels(false);
+                        yLAxis.setDrawAxisLine(false);
+//                        yLAxis.setTextColor(Color.BLACK);
+
+                        YAxis yRAxis = lineChart.getAxisRight();
+                        yRAxis.setDrawLabels(false);
+                        yRAxis.setDrawAxisLine(false);
+//                        yRAxis.setDrawGridLines(false);
+
+                        // 격자 없애기
+                        lineChart.getAxisLeft().setDrawGridLines(false);
+                        lineChart.getAxisRight().setDrawGridLines(false);
+                        lineChart.getXAxis().setDrawGridLines(false);
+
+                        lineChart.setDoubleTapToZoomEnabled(false);
+                        lineChart.setDrawGridBackground(false);
+                        lineChart.setDescription(description);
+                        lineChart.animateY(2000, Easing.EasingOption.EaseInCubic);
+                        lineChart.invalidate();
+
+                        weight_mean /= weight.size();
+                        weight_num.setText(Math.round(weight.get(weight.size()-1))+"kg");
+
+                        Legend leg2 = lineChart.getLegend();
+                        leg2.setEnabled(false);
+
+                        /*** 혈당량 barchart ***/
+                        ArrayList<BarEntry> bar_values = new ArrayList<>();
+                        ArrayList<String> theDates = new ArrayList<>();
+                        int blood_mean = 0;
+
+                        for (int i = 0; i < blood.size(); i++) {
+                            Log.e("확인 : ", weight.get(i) + "");
+                            bar_values.add(new BarEntry(i, blood.get(i)));
+                            blood_mean+= blood.get(i);
+                            theDates.add(blood_date.get(i));
+                        }
+
+                        BarDataSet barDataSet = new BarDataSet(bar_values, "");
+
+                        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(theDates));
+                        BarData theData = new BarData(barDataSet);//----Line of error
+                        barChart.setData(theData);
+
+                        YAxis leftAxis = barChart.getAxisLeft();
+                        YAxis yRAxiss = barChart.getAxisRight();
+                        yRAxiss.setDrawLabels(false);
+                        yRAxiss.setDrawAxisLine(false);
+                        leftAxis.setDrawAxisLine(false);
+                        leftAxis.setDrawLabels(false);
+                        barDataSet.setValueTypeface(tf);
+
+                        barChart.getAxisRight();
+//                        leftAxis.setTypeface(tf);
+
+                        XAxis xAxist = barChart.getXAxis();
+                        xAxist.setTypeface(tf);
+
+                        Legend l = barChart.getLegend();
+                        l.setTypeface(tf);
+
+                        // 라벨 제거
+                        barChart.getLegend().setEnabled(false);
+
+                        barChart.setScaleEnabled(true);
+                        barChart.setTouchEnabled(false);
+
+                        // 격자 없애기
+                        barChart.getAxisLeft().setDrawGridLines(false);
+                        barChart.getAxisRight().setDrawGridLines(false);
+                        barChart.getXAxis().setDrawGridLines(false);
+
+
+                        barDataSet.setValueFormatter(new MyValueFormatter());
+                        XAxis xAxiss = barChart.getXAxis();
+                        xAxiss.setPosition(XAxis.XAxisPosition.BOTTOM);
+                        barChart.getAxisLeft().setAxisMinimum(0);
+                        barChart.getAxisRight().setAxisMinimum(0);
+
+                        barChart.animateY(1000);
+
+                        // description 삭제
+                        barChart.getDescription().setEnabled(false);
+                        barDataSet.setValueTextSize(15f);
+
+                        blood_mean /= blood.size();
+                        blood_num.setText(Math.round(blood.get(blood.size()-1))+"");
 
 
                         try {
@@ -495,7 +642,8 @@ public class MainActivity extends AppCompatActivity {
                                         });
                             }
                         });
-                        blood_cancleBtn.setOnClickListener(v -> ((ViewManager) ll.getParent()).removeView(ll));
+                        blood_cancleBtn.setOnClickListener(v ->
+                                ((ViewManager) ll.getParent()).removeView(ll));
                     }
 
                 });
@@ -564,6 +712,35 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
                 break;
+        }
+    }
+    public class MyValueFormatter implements IValueFormatter {
+
+        private DecimalFormat mFormat;
+
+        public MyValueFormatter() {
+            mFormat = new DecimalFormat("###,###,##0"); // use one decimal
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            // write your logic here
+            return mFormat.format(value);
+        }
+    }
+
+    public class MyValueFormatter2 implements IValueFormatter {
+
+        private DecimalFormat mFormat;
+
+        public MyValueFormatter2() {
+            mFormat = new DecimalFormat("###,###,##0"); // use one decimal
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            // write your logic here
+            return mFormat.format(value)+"kg";
         }
     }
 }
