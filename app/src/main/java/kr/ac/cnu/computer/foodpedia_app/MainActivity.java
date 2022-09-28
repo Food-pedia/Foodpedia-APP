@@ -508,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
 //                        bloodBtn.setVisibility(View.GONE);
                         return true;
                     case R.id.Records:
-                        final Intent intent3 = new Intent(MainActivity.this, CalendarActivity.class);
+                        final Intent intent3 = new Intent(MainActivity.this, CalendarActivity2.class);
                         startActivity(intent3);
                         finish();
                         overridePendingTransition(R.anim.slide_right_enter, R.anim.slide_right_exit);

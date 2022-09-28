@@ -3,9 +3,11 @@ package kr.ac.cnu.computer.foodpedia_app;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,12 +20,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -31,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,25 +46,28 @@ public class CalendarActivity2 extends AppCompatActivity {
     CompactCalendarView compactCalendarView;
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm-yyyy", Locale.getDefault());
     private SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    SimpleDateFormat sdf;
     TextView tx_date;
-    Button btn_today;
     LinearLayout ly_detail;
     LinearLayout ly_left, ly_right;
     Calendar myCalendar;
-    ImageView im_back;
     Date c;
     SimpleDateFormat df;
     String formattedDate;
     RecyclerView recyclerView;
     TextView tx_item;
     View camera_pop;
+    Intent bottom_nav_intent;
+
+    final static int TAKE_PICTURE = 1;
+    final static int GET_FROM_GALLERY = 2;
+    private Button btn_camera, btn_gallery;
 
     int who;
 
     private FirebaseStorage storage;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     ArrayList<String> day = new ArrayList<>();
     ArrayList<String> month = new ArrayList<>();
@@ -65,22 +75,40 @@ public class CalendarActivity2 extends AppCompatActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar);
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(layoutManager);
+        setContentView(R.layout.activity_calendar2);
 
         storage = FirebaseStorage.getInstance();
-        camera_pop = findViewById(R.id.camera_pop);
-        camera_pop.setVisibility(View.GONE);
+//        camera_pop = findViewById(R.id.camera_pop);
+//        camera_pop.setVisibility(View.GONE);
 
         setDate();
         init();
-        calendarlistener();
 
-        tx_date.setText("" + formattedDate);
+        btn_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_camera:
+                        bottom_nav_intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(bottom_nav_intent, TAKE_PICTURE);
+                        break;
+                }
+            }
+        });
+
+        btn_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_gallery:
+                        bottom_nav_intent = new Intent(Intent.ACTION_PICK);
+                        bottom_nav_intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                        bottom_nav_intent.setType("image/*");
+                        startActivityForResult(bottom_nav_intent, GET_FROM_GALLERY);
+                        break;
+                }
+            }
+        });
 
         /************* 하단바 *************/
         BottomNavigationView bottomNav = findViewById(R.id.navigationView);
@@ -95,7 +123,6 @@ public class CalendarActivity2 extends AppCompatActivity {
 
                     case R.id.Camera:
                         camera_pop.setVisibility(View.VISIBLE);
-//                        bloodBtn.setVisibility(View.GONE);
                         return true;
                 }
                 return false;
@@ -110,27 +137,10 @@ public class CalendarActivity2 extends AppCompatActivity {
         tx_date = findViewById(R.id.text);
         ly_left = findViewById(R.id.layout_left);
         ly_right = findViewById(R.id.layout_right);
-        ly_detail = findViewById(R.id.layout_detail);
-        tx_item = findViewById(R.id.text_item);
-        recyclerView = findViewById(R.id.recyclerview);
-    }
-
-    // calendar method
-    public void calendarlistener() {
-        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
-
-            @Override
-            public void onDayClick(Date dateClicked) {
-                downLoadImageFromStorage(dateClicked);
-            }
-
-            @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-                compactCalendarView.removeAllEvents();
-                setDate();
-                tx_date.setText(simpleDateFormat.format(firstDayOfNewMonth));
-            }
-        });
+        camera_pop = findViewById(R.id.camera_pop);
+        camera_pop.setVisibility(View.GONE);
+        btn_camera = findViewById(R.id.btn_camera);
+        btn_gallery = findViewById(R.id.btn_gallery);
     }
 
     // get current date
@@ -138,112 +148,46 @@ public class CalendarActivity2 extends AppCompatActivity {
         c = Calendar.getInstance().getTime();
         df = new SimpleDateFormat("yyyy-MM-dd");
         formattedDate = df.format(c);
-
         getEventDateFromStorage();
         myCalendar = Calendar.getInstance();
-
-        for (int j = 0; j < month.size(); j++) {
-            int mon = Integer.parseInt(month.get(j));
-            myCalendar.set(Calendar.YEAR, Integer.parseInt(year.get(j)));
-            myCalendar.set(Calendar.MONTH, mon - 1);
-            myCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.get(j)));
-
-            Event event = new Event(Color.RED, myCalendar.getTimeInMillis(), "test");
-            compactCalendarView.addEvent(event);
-        }
     }
-
-
-    private void downLoadImageFromStorage(Date dateClicked) { // 달력 관련 접근 고치기
-        String kakaoid = ((GlobalApplication) getApplication()).getKakaoID();
-        StorageReference storageReference = storage.getReference().child(kakaoid + "/" + DateFormat.format(dateClicked));
-        getGaitCount(dateClicked);
-
-        List<RecyclerItem> items = new ArrayList<>();
-        storageReference.listAll()
-                .addOnSuccessListener(listResult -> {
-                    if (listResult.getItems().isEmpty()) {
-                        tx_item.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
-                    } else {
-                        tx_item.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
-
-                        for (StorageReference item : listResult.getItems()) {
-//                                Log.e("파일이름",item.getName());
-                            String time = item.getName().split("_")[0];
-                            String result = item.getName().split("_")[1];
-
-                            int count = who; // 여기서 걸음수 가져오는 함수 불러서 저장
-
-                            RecyclerItem result_item = new RecyclerItem(DateFormat.format(dateClicked), time, result, count);
-                            items.add(result_item);
-
-//                            recyclerView.setAdapter(new CalendarAdapter(getApplicationContext(), items, R.layout.activity_calendar, kakaoid));
-                        }
-                        // 걸음 수 setText
-                    }
-                });
-    }
-
-    private void getGaitCount(Date dateClicked) {
-        if (((GlobalApplication) getApplication()).getKakaoID() == null | ((GlobalApplication) getApplication()).getKakaoID() == "") { // 이메일
-            databaseReference.child("EMAIL").child(((GlobalApplication) getApplication()).getBasicName()).child(((GlobalApplication) getApplication()).getBasicEmail()).child("STEPS").child(DateFormat.format(dateClicked)).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.getValue() != null) {
-                        who = (int) snapshot.getValue(Integer.class);
-                    } else {
-                        who = 0;
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // 디비를 가져오던중 에러 발생 시
-                    //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
-                }
-            });
-        } else {
-            databaseReference.child("KAKAOID").child(((GlobalApplication) getApplication()).getKakaoID()).child("STEPS").child(DateFormat.format(dateClicked)).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.getValue() != null) {
-                        who = (int) snapshot.getValue(Integer.class);
-                    } else {
-                        who = 0;
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    // 디비를 가져오던중 에러 발생 시
-                    //Log.e("MainActivity", String.valueOf(databaseError.toException())); // 에러문 출력
-                }
-            });
-        }
-
-    }
-
 
     private void getEventDateFromStorage() {
-        String kakaoid = ((GlobalApplication) getApplication()).getKakaoID();
-        StorageReference storageReference = storage.getReference().child(kakaoid + "/");
+        db.collection("foodRecord").whereEqualTo("member", ((GlobalApplication) getApplication()).getKakaoID())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            HashMap record = (HashMap) document.getData();
 
-        storageReference.listAll()
-                .addOnSuccessListener(listResult -> {
-                    ArrayList folders = (ArrayList) listResult.getPrefixes();
+                            int len = record.get("time").toString().split("-").length;
 
-                    for (Object folder : folders) {
-                        int len = folder.toString().split("/").length;
-                        String measureDate = folder.toString().split("/")[len - 1];
-                        String measureYear = measureDate.split("-")[0];
-                        String measureMonth = measureDate.split("-")[1];
-                        String measureDay = measureDate.split("-")[2];
+                            Log.e("날짜 원본 : ", record.get("time").toString());
 
-                        year.add(measureYear);
-                        month.add(measureMonth);
-                        day.add(measureDay);
+                            String measureYear = record.get("time").toString().split("-")[0];
+                            String measureMonth = record.get("time").toString().split("-")[1];
+                            String measureDay = record.get("time").toString().split("-")[2];
+
+                            Log.e("년도 : ", measureYear);
+                            Log.e("월 : ", measureMonth);
+                            Log.e("일 : ", measureDay);
+
+                            year.add(measureYear);
+                            month.add(measureMonth);
+                            day.add(measureDay);
+                        }
+                        Log.e("사이잉즈 : ",month.size()+"");
+                        for (int j = 0; j < month.size(); j++) {
+                            Log.e("할로롤 : ","!!!!");
+                            int mon = Integer.parseInt(month.get(j));
+                            myCalendar.set(Calendar.YEAR, Integer.parseInt(year.get(j)));
+                            myCalendar.set(Calendar.MONTH, mon - 1);
+                            myCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day.get(j)));
+
+                            Event event = new Event(Color.parseColor("#275C3C"), myCalendar.getTimeInMillis(), "test");
+                            compactCalendarView.addEvent(event);
+                        }
                     }
                 });
     }

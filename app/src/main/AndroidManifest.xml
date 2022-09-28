@@ -92,7 +92,7 @@
             android:parentActivityName=".FoodRecognitionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".CalendarActivity"
+            android:name=".CalendarActivity2"
             android:exported="true"
             android:screenOrientation="portrait" />
 

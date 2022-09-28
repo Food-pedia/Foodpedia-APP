@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/vegetable"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-    </androidx.appcompat.widget.Toolbar>
+        android:layout_height="?attr/actionBarSize"></androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,9 +81,9 @@
                 android:layout_height="320dp"
                 android:layout_margin="5dp"
                 app:compactCalendarBackgroundColor="@android:color/white"
-                app:compactCalendarCurrentDayBackgroundColor="@color/main"
+                app:compactCalendarCurrentDayBackgroundColor="@color/red"
                 app:compactCalendarCurrentSelectedDayBackgroundColor="#EEEEEE"
-                app:compactCalendarMultiEventIndicatorColor="@color/main"
+                app:compactCalendarMultiEventIndicatorColor="@color/red"
                 app:compactCalendarTargetHeight="360dp"
                 app:compactCalendarTextColor="@android:color/black"
                 app:compactCalendarTextSize="15dp" />
@@ -91,33 +91,36 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/layout_detail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:id="@+id/camera_pop"
+        android:layout_width="157dp"
+        android:layout_height="108dp"
+        android:background="@color/main"
+        android:orientation="vertical"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="88dp">
 
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/recyclerview"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scrollbarSize="8dp"-->
-<!--            android:scrollbarThumbVertical="@drawable/scrollbar"-->
-<!--            android:scrollbars="vertical">-->
-<!--        </androidx.recyclerview.widget.RecyclerView>-->
-
-        <TextView
-            android:id="@+id/text_item"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btn_camera"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="측정 기록이 없습니다."
             android:fontFamily="@font/jalan"
-            android:textColor="@android:color/white"
+            android:backgroundTint="@color/main"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:visibility="gone" />
+            android:text="카메라" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8px"
+            android:background="@color/white"/>
+
+        <Button
+            android:id="@+id/btn_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/jalan"
+            android:backgroundTint="@color/main"
+            android:textSize="20dp"
+            android:text="갤러리" />
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -129,10 +132,11 @@
         app:itemIconSize="@dimen/bottom_navigation_icon_size"
         app:itemIconTint="@drawable/menu_selector_color"
         app:itemTextColor="@drawable/menu_selector_color"
-        app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
         app:menu="@menu/bottom_menu">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+
 
 
 </LinearLayout>
