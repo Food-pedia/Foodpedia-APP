@@ -369,9 +369,9 @@ public class MainActivity extends AppCompatActivity {
 
                             set1.setLineWidth(2);
                             set1.setCircleRadius(6);
-                            set1.setCircleColor(Color.parseColor("#FFA1B4DC"));
-                            set1.setCircleColorHole(Color.BLUE);
-                            set1.setColor(Color.parseColor("#FFA1B4DC"));
+                            set1.setCircleColor(Color.parseColor("#FF7448"));
+                            set1.setCircleColorHole(Color.parseColor("#FFB63107"));
+                            set1.setColor(Color.parseColor("#FF7448"));
                             set1.setDrawCircleHole(true);
                             set1.setDrawCircles(true);
                             set1.setDrawHorizontalHighlightIndicator(false);
@@ -431,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         else{
                             BarDataSet barDataSet = new BarDataSet(bar_values, "");
-
+                            barDataSet.setColor(Color.parseColor("#FF7448"));
                             barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(theDates));
                             BarData theData = new BarData(barDataSet);//----Line of error
                             barChart.setData(theData);
@@ -582,11 +582,9 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 ((ViewManager) ll.getParent()).removeView(ll);
-                                                Intent intent = getIntent();
-                                                finish(); //현재 액티비티 종료 실시
-                                                overridePendingTransition(0, 0); //인텐트 애니메이션 없애기
-                                                startActivity(intent); //현재 액티비티 재실행 실시
-                                                overridePendingTransition(0, 0); //인텐트 애니메이션 없애기
+                                                Intent intent = getIntent(); //인텐트
+                                                startActivity(intent); //액티비티 열기
+                                                overridePendingTransition(0, 0);//인텐트 효과 없애기
                                             }
                                         });
 
@@ -662,11 +660,9 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 ((ViewManager) ll.getParent()).removeView(ll);
-                                                Intent intent = getIntent();
-                                                finish(); //현재 액티비티 종료 실시
-                                                overridePendingTransition(0, 0); //인텐트 애니메이션 없애기
-                                                startActivity(intent); //현재 액티비티 재실행 실시
-                                                overridePendingTransition(0, 0); //인텐트 애니메이션 없애기
+                                                Intent intent = getIntent(); //인텐트
+                                                startActivity(intent); //액티비티 열기
+                                                overridePendingTransition(0, 0);//인텐트 효과 없애기
                                             }
                                         });
                             }
