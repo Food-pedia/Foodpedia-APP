@@ -28,6 +28,7 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -190,24 +191,32 @@ public class FoodRecordsActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                Log.e("푸드레코드 들어옴 : ","");
                                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                     String key = document.getId(); // -> document id?
                                     if (key.contains(((GlobalApplication) getApplication()).getKakaoID() + "-" + recordDate)) {
                                         HashMap record = (HashMap) document.getData();
-                                        foods = (ArrayList<String>) record.get("foods");
-                                        intake =  (ArrayList<Double>) record.get("intake");
-                                        System.out.println("intake : "+ intake);
-                                        for (Object foodName : foods) {
+                                        for (Object foodName : (ArrayList) record.get("foods")) {
                                             foods.add((String) foodName);
                                         }
-                                        for (Object amount : intake) {
+                                        for (Object amount : (ArrayList) record.get("intake")) {
                                             intake.add((Double) amount);
                                         }
 
                                     }
                                 }
                             }
-                        });
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        Log.e("실패!!","ㄹㅇㄹㅇ");
+                    }
+                }).addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        Log.e("취소!!","ㄹㅇㄹㅇ");
+                    }
+                });
 
                 try {
                     Thread.sleep(1000);

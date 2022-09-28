@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.prolificinteractive.materialcalendarview.*;
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter;
 import com.prolificinteractive.materialcalendarview.format.MonthArrayTitleFormatter;
@@ -30,6 +32,7 @@ public class CalendarActivity extends AppCompatActivity {
     private MaterialCalendarView calendarView;
     private LinearLayout eatLogInfo;
     private LinearLayout eatLogView;
+    private View camera_pop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,8 @@ public class CalendarActivity extends AppCompatActivity {
         eatLogInfo = (LinearLayout) findViewById(R.id.eatLogInfo);
         eatLogView.setVisibility(View.GONE);
         eatLogInfo.setVisibility(View.GONE);
+        camera_pop = findViewById(R.id.camera_pop);
+        camera_pop.setVisibility(View.GONE);
         // 첫 시작 요일은 월요일
         calendarView.state()
                 .edit()
@@ -98,6 +103,38 @@ public class CalendarActivity extends AppCompatActivity {
                 return calendarHeaderBuilder.toString();
             }
         });
+
+        /************* 하단바 *************/
+        BottomNavigationView bottomNav = findViewById(R.id.navigationView);
+
+        // item selection part
+        bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.Today:
+                        final Intent intent = new Intent(CalendarActivity.this, MainActivity.class);
+                        startActivity(intent);
+
+                        finish();
+                        overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
+                        return true;
+
+                    case R.id.Camera:
+                        camera_pop.setVisibility(View.VISIBLE);
+//                        bloodBtn.setVisibility(View.GONE);
+                        return true;
+                    case R.id.Records:
+                        final Intent intent3 = new Intent(CalendarActivity.this, CalendarActivity.class);
+                        startActivity(intent3);
+                        finish();
+                        overridePendingTransition(R.anim.slide_right_enter, R.anim.slide_right_exit);
+                        return true;
+                }
+                return false;
+            }
+        });
+        /************* 하단바 *************/
     }
 
     /* 선택된 요일의 background를 설정하는 Decorator 클래스 */

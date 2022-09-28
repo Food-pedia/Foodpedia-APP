@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -62,6 +63,8 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -69,6 +72,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -199,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                Log.e("푸드레코드 들어옴 : ","");
                                 for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                     String key = document.getId(); // -> document id?
                                     if (key.contains(((GlobalApplication) getApplication()).getKakaoID() + "-" + getTime)) {
@@ -213,7 +219,17 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                        });
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull @NotNull Exception e) {
+                        Log.e("실패!!","ㄹㅇㄹㅇ");
+                    }
+                }).addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        Log.e("취소!!","ㄹㅇㄹㅇ");
+                    }
+                });
 
                 db.collection("weight").whereEqualTo("user", ((GlobalApplication) getApplication()).getKakaoID())
                         .get()
@@ -279,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -453,6 +469,7 @@ public class MainActivity extends AppCompatActivity {
                             barDataSet.setValueFormatter(new MyValueFormatter());
                             XAxis xAxiss = barChart.getXAxis();
                             xAxiss.setPosition(XAxis.XAxisPosition.BOTTOM);
+                            xAxiss.setDrawLabels(false);
                             barChart.getAxisLeft().setAxisMinimum(0);
                             barChart.getAxisRight().setAxisMinimum(0);
 
@@ -571,6 +588,11 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 ((ViewManager) ll.getParent()).removeView(ll);
+                                                Intent intent = getIntent();
+                                                finish(); //현재 액티비티 종료 실시
+                                                overridePendingTransition(0, 0); //인텐트 애니메이션 없애기
+                                                startActivity(intent); //현재 액티비티 재실행 실시
+                                                overridePendingTransition(0, 0); //인텐트 애니메이션 없애기
                                             }
                                         });
 
@@ -646,6 +668,11 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 ((ViewManager) ll.getParent()).removeView(ll);
+                                                Intent intent = getIntent();
+                                                finish(); //현재 액티비티 종료 실시
+                                                overridePendingTransition(0, 0); //인텐트 애니메이션 없애기
+                                                startActivity(intent); //현재 액티비티 재실행 실시
+                                                overridePendingTransition(0, 0); //인텐트 애니메이션 없애기
                                             }
                                         });
                             }

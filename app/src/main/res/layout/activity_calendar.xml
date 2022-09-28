@@ -1,49 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   tools:context=".CalendarActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CalendarActivity">
 
     <ScrollView
+        android:id="@+id/scrollView3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
             <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-                    android:id="@+id/calendarView"
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:theme="@style/CalenderViewCustom"
-                    app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
-                    app:mcv_selectionMode="single"
-                    app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText"
-            >
-            </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:theme="@style/CalenderViewCustom"
+                app:mcv_dateTextAppearance="@style/CalenderViewDateCustomText"
+                app:mcv_selectionMode="single"
+                app:mcv_weekDayTextAppearance="@style/CalenderViewWeekCustomText"></com.prolificinteractive.materialcalendarview.MaterialCalendarView>
+
             <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="2dp"
-                    android:id="@+id/eatLogInfo">
+                android:id="@+id/eatLogInfo"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginEnd="2dp"
+                android:orientation="horizontal">
+
                 <TextView
-                        android:text="@string/log_title"
-                        android:layout_width="352dp"
-                        android:layout_height="match_parent" android:id="@+id/textView2" android:textSize="20sp"
-                        android:gravity="center_vertical" android:paddingStart="10dp" android:paddingEnd="10dp"/>
+                    android:id="@+id/textView2"
+                    android:layout_width="352dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="@string/log_title"
+                    android:textSize="20sp" />
+
                 <Button
-                        android:text="@string/add"
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content" android:id="@+id/logAddBtn"
-                />
+                    android:id="@+id/logAddBtn"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add" />
             </LinearLayout>
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                          android:orientation="vertical" android:id="@+id/eatLogView">
-            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/eatLogView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
         </LinearLayout>
     </ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        app:itemBackground="@color/main"
+        app:itemIconSize="@dimen/bottom_navigation_icon_size"
+        app:itemIconTint="@drawable/menu_selector_color"
+        app:itemTextColor="@drawable/menu_selector_color"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
+        app:menu="@menu/bottom_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <LinearLayout
+        android:id="@+id/camera_pop"
+        android:layout_width="157dp"
+        android:layout_height="108dp"
+        android:background="@color/main"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="60dp"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btn_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/jalan"
+            android:backgroundTint="@color/main"
+            android:textSize="20dp"
+            android:text="카메라" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8px"
+            android:background="@color/white"/>
+
+        <Button
+            android:id="@+id/btn_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/jalan"
+            android:backgroundTint="@color/main"
+            android:textSize="20dp"
+            android:text="갤러리" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

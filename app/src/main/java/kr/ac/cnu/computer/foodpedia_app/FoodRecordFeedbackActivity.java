@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentReference;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FoodRecordFeedbackActivity extends AppCompatActivity {
+    View camera_pop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,8 @@ public class FoodRecordFeedbackActivity extends AppCompatActivity {
         ChipGroup feedbackGroup = (ChipGroup) findViewById(R.id.chipGroupFeedback);
         EditText memoEditText = findViewById(R.id.editTextTextMultiLine);
         Button saveBtn = findViewById(R.id.buttonSave);
+        camera_pop = findViewById(R.id.camera_pop);
+        camera_pop.setVisibility(View.GONE);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -81,7 +86,37 @@ public class FoodRecordFeedbackActivity extends AppCompatActivity {
 
             }
         });
+        /************* 하단바 *************/
+        BottomNavigationView bottomNav = findViewById(R.id.navigationView);
 
+        // item selection part
+        bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.Today:
+                        final Intent intent = new Intent(FoodRecordFeedbackActivity.this, MainActivity.class);
+                        startActivity(intent);
+
+                        finish();
+                        overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
+                        return true;
+
+                    case R.id.Camera:
+                        camera_pop.setVisibility(View.VISIBLE);
+//                        bloodBtn.setVisibility(View.GONE);
+                        return true;
+                    case R.id.Records:
+                        final Intent intent3 = new Intent(FoodRecordFeedbackActivity.this, CalendarActivity.class);
+                        startActivity(intent3);
+                        finish();
+                        overridePendingTransition(R.anim.slide_right_enter, R.anim.slide_right_exit);
+                        return true;
+                }
+                return false;
+            }
+        });
+        /************* 하단바 *************/
 
 
 
