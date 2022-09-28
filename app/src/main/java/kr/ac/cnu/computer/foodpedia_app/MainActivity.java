@@ -387,11 +387,12 @@ public class MainActivity extends AppCompatActivity {
                         lineChart.animateY(2000, Easing.EasingOption.EaseInCubic);
                         lineChart.invalidate();
 
-                        weight_mean /= weight.size();
+
                         if (weight.size()==0){
                             weight_num.setText("");
                         }
                         else{
+                            weight_mean /= weight.size();
                             weight_num.setText(Math.round(weight.get(weight.size()-1))+"kg");
                         }
 
@@ -458,11 +459,11 @@ public class MainActivity extends AppCompatActivity {
                         barChart.getDescription().setEnabled(false);
                         barDataSet.setValueTextSize(15f);
 
-                        blood_mean /= blood.size();
                         if (blood.size() == 0){
                             blood_num.setText("");
                         }
                         else{
+                            blood_mean /= blood.size();
                             blood_num.setText(Math.round(blood.get(blood.size()-1))+"");
                         }
 
