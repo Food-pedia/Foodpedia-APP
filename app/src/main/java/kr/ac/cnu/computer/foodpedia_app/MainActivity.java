@@ -502,11 +502,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.Today:
-                        final Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                        startActivity(intent);
-
-                        finish();
-                        overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
                         return true;
 
                     case R.id.Camera:
