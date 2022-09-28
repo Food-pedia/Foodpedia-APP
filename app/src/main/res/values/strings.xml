@@ -12,6 +12,11 @@
     <string name="fat">지방</string>
     <string name="protein">단백질</string>
     <string name="carbohydrate">탄수화물</string>
+    <string name="feedbackTextFirst">잘 챙겨먹었어요</string>
+    <string name="feedbackTextSecond">양 조절에 실패했어요</string>
+    <string name="feedbackTextThird">편식했어요</string>
+    <string name="feedbackTextFourth">단 음식을 많이 먹었어요</string>
+    <string name="feedbackTextFifth">균형있게 먹었어요</string>
 
     <string-array name="weekdays">
         <item>일</item>

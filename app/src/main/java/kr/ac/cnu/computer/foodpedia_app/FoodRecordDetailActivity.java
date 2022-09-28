@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,6 +50,17 @@ import java.util.Map;
 import kr.ac.cnu.computer.foodpedia_app.tflite.Classifier;
 
 public class FoodRecordDetailActivity extends AppCompatActivity {
+    final int FEEDBACK_EMOJI_EXCELLENT = 2131362268;
+    final int FEEDBACK_EMOJI_GOOD = 2131362269;
+    final int FEEDBACK_EMOJI_NEUTRAL = 2131362270;
+    final int FEEDBACK_EMOJI_BAD = 2131362271;
+    final int FEEDBACK_EMOJI_TERRIBLE = 2131362272;
+
+    final int FEEDBACK_TEXT_FIRST = 2131361944;
+    final int FEEDBACK_TEXT_SECOND = 2131361945;
+    final int FEEDBACK_TEXT_THIRD = 2131361946;
+    final int FEEDBACK_TEXT_FOURTH = 2131361947;
+    final int FEEDBACK_TEXT_FIFTH = 2131361948;
 
     List<String> foodName;    //인식된 식품 이름들(영어) 저장할 배열
     Map<String, String> foodKorName = new HashMap<>();
@@ -57,10 +69,12 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
 
     LinearLayout.LayoutParams param;
 
+
     String timezone;
 
     Number selectedEmoji;
     List<Number> selectedFeedback;
+    List<TextView> selectedFeedbackTextView = new ArrayList<TextView>();
     String memoText;
     Intent newIntent;
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
@@ -79,6 +93,7 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout foodButtonLayout = findViewById(R.id.foodButtonLayout);
+        LinearLayout feedbackText = findViewById(R.id.feedbackText);
         Intent intent = getIntent();
         String recordId = intent.getStringExtra("foodRecordId");
         String date = intent.getStringExtra("date");
@@ -146,31 +161,47 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                             } else {
                                 Log.e("=== DEBUG", "no data");
                             }
-                         });
+                        });
+
                 /*피드백 출력할 준비*/
-                db.collection("feedback")
-                        .document(((GlobalApplication) getApplication()).getKakaoID() + "-" + recordId+"-"+"feedback")
-                        .get()
-                        .addOnCompleteListener(task -> {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot documentSnapshot = task.getResult();
-                                        HashMap feedbackMap = (HashMap) documentSnapshot.getData();
-                                        selectedEmoji= (Number)feedbackMap.get("emoji");
-                                        Log.e("=== DEBUG selectedEmoji", selectedEmoji + "");
-                                        selectedFeedback = (ArrayList<Number>) feedbackMap.get("feedback");
-                                        memoText = (String) feedbackMap.get("memo");
-                                    } else {
-                                        Log.e("=== DEBUG", "no data");
+                try {
+                    db.collection("feedback")
+                            .document(((GlobalApplication) getApplication()).getKakaoID() + "-" + recordId+"-"+"feedback")
+                            .get()
+                            .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot documentSnapshot = task.getResult();
+                                            HashMap feedbackMap = (HashMap) documentSnapshot.getData();
+                                            if(feedbackMap!=null){
+                                                selectedEmoji= (Number)feedbackMap.get("emoji");
+                                                Log.e("=== DEBUG selectedEmoji", selectedEmoji + "");
+                                                selectedFeedback = (ArrayList<Number>) feedbackMap.get("feedback");
+                                                memoText = (String) feedbackMap.get("memo");
+                                            }
+                                            else{
+                                                selectedEmoji = 0;
+                                                selectedFeedback = null;
+                                                memoText = "";
+                                                Log.e("=== DEBUG", "no data catch");
+                                            }
+
+                                        } else {
+                                            Log.e("=== DEBUG", "no data");
+                                        }
                                     }
-                                }
-                        );
+                            );
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+
+
 
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
                 getFoodKorName(foodName);
 
                 try {
@@ -189,6 +220,58 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                         /*timezone 출력*/
                         TextView timezoneText = findViewById(R.id.timezone);
                         timezoneText.setText(timezone + " 식단");
+
+                       /*식단 피드백 출력*/
+                        ImageView feedbackEmoji = findViewById(R.id.feedbackImogi);
+
+                        //피드백 이모지
+                        if(selectedEmoji.intValue() == 0) {
+                            LinearLayout feedbackLayout = findViewById(R.id.feedbackalllayout);
+                            feedbackLayout.setVisibility(View.GONE);
+                        }
+                        else {
+                            switch(selectedEmoji.intValue()){
+                                case FEEDBACK_EMOJI_EXCELLENT:
+                                    Drawable drawable = getResources().getDrawable(R.drawable.excellent_off);
+                                    feedbackEmoji.setImageDrawable(drawable);
+                                case FEEDBACK_EMOJI_GOOD:
+                                    Drawable drawable2 = getResources().getDrawable(R.drawable.good_off);
+                                    feedbackEmoji.setImageDrawable(drawable2);
+                                case FEEDBACK_EMOJI_NEUTRAL:
+                                    Drawable drawable3 = getResources().getDrawable(R.drawable.neutral_off);
+                                    feedbackEmoji.setImageDrawable(drawable3);
+                                case FEEDBACK_EMOJI_BAD:
+                                    Drawable drawable4 = getResources().getDrawable(R.drawable.bad_off);
+                                    feedbackEmoji.setImageDrawable(drawable4);
+                                case FEEDBACK_EMOJI_TERRIBLE:
+                                    Drawable drawable5 = getResources().getDrawable(R.drawable.terrible_off);
+                                    feedbackEmoji.setImageDrawable(drawable5);
+                            }
+                        }
+                        //피드백 텍스트
+                        if(selectedFeedback != null){
+                            for(int i=0; i<selectedFeedback.size(); i++){
+                                selectedFeedbackTextView.add(new TextView(getApplicationContext()));
+                                switch(selectedFeedback.get(i).intValue()){
+                                    case FEEDBACK_TEXT_FIRST:
+                                        selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFirst);
+                                    case FEEDBACK_TEXT_SECOND:
+                                        selectedFeedbackTextView.get(i).setText(R.string.feedbackTextSecond);
+                                    case FEEDBACK_TEXT_THIRD:
+                                        selectedFeedbackTextView.get(i).setText(R.string.feedbackTextThird);
+                                    case FEEDBACK_TEXT_FOURTH:
+                                        selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFourth);
+                                    case FEEDBACK_TEXT_FIFTH:
+                                        selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFifth);
+                                }
+                                feedbackText.addView(selectedFeedbackTextView.get(i));
+                            }
+                        }
+
+
+
+
+
 
                         try {
                             Thread.sleep(1000);
@@ -283,4 +366,3 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
         }
     }
 }
-

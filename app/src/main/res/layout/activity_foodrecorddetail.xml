@@ -46,6 +46,7 @@
                 tools:ignore="MissingConstraints"></LinearLayout>
 
             <LinearLayout
+                android:id="@+id/feedbackalllayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -65,14 +66,17 @@
                     android:layout_height="100dp"
                     android:background="@drawable/memo_layout"
                     android:orientation="vertical">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <ImageView
                             android:id="@+id/feedbackImogi"
                             android:layout_width="36dp"
                             android:layout_height="36dp"
-                            android:layout_margin="10dp"  />
+                            android:layout_margin="10dp" />
+
                         <LinearLayout
                             android:id="@+id/feedbackText"
                             android:layout_width="match_parent"
@@ -85,9 +89,9 @@
                         android:id="@+id/feedbackMemo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
                         android:ems="10"
-                        android:gravity="start|top"
-                        android:layout_margin="10dp"/>
+                        android:gravity="start|top" />
                 </LinearLayout>
 
 

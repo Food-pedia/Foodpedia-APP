@@ -30,6 +30,10 @@
             android:name=".FoodRecordDetailActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".FoodRecordDetailNutActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
