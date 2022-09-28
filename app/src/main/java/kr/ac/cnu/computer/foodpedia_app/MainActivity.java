@@ -345,8 +345,6 @@ public class MainActivity extends AppCompatActivity {
                             values.add(new Entry(i, weight.get(i)));
                         }
 
-
-
                         if (weight.size()==0){
                             weight_num.setText("");
                         }
