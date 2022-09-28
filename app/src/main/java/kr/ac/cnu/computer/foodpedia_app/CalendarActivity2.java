@@ -86,7 +86,17 @@ public class CalendarActivity2 extends AppCompatActivity {
 
         setDate();
         init();
-        
+
+        ly_right.setOnClickListener(v -> {
+            compactCalendarView.showCalendarWithAnimation();
+            compactCalendarView.showNextMonth();
+        });
+
+        ly_left.setOnClickListener(v -> {
+            compactCalendarView.showCalendarWithAnimation();
+            compactCalendarView.showPreviousMonth();
+        });
+
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
@@ -139,10 +149,15 @@ public class CalendarActivity2 extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.Today:
+                        final Intent intent3 = new Intent(CalendarActivity2.this, MainActivity.class);
+                        startActivity(intent3);
+                        finish();
+                        overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
                         return true;
 
                     case R.id.Camera:
                         camera_pop.setVisibility(View.VISIBLE);
+//                        bloodBtn.setVisibility(View.GONE);
                         return true;
                 }
                 return false;
