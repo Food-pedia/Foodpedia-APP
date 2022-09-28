@@ -1,153 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent" android:layout_gravity="center">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center">
+
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:layout_weight="1" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/constraintLayout2">
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="408dp"
-                android:layout_height="298dp" app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/constraintLayout">
+            android:id="@+id/constraintLayout"
+            android:layout_width="408dp"
+            android:layout_height="298dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                    android:text="2000.00.00. MON"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/recordDate"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="10dp" android:layout_marginStart="10dp" android:textSize="24sp"/>
+                android:id="@+id/recordDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/jalan"
+                android:textColor="#000000"
+                android:text="2000.00.00. MON"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
-                    android:text="Calories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/calories"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="10dp"
-                    app:layout_constraintTop_toBottomOf="@+id/recordDate" android:layout_marginTop="50dp"/>
+                android:id="@+id/calories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="50dp"
+                android:text="Calories"
+                android:fontFamily="@font/jalan"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recordDate" />
+
             <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="119dp"
-                    android:layout_height="62dp" app:layout_constraintTop_toBottomOf="@+id/calories"
-                    app:layout_constraintStart_toStartOf="parent" android:id="@+id/linearLayout8">
+                android:id="@+id/linearLayout8"
+                android:layout_width="119dp"
+                android:layout_height="62dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/calories">
+
                 <ImageView
-                        android:layout_width="26dp"
-                        android:layout_height="25dp" app:srcCompat="@drawable/fire" android:id="@+id/calorieIcon"
-                        android:layout_marginStart="10dp" android:layout_marginTop="12dp"
-                />
+                    android:id="@+id/calorieIcon"
+                    android:layout_width="26dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="12dp" />
+
                 <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/eatenCalories"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginStart="8dp"
-                        android:textColor="#000000" android:textSize="18sp"/>
+                    android:id="@+id/eatenCalories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="12dp"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
             </LinearLayout>
+
             <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="273dp"
-                    android:layout_height="50dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginStart="5dp" app:layout_constraintStart_toEndOf="@+id/linearLayout8"
-                    app:layout_constraintTop_toBottomOf="@+id/recordDate"
-                    android:gravity="center" android:layout_marginTop="5dp" android:id="@+id/linearLayout9">
+                android:id="@+id/linearLayout9"
+                android:layout_width="273dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/linearLayout8"
+                app:layout_constraintTop_toBottomOf="@+id/recordDate">
+
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
                     <TextView
-                            android:text="@string/fat"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/infoFat"
-                            android:textAlignment="center"/>
+                        android:id="@+id/infoFat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fat"
+                        android:textAlignment="center" />
+
                     <TextView
-                            android:text="TextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/eatenFat"
-                            android:textAlignment="center"/>
+                        android:id="@+id/eatenFat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textAlignment="center" />
                     <!--                        <com.github.mikephil.charting.charts.PieChart-->
                     <!--                                android:id="@+id/pieChartFat"-->
                     <!--                                android:layout_width="match_parent"-->
                     <!--                                android:layout_height="match_parent" />-->
                 </LinearLayout>
+
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
                     <TextView
-                            android:text="@string/protein"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/infoProtein"
-                            android:textAlignment="center"/>
+                        android:id="@+id/infoProtein"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/protein"
+                        android:textAlignment="center" />
+
                     <TextView
-                            android:text="TextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/eatenProtein"
-                            android:textAlignment="center"/>
+                        android:id="@+id/eatenProtein"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textAlignment="center" />
                     <!--                        <com.github.mikephil.charting.charts.PieChart-->
                     <!--                                android:id="@+id/pieChartProtein"-->
                     <!--                                android:layout_width="match_parent"-->
                     <!--                                android:layout_height="match_parent" />-->
                 </LinearLayout>
+
                 <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
                     <TextView
-                            android:text="@string/carbohydrate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/infoCarbohydrate"
-                            android:textAlignment="center"/>
+                        android:id="@+id/infoCarbohydrate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/carbohydrate"
+                        android:textAlignment="center" />
+
                     <TextView
-                            android:text="TextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/eatenCarbohydrate"
-                            android:textAlignment="center"/>
+                        android:id="@+id/eatenCarbohydrate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TextView"
+                        android:textAlignment="center" />
                     <!--                        <com.github.mikephil.charting.charts.PieChart-->
                     <!--                                android:id="@+id/pieChartCarb"-->
                     <!--                                android:layout_width="match_parent"-->
                     <!--                                android:layout_height="match_parent" />-->
                 </LinearLayout>
             </LinearLayout>
+
             <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/pieChart"
-                    android:layout_width="165dp"
-                    android:layout_height="145dp" app:layout_constraintStart_toEndOf="@+id/linearLayout8"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout9"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/encouragement"/>
+                android:id="@+id/pieChart"
+                android:layout_width="165dp"
+                android:layout_height="145dp"
+                app:layout_constraintBottom_toTopOf="@+id/encouragement"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/linearLayout8"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout9" />
+
             <TextView
-                    android:text="🎊 Keep the pace! You're doing great"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/encouragement"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginBottom="10dp" android:backgroundTint="#A1E6E6E6"
-                    android:background="#ECECEC"
-                    android:padding="10dp" android:textColor="#000000" android:paddingStart="10dp"
-                    android:textSize="16sp"/>
+                android:id="@+id/encouragement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="#ECECEC"
+                android:backgroundTint="#A1E6E6E6"
+                android:padding="10dp"
+                android:paddingStart="10dp"
+                android:text="🎊 계속해서 기록해주세요!  잘하고 있습니다!"
+                android:fontFamily="@font/jalan"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ScrollView
-            android:layout_width="0dp"
-            android:layout_height="400dp"
-            android:id="@+id/scrollView2"
-            android:fillViewport="true"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="24dp">
+        android:id="@+id/scrollView2"
+        android:layout_width="0dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="24dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+
         <LinearLayout
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:orientation="vertical"
-                app:layout_constraintStart_toStartOf="parent"/>
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent" />
     </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
