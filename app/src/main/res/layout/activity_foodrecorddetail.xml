@@ -22,12 +22,13 @@
                 android:orientation="vertical" android:layout_margin="10dp">
 
             <ImageView
-                    android:id="@+id/todayFoodImg"
-                    android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:layout_marginTop="10dp"
-                    android:contentDescription="@string/image_view_description"
-                    android:scaleType="fitStart"/>
+                android:id="@+id/todayFoodImg"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/image_view_description"
+                android:scaleType="fitStart" />
 
             <TextView
                     android:id="@+id/timezone"
@@ -89,6 +90,7 @@
                                 android:layout_marginLeft="40dp"
                                 android:fontFamily="@font/jalan"
                                 android:text="이 식단은?"
+                                android:textColor="@color/black"
                                 android:textSize="16dp"
                                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -119,6 +121,7 @@
                                 android:fontFamily="@font/jalan"
                                 android:lineSpacingExtra="5dp"
                                 android:text="TextView"
+                                android:textColor="@color/black"
                                 android:textSize="16dp" />
                         </LinearLayout>
 
@@ -136,6 +139,7 @@
                                 android:layout_marginLeft="40dp"
                                 android:fontFamily="@font/jalan"
                                 android:text="메모"
+                                android:textColor="@color/black"
                                 android:textSize="16dp" />
 
                             <TextView
