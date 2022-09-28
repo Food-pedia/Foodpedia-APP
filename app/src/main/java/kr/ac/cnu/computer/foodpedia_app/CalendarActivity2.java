@@ -84,6 +84,23 @@ public class CalendarActivity2 extends AppCompatActivity {
         setDate();
         init();
 
+        compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+            @Override
+            public void onDayClick(Date dateClicked) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                Intent intent = new Intent(getApplicationContext(), FoodRecordsActivity.class);
+                intent.putExtra("recordDate", format.format(dateClicked));
+                intent.putExtra("mode", "DAY");
+                Log.e("=== selected date", format.format(dateClicked));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onMonthScroll(Date firstDayOfNewMonth) {
+                Log.e("calendar", "scrolled");
+            }
+        });
+
         btn_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
