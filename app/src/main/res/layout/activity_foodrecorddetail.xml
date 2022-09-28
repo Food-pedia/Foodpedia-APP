@@ -25,7 +25,7 @@
                 android:id="@+id/todayFoodImg"
                 android:layout_width="wrap_content"
                 android:layout_height="300dp"
-                android:layout_gravity="center"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:contentDescription="@string/image_view_description"
                 android:scaleType="fitStart" />
