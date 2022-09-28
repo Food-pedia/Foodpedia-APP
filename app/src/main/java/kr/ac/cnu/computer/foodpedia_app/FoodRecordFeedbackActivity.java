@@ -44,8 +44,8 @@ public class FoodRecordFeedbackActivity extends AppCompatActivity {
         ChipGroup feedbackGroup = (ChipGroup) findViewById(R.id.chipGroupFeedback);
         EditText memoEditText = findViewById(R.id.editTextTextMultiLine);
         Button saveBtn = findViewById(R.id.buttonSave);
-        camera_pop = findViewById(R.id.camera_pop);
-        camera_pop.setVisibility(View.GONE);
+//        camera_pop = findViewById(R.id.camera_pop);
+//        camera_pop.setVisibility(View.GONE);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
