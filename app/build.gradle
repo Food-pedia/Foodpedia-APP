@@ -93,9 +93,6 @@ dependencies {
     implementation "com.kakao.sdk:v2-user:2.4.2" // 카카오 로그인
     implementation "com.kakao.sdk:v2-talk:2.4.2" // 친구, 메시지(카카오톡)
 
-    // MPChart
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2'
-
     // firebase signup
     implementation 'com.google.firebase:firebase-auth:21.0.1'
 
