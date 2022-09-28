@@ -17,7 +17,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
             android:orientation="vertical">
 
             <ImageView
@@ -64,7 +65,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    android:background="@drawable/memo_layout"
+                    android:background="@drawable/note"
                     android:orientation="vertical">
 
                     <LinearLayout
