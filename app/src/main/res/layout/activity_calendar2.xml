@@ -10,7 +10,6 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
-
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
@@ -91,14 +90,14 @@
         </LinearLayout>
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/layout_detail"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_margin="10dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:gravity="center"-->
-<!--        android:orientation="vertical">-->
+    <LinearLayout
+        android:id="@+id/layout_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
 <!--        <androidx.recyclerview.widget.RecyclerView-->
 <!--            android:id="@+id/recyclerview"-->
@@ -109,17 +108,17 @@
 <!--            android:scrollbars="vertical">-->
 <!--        </androidx.recyclerview.widget.RecyclerView>-->
 
-<!--        <TextView-->
-<!--            android:id="@+id/text_item"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="측정 기록이 없습니다."-->
-<!--            android:fontFamily="@font/jalnan"-->
-<!--            android:textColor="@android:color/white"-->
-<!--            android:textSize="20dp"-->
-<!--            android:textStyle="bold"-->
-<!--            android:visibility="gone" />-->
-<!--    </LinearLayout>-->
+        <TextView
+            android:id="@+id/text_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="측정 기록이 없습니다."
+            android:fontFamily="@font/jalan"
+            android:textColor="@android:color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigationView"
@@ -127,49 +126,13 @@
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
         app:itemBackground="@color/main"
-        android:layout_marginTop="196dp"
         app:itemIconSize="@dimen/bottom_navigation_icon_size"
         app:itemIconTint="@drawable/menu_selector_color"
         app:itemTextColor="@drawable/menu_selector_color"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
         app:menu="@menu/bottom_menu">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
-    <LinearLayout
-        android:id="@+id/camera_pop"
-        android:layout_width="157dp"
-        android:layout_height="108dp"
-        android:background="@color/main"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_marginBottom="60dp"
-        android:elevation="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <Button
-            android:id="@+id/btn_camera"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/jalan"
-            android:backgroundTint="@color/main"
-            android:textSize="20dp"
-            android:text="카메라" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="8px"
-            android:background="@color/white"/>
-
-        <Button
-            android:id="@+id/btn_gallery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/jalan"
-            android:backgroundTint="@color/main"
-            android:textSize="20dp"
-            android:text="갤러리" />
-    </LinearLayout>
 
 </LinearLayout>

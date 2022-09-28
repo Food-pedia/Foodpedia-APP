@@ -173,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.btn_gallery:
-                        Log.e("갤러리 : ", "들어옴");
                         intent = new Intent(Intent.ACTION_PICK);
                         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
                         intent.setType("image/*");
@@ -407,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
                             lineChart.setDoubleTapToZoomEnabled(false);
                             lineChart.setDrawGridBackground(false);
                             lineChart.setDescription(description);
-                            lineChart.animateY(2000, Easing.EasingOption.EaseInCubic);
+                            lineChart.animateY(500, Easing.EasingOption.EaseInCubic);
                             lineChart.invalidate();
                             Legend leg2 = lineChart.getLegend();
                             leg2.setEnabled(false);
@@ -710,31 +709,18 @@ public class MainActivity extends AppCompatActivity {
             case TAKE_PICTURE: // 카메라로 촬영하는 경우
                 if (resultCode == RESULT_OK && intent.hasExtra("data")) {
                     Bitmap bitmap = (Bitmap) intent.getExtras().get("data");
-//                    bitmap = bitmap.createScaledBitmap(bitmap,640,640,true);
-//                    if (bitmap != null) {
-//                       ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                       float scale = (float) (1024/(float)bitmap.getWidth());
-//                       int image_w = (int) (bitmap.getWidth() * scale);
-//                       int image_h = (int) (bitmap.getHeight() * scale);
-//                       Bitmap resize = Bitmap.createScaledBitmap(bitmap, image_w, image_h, true);
-//                       resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-////                       byte[] byteArray = stream.toByteArray();
-
                     Intent intent2 = new Intent(getApplicationContext(), FoodRecognitionActivity.class);
                     intent2.putExtra("image", bitmap);
                     startActivity(intent2);
                 }
                 break;
             case GET_FROM_GALLERY:
-                Log.e("DEBUG : result code is ", resultCode + "");
                 if (resultCode == RESULT_OK) {
                     Uri uri = intent.getData();
-                    Log.e("DEBUG :  ", uri + "");
                     GlideApp.with(getApplicationContext()).asBitmap().load(uri).override(300, 300).into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                             Bitmap bitmap = resource;
-                            Log.e("DEBUG : ", bitmap + "");
                             Intent intent2 = new Intent(getApplicationContext(), FoodRecognitionActivity.class);
                             intent2.putExtra("image", bitmap);
                             startActivity(intent2);
