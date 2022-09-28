@@ -370,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
                             set1.setLineWidth(2);
                             set1.setCircleRadius(6);
                             set1.setCircleColor(Color.parseColor("#FF7448"));
-                            set1.setCircleColorHole(Color.parseColor("#FFB63107"));
+                            set1.setCircleColorHole(Color.WHITE);
                             set1.setColor(Color.parseColor("#FF7448"));
                             set1.setDrawCircleHole(true);
                             set1.setDrawCircles(true);
