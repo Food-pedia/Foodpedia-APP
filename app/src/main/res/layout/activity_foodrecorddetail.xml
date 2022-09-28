@@ -42,8 +42,8 @@
                 android:id="@+id/foodButtonLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                tools:ignore="MissingConstraints"></LinearLayout>
+                tools:ignore="MissingConstraints"
+                android:orientation="horizontal"></LinearLayout>
 
             <LinearLayout
                 android:id="@+id/feedbackalllayout"
@@ -72,9 +72,9 @@
                         android:layout_height="wrap_content">
 
                         <ImageView
-                            android:id="@+id/feedbackImogi"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:id="@+id/feedbackEmogi"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:layout_margin="10dp" />
 
                         <LinearLayout
