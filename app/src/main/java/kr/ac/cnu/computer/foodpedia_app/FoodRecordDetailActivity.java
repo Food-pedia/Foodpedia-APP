@@ -94,7 +94,7 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         LinearLayout foodButtonLayout = findViewById(R.id.foodButtonLayout);
-        LinearLayout feedbackText = findViewById(R.id.feedbackText);
+        LinearLayout feedbackTextLayout = findViewById(R.id.feedbackTextLayout);
         Intent intent = getIntent();
         String recordId = intent.getStringExtra("foodRecordId");
         String date = intent.getStringExtra("date");
@@ -252,25 +252,37 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                         }
                         //피드백 텍스트
                         if(selectedFeedback != null){
+                            TextView selectedFeedbackTextView = findViewById(R.id.selectedfeedbackTextView);
+                            String feedbackText = "이번 식단은 ";
                             for(int i=0; i<selectedFeedback.size(); i++){
-                                selectedFeedbackTextView.add(new TextView(getApplicationContext()));
                                 switch(selectedFeedback.get(i).intValue()){
                                     case FEEDBACK_TEXT_FIRST:
-                                        selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFirst);
+                                        feedbackText+="잘 챙겨먹었어요, ";
+                                        //selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFirst);
                                         break;
                                     case FEEDBACK_TEXT_SECOND:
-                                        selectedFeedbackTextView.get(i).setText(R.string.feedbackTextSecond);
+                                        feedbackText+="양 조절에 실패했어요, ";
+                                        //selectedFeedbackTextView.get(i).setText(R.string.feedbackTextSecond);
                                         break;
                                     case FEEDBACK_TEXT_THIRD:
-                                        selectedFeedbackTextView.get(i).setText(R.string.feedbackTextThird);
+                                        feedbackText+="편식했어요, ";
+                                        //selectedFeedbackTextView.get(i).setText(R.string.feedbackTextThird);
                                         break;
                                     case FEEDBACK_TEXT_FOURTH:
-                                        selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFourth);
+                                        feedbackText+="단 음식을 많이 먹었어요, ";
+                                        //selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFourth);
                                         break;
                                     case FEEDBACK_TEXT_FIFTH:
-                                        selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFifth);
+                                        feedbackText+="균형있게 먹었어요, ";
+                                        //selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFifth);
                                         break;
                                 }
+                                if(i==selectedFeedback.size()-1){
+                                    feedbackText = feedbackText.substring(0,feedbackText.length()-2);
+                                    feedbackText+=".";
+                                    System.out.println("feedbackText.substring : " + feedbackText);
+                                }
+                                /*
                                 selectedFeedbackTextView.get(i).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                                // selectedFeedbackTextView.get(i).setTextColor();
                                 LinearLayout.LayoutParams params2 =  new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -279,7 +291,13 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                                 params2.topMargin = 10;
                                 feedbackText.addView( selectedFeedbackTextView.get(i), params2);
                                 System.out.println("피드백 텍뷰 : " + selectedFeedbackTextView.get(i).getText());
+                                 selectedFeedbackTextView.add(new TextView(getApplicationContext()));
+                            selectedFeedbackTextView.get(0).setText(feedbackText);
+                            selectedFeedbackTextView.get(0).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                            feedbackTextLayout.addView( selectedFeedbackTextView.get(0));*/
                             }
+                            selectedFeedbackTextView.setText(feedbackText);
+
 
                         }
                         //피드백 메모
