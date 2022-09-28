@@ -228,7 +228,7 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                         //피드백 이모지
                         if(selectedEmoji.intValue() == 0) {
                             LinearLayout feedbackLayout = findViewById(R.id.feedbackalllayout);
-                            //feedbackLayout.setVisibility(View.GONE);
+                            feedbackLayout.setVisibility(View.GONE);
                             Log.e("이모지", "이모지안보임");
                         }
                         else {
@@ -301,7 +301,10 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
 
                         }
                         //피드백 메모
-                        if(!memoText.equals("emptyMemo")){
+                        if(memoText==null){
+                            LinearLayout memoLayout = findViewById(R.id.memoLayout);
+                            memoLayout.setVisibility(View.GONE);
+                        }else{
                             TextView memo = findViewById(R.id.feedbackMemo);
                             memo.setText(memoText);
                         }
