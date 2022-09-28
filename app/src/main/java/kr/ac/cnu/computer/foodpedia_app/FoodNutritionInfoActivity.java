@@ -33,24 +33,7 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
     double intake = 1;
     Intent newIntent = null;
 
-//    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
-//            new ActivityResultContracts.StartActivityForResult(),
-//            result -> {
-//                if (result.getResultCode() == RESULT_OK) {
-//                    newIntent = result.getData();
-//                    String newFoodName = newIntent.getStringExtra("foodName");
-//                    String newFoodIntake = newIntent.getStringExtra("foodIntake");
-//                    foodName = newFoodName;
-//                    foodIntake = newFoodIntake;
-//                    Button foodNutSaveBtn = findViewById(R.id.foodNutSaveBtn);
-//                    foodNutSaveBtn.setText("추가");
-//                }
-//                if (result.getResultCode() == 123){
-//                    Intent otherIntent = result.getData();
-//
-//                }
-//            }
-//    );
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

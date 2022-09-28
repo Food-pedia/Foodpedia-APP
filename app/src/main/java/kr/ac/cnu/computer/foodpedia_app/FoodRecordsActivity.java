@@ -63,6 +63,8 @@ public class FoodRecordsActivity extends AppCompatActivity {
     // 일단 한번에 표현
 
     ImageView imageView;
+    List<String> foods = new ArrayList<>();
+    List<Double> intake = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     String getTodayFromLocalDate() {
@@ -134,12 +136,10 @@ public class FoodRecordsActivity extends AppCompatActivity {
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-//                            Intent intent = new Intent(getApplicationContext(), FoodRecordsActivity.class);
-//                            intent.putExtra("foodRecordId", "");
-//                            // TODO
-//                            // intent destination 변경 필요
-//                            startActivity(intent);
-                            // document id는 item.getName().split("\\.")[0]
+                            Intent intent = new Intent(getApplicationContext(), FoodRecordDetailActivity.class);
+                            intent.putExtra("foodRecordId", item.getName().split("\\.")[0]);
+                            intent.putExtra("date", recordDate);
+                            startActivity(intent);
                         }
                     });
 
@@ -183,8 +183,7 @@ public class FoodRecordsActivity extends AppCompatActivity {
                 // UI 작업 수행 불가능
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                List<String> foods = new ArrayList<>();
-                List<Double> intake = new ArrayList<>();
+
 
                 db.collection("foodRecord").whereEqualTo("member", ((GlobalApplication) getApplication()).getKakaoID())
                         .get()
@@ -195,10 +194,13 @@ public class FoodRecordsActivity extends AppCompatActivity {
                                     String key = document.getId(); // -> document id?
                                     if (key.contains(((GlobalApplication) getApplication()).getKakaoID() + "-" + recordDate)) {
                                         HashMap record = (HashMap) document.getData();
-                                        for (Object foodName : (ArrayList)record.get("foods")) {
+                                        foods = (ArrayList<String>) record.get("foods");
+                                        intake =  (ArrayList<Double>) record.get("intake");
+                                        System.out.println("intake : "+ intake);
+                                        for (Object foodName : foods) {
                                             foods.add((String) foodName);
                                         }
-                                        for (Object amount : (ArrayList)record.get("intake")) {
+                                        for (Object amount : intake) {
                                             intake.add((Double) amount);
                                         }
 

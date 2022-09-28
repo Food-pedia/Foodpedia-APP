@@ -144,11 +144,11 @@ public class MainActivity extends AppCompatActivity {
 
         // ***** 카메라, 갤러리 *****
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                 Log.d("LOG", "권한 설정 완료");
             } else {
                 Log.d("LOG", "권한 설정 요청");
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             }
         }
         btn_camera.setOnClickListener(new View.OnClickListener() {
@@ -701,7 +701,7 @@ public class MainActivity extends AppCompatActivity {
 //                       resize.compress(Bitmap.CompressFormat.JPEG, 100, stream);
 ////                       byte[] byteArray = stream.toByteArray();
 
-                    Intent intent2 = new Intent(this, FoodRecognitionActivity.class);
+                    Intent intent2 = new Intent(getApplicationContext(), FoodRecognitionActivity.class);
                     intent2.putExtra("image", bitmap);
                     startActivity(intent2);
                 }
@@ -716,7 +716,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                             Bitmap bitmap = resource;
                             Log.e("DEBUG : ", bitmap + "");
-                            Intent intent2 = new Intent(MainActivity.this, FoodRecognitionActivity.class);
+                            Intent intent2 = new Intent(getApplicationContext(), FoodRecognitionActivity.class);
                             intent2.putExtra("image", bitmap);
                             startActivity(intent2);
                         }
