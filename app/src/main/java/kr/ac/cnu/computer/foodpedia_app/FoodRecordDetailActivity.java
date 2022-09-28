@@ -320,12 +320,6 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
 
 
 
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
                     }
                 });
                 Looper.loop();
