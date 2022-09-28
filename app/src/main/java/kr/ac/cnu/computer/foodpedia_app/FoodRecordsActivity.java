@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -172,9 +173,9 @@ public class FoodRecordsActivity extends AppCompatActivity {
 
         TextView recordDateTextView = (TextView) findViewById(R.id.recordDate);
         TextView eatenCaloriesTextView = (TextView) findViewById(R.id.eatenCalories);
-        TextView eatenFatTextView = (TextView) findViewById(R.id.eatenFat);
-        TextView eatenProteinTextView = (TextView) findViewById(R.id.eatenProtein);
-        TextView eatenCarbohydrateTextView = (TextView) findViewById(R.id.eatenCarbohydrate);
+//        TextView eatenFatTextView = (TextView) findViewById(R.id.eatenFat);
+//        TextView eatenProteinTextView = (TextView) findViewById(R.id.eatenProtein);
+//        TextView eatenCarbohydrateTextView = (TextView) findViewById(R.id.eatenCarbohydrate);
         Handler handler = new Handler();
 
 //        pieChartFat = (PieChart) findViewById(R.id.pieChartFat);
@@ -272,34 +273,39 @@ public class FoodRecordsActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         eatenCaloriesTextView.setText(Math.round(calories) + "kcal");
-                        eatenFatTextView.setText(Math.round(fat) + "");
-                        eatenProteinTextView.setText(Math.round(protein) + "");
-                        eatenCarbohydrateTextView.setText(Math.round(carbohydrate) + "");
+//                        eatenFatTextView.setText(Math.round(fat) + "");
+//                        eatenProteinTextView.setText(Math.round(protein) + "");
+//                        eatenCarbohydrateTextView.setText(Math.round(carbohydrate) + "");
 
                         // pie chart 세팅하는 부분
 
                         PieChart pieChart = (PieChart) findViewById(R.id.pieChart);
-                        ArrayList<PieEntry> numOfIntake = new ArrayList<>();
+                        // pie chart 세팅하는 부분
+                        ArrayList<PieEntry> numOfIntake1 = new ArrayList<>();
 
-                        numOfIntake.add(new PieEntry(Math.round(fat),"fat"));
-                        numOfIntake.add(new PieEntry(Math.round(protein), "protein"));
-                        numOfIntake.add(new PieEntry(Math.round(carbohydrate), "carbohydrate"));
-                        Log.e("=== DEBUG", numOfIntake + "");
+                        numOfIntake1.add(new PieEntry(Math.round(fat), "지방"));
+                        numOfIntake1.add(new PieEntry(Math.round(protein), "단백질"));
+                        numOfIntake1.add(new PieEntry(Math.round(carbohydrate), "탄수화물"));
 
                         Description description = new Description();
                         description.setText("섭취 비율"); // label
-                        description.setTextSize(15);
+                        description.setTextSize(12);
                         pieChart.setDescription(description);
 
-                        PieDataSet dataSet = new PieDataSet(numOfIntake, "");
-                        dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                        PieDataSet dataSet1 = new PieDataSet(numOfIntake1, "");
+                        dataSet1.setValueTextSize(15);
 
-                        PieData data = new PieData(dataSet);
-                        pieChart.setData(data);
+                        dataSet1.setColors(ColorTemplate.COLORFUL_COLORS);
+
+                        PieData data1 = new PieData(dataSet1);
+
+                        pieChart.setData(data1);
                         pieChart.invalidate();
                         pieChart.getDescription().setEnabled(false);
                         pieChart.animate();
                         pieChart.setNoDataText("No data");
+                        Legend leg = pieChart.getLegend();
+                        leg.setEnabled(false);
 
 
                         try {

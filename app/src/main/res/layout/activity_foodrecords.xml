@@ -50,7 +50,7 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout8"
-                android:layout_width="119dp"
+                android:layout_width="135dp"
                 android:layout_height="62dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -70,105 +70,107 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="12dp"
                     android:textColor="#000000"
+                    android:fontFamily="@font/jalan"
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayout9"
-                android:layout_width="273dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/linearLayout8"
-                app:layout_constraintTop_toBottomOf="@+id/recordDate">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/linearLayout9"-->
+<!--                android:layout_width="273dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_marginStart="5dp"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="horizontal"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/linearLayout8"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/recordDate">-->
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:orientation="vertical">-->
 
-                    <TextView
-                        android:id="@+id/infoFat"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/fat"
-                        android:textAlignment="center" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/infoFat"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="@string/fat"-->
+<!--                        android:textAlignment="center" />-->
 
-                    <TextView
-                        android:id="@+id/eatenFat"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        android:textAlignment="center" />
-                    <!--                        <com.github.mikephil.charting.charts.PieChart-->
-                    <!--                                android:id="@+id/pieChartFat"-->
-                    <!--                                android:layout_width="match_parent"-->
-                    <!--                                android:layout_height="match_parent" />-->
-                </LinearLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/eatenFat"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="TextView"-->
+<!--                        android:textAlignment="center" />-->
+<!--                    &lt;!&ndash;                        <com.github.mikephil.charting.charts.PieChart&ndash;&gt;-->
+<!--                    &lt;!&ndash;                                android:id="@+id/pieChartFat"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                                android:layout_width="match_parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                                android:layout_height="match_parent" />&ndash;&gt;-->
+<!--                </LinearLayout>-->
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:orientation="vertical">-->
 
-                    <TextView
-                        android:id="@+id/infoProtein"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/protein"
-                        android:textAlignment="center" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/infoProtein"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="@string/protein"-->
+<!--                        android:textAlignment="center" />-->
 
-                    <TextView
-                        android:id="@+id/eatenProtein"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        android:textAlignment="center" />
-                    <!--                        <com.github.mikephil.charting.charts.PieChart-->
-                    <!--                                android:id="@+id/pieChartProtein"-->
-                    <!--                                android:layout_width="match_parent"-->
-                    <!--                                android:layout_height="match_parent" />-->
-                </LinearLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/eatenProtein"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="TextView"-->
+<!--                        android:textAlignment="center" />-->
+<!--                    &lt;!&ndash;                        <com.github.mikephil.charting.charts.PieChart&ndash;&gt;-->
+<!--                    &lt;!&ndash;                                android:id="@+id/pieChartProtein"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                                android:layout_width="match_parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                                android:layout_height="match_parent" />&ndash;&gt;-->
+<!--                </LinearLayout>-->
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:orientation="vertical">-->
 
-                    <TextView
-                        android:id="@+id/infoCarbohydrate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/carbohydrate"
-                        android:textAlignment="center" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/infoCarbohydrate"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="@string/carbohydrate"-->
+<!--                        android:textAlignment="center" />-->
 
-                    <TextView
-                        android:id="@+id/eatenCarbohydrate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="TextView"
-                        android:textAlignment="center" />
-                    <!--                        <com.github.mikephil.charting.charts.PieChart-->
-                    <!--                                android:id="@+id/pieChartCarb"-->
-                    <!--                                android:layout_width="match_parent"-->
-                    <!--                                android:layout_height="match_parent" />-->
-                </LinearLayout>
-            </LinearLayout>
+<!--                    <TextView-->
+<!--                        android:id="@+id/eatenCarbohydrate"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="TextView"-->
+<!--                        android:textAlignment="center" />-->
+<!--                    &lt;!&ndash;                        <com.github.mikephil.charting.charts.PieChart&ndash;&gt;-->
+<!--                    &lt;!&ndash;                                android:id="@+id/pieChartCarb"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                                android:layout_width="match_parent"&ndash;&gt;-->
+<!--                    &lt;!&ndash;                                android:layout_height="match_parent" />&ndash;&gt;-->
+<!--                </LinearLayout>-->
+<!--            </LinearLayout>-->
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart"
-                android:layout_width="165dp"
-                android:layout_height="145dp"
+                android:layout_width="230dp"
+                android:layout_height="185dp"
+                android:layout_marginBottom="12dp"
                 app:layout_constraintBottom_toTopOf="@+id/encouragement"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/linearLayout8"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout9" />
+                app:layout_constraintHorizontal_bias="0.507"
+                app:layout_constraintStart_toEndOf="@+id/linearLayout8" />
 
             <TextView
                 android:id="@+id/encouragement"
@@ -179,10 +181,10 @@
                 android:backgroundTint="#A1E6E6E6"
                 android:padding="10dp"
                 android:paddingStart="10dp"
-                android:text="🎊 계속해서 기록해주세요!  잘하고 있습니다!"
+                android:text="🎊 계속해서 기록해주세요! 잘하고 있습니다!"
                 android:fontFamily="@font/jalan"
                 android:textColor="#000000"
-                android:textSize="16sp"
+                android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
