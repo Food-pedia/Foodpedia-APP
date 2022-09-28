@@ -407,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
                             lineChart.setDoubleTapToZoomEnabled(false);
                             lineChart.setDrawGridBackground(false);
                             lineChart.setDescription(description);
-                            lineChart.animateY(2000, Easing.EasingOption.EaseInCubic);
+                            lineChart.animateY(500, Easing.EasingOption.EaseInCubic);
                             lineChart.invalidate();
                             Legend leg2 = lineChart.getLegend();
                             leg2.setEnabled(false);
