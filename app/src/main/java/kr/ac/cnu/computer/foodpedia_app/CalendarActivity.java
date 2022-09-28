@@ -2,18 +2,25 @@ package kr.ac.cnu.computer.foodpedia_app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.prolificinteractive.materialcalendarview.*;
 import com.prolificinteractive.materialcalendarview.format.ArrayWeekDayFormatter;
@@ -32,7 +39,12 @@ public class CalendarActivity extends AppCompatActivity {
     private MaterialCalendarView calendarView;
     private LinearLayout eatLogInfo;
     private LinearLayout eatLogView;
+
+    final static int TAKE_PICTURE = 1;
+    final static int GET_FROM_GALLERY = 2;
     private View camera_pop;
+    private Button btn_camera, btn_gallery;
+    Intent bottom_nav_intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +57,35 @@ public class CalendarActivity extends AppCompatActivity {
         eatLogInfo.setVisibility(View.GONE);
         camera_pop = findViewById(R.id.camera_pop);
         camera_pop.setVisibility(View.GONE);
+        btn_camera = findViewById(R.id.btn_camera);
+        btn_gallery = findViewById(R.id.btn_gallery);
+
+        btn_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_camera:
+                        bottom_nav_intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(bottom_nav_intent, TAKE_PICTURE);
+                        break;
+                }
+            }
+        });
+
+        btn_gallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_gallery:
+                        bottom_nav_intent = new Intent(Intent.ACTION_PICK);
+                        bottom_nav_intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+                        bottom_nav_intent.setType("image/*");
+                        startActivityForResult(bottom_nav_intent, GET_FROM_GALLERY);
+                        break;
+                }
+            }
+        });
+
         // 첫 시작 요일은 월요일
         calendarView.state()
                 .edit()
@@ -153,6 +194,35 @@ public class CalendarActivity extends AppCompatActivity {
         public void decorate(DayViewFacade view) {
             view.setSelectionDrawable(drawable);
 //            view.addSpan(new StyleSpan(Typeface.BOLD));   // 달력 안의 모든 숫자들이 볼드 처리됨
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        switch (requestCode) {
+            case TAKE_PICTURE: // 카메라로 촬영하는 경우
+                if (resultCode == RESULT_OK && intent.hasExtra("data")) {
+                    Bitmap bitmap = (Bitmap) intent.getExtras().get("data");
+
+                    Intent intent2 = new Intent(getApplicationContext(), FoodRecognitionActivity.class);
+                    intent2.putExtra("image", bitmap);
+                    startActivity(intent2);
+                }
+                break;
+            case GET_FROM_GALLERY:
+                if (resultCode == RESULT_OK) {
+                    Uri uri = intent.getData();
+                    GlideApp.with(getApplicationContext()).asBitmap().load(uri).override(300, 300).into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            Bitmap bitmap = resource;
+                            Intent intent2 = new Intent(getApplicationContext(), FoodRecognitionActivity.class);
+                            intent2.putExtra("image", bitmap);
+                            startActivity(intent2);
+                        }
+                    });
+                }
+                break;
         }
     }
 }
