@@ -51,11 +51,11 @@ import java.util.Map;
 import kr.ac.cnu.computer.foodpedia_app.tflite.Classifier;
 
 public class FoodRecordDetailActivity extends AppCompatActivity {
-    final int FEEDBACK_EMOJI_EXCELLENT = 2131362268;
-    final int FEEDBACK_EMOJI_GOOD = 2131362269;
-    final int FEEDBACK_EMOJI_NEUTRAL = 2131362270;
-    final int FEEDBACK_EMOJI_BAD = 2131362271;
-    final int FEEDBACK_EMOJI_TERRIBLE = 2131362272;
+    final int FEEDBACK_EMOJI_EXCELLENT = 2131362269;
+    final int FEEDBACK_EMOJI_GOOD = 2131362270;
+    final int FEEDBACK_EMOJI_NEUTRAL = 2131362271;
+    final int FEEDBACK_EMOJI_BAD = 2131362272;
+    final int FEEDBACK_EMOJI_TERRIBLE = 2131362273;
 
     final int FEEDBACK_TEXT_FIRST = 2131361944;
     final int FEEDBACK_TEXT_SECOND = 2131361945;
@@ -228,26 +228,26 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                         //피드백 이모지
                         if(selectedEmoji.intValue() == 0) {
                             LinearLayout feedbackLayout = findViewById(R.id.feedbackalllayout);
-                            feedbackLayout.setVisibility(View.GONE);
+                            //feedbackLayout.setVisibility(View.GONE);
                             Log.e("이모지", "이모지안보임");
                         }
                         else {
                             switch(selectedEmoji.intValue()){
                                 case FEEDBACK_EMOJI_EXCELLENT:
-                                    Drawable drawable = getResources().getDrawable(R.drawable.excellent_off);
-                                    feedbackEmoji.setImageDrawable(drawable);
+                                    feedbackEmoji.setImageResource(R.drawable.excellent_off);
+                                    break;
                                 case FEEDBACK_EMOJI_GOOD:
-                                    Drawable drawable2 = getResources().getDrawable(R.drawable.good_off);
-                                    feedbackEmoji.setImageDrawable(drawable2);
+                                    feedbackEmoji.setImageResource(R.drawable.good_off);
+                                    break;
                                 case FEEDBACK_EMOJI_NEUTRAL:
-                                    Drawable drawable3 = getResources().getDrawable(R.drawable.neutral_off);
-                                    feedbackEmoji.setImageDrawable(drawable3);
+                                    feedbackEmoji.setImageResource(R.drawable.neutral_off);
+                                    break;
                                 case FEEDBACK_EMOJI_BAD:
-                                    Drawable drawable4 = getResources().getDrawable(R.drawable.bad_off);
-                                    feedbackEmoji.setImageDrawable(drawable4);
+                                    feedbackEmoji.setImageResource(R.drawable.bad_off);
+                                    break;
                                 case FEEDBACK_EMOJI_TERRIBLE:
-                                    Drawable drawable5 = getResources().getDrawable(R.drawable.terrible_off);
-                                    feedbackEmoji.setImageDrawable(drawable5);
+                                    feedbackEmoji.setImageResource(R.drawable.terrible_off);
+                                    break;
                             }
                         }
                         //피드백 텍스트
@@ -257,23 +257,30 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                                 switch(selectedFeedback.get(i).intValue()){
                                     case FEEDBACK_TEXT_FIRST:
                                         selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFirst);
+                                        break;
                                     case FEEDBACK_TEXT_SECOND:
                                         selectedFeedbackTextView.get(i).setText(R.string.feedbackTextSecond);
+                                        break;
                                     case FEEDBACK_TEXT_THIRD:
                                         selectedFeedbackTextView.get(i).setText(R.string.feedbackTextThird);
+                                        break;
                                     case FEEDBACK_TEXT_FOURTH:
                                         selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFourth);
+                                        break;
                                     case FEEDBACK_TEXT_FIFTH:
                                         selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFifth);
+                                        break;
                                 }
-                                selectedFeedbackTextView.get(i).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
-
+                                selectedFeedbackTextView.get(i).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                               // selectedFeedbackTextView.get(i).setTextColor();
                                 LinearLayout.LayoutParams params2 =  new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                                 params2.weight = 1;
                                 params2.gravity = Gravity.CLIP_HORIZONTAL;
                                 params2.topMargin = 10;
-                                feedbackText.addView(selectedFeedbackTextView.get(i), params2);
+                                feedbackText.addView( selectedFeedbackTextView.get(i), params2);
+                                System.out.println("피드백 텍뷰 : " + selectedFeedbackTextView.get(i).getText());
                             }
+
                         }
                         //피드백 메모
                         if(!memoText.equals("emptyMemo")){
