@@ -91,52 +91,56 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/camera_pop"
-        android:layout_width="157dp"
-        android:layout_height="108dp"
-        android:background="@color/main"
-        android:orientation="vertical"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="88dp">
-
-        <Button
-            android:id="@+id/btn_camera"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/jalan"
-            android:backgroundTint="@color/main"
-            android:textSize="20dp"
-            android:text="카메라" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="8px"
-            android:background="@color/white"/>
-
-        <Button
-            android:id="@+id/btn_gallery"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/jalan"
-            android:backgroundTint="@color/main"
-            android:textSize="20dp"
-            android:text="갤러리" />
-    </LinearLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigationView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
-        app:itemBackground="@color/main"
-        app:itemIconSize="@dimen/bottom_navigation_icon_size"
-        app:itemIconTint="@drawable/menu_selector_color"
-        app:itemTextColor="@drawable/menu_selector_color"
-        app:menu="@menu/bottom_menu">
+        android:orientation="vertical"
+        android:gravity="bottom"
+        android:layout_height="match_parent">
 
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
+        <LinearLayout
+            android:id="@+id/camera_pop"
+            android:layout_width="157dp"
+            android:layout_height="108dp"
+            android:layout_marginStart="120dp"
+            android:background="@color/main"
+            android:elevation="20dp"
+            android:visibility="gone"
+            android:orientation="vertical">
 
+            <Button
+                android:id="@+id/btn_camera"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/main"
+                android:fontFamily="@font/jalan"
+                android:text="카메라"
+                android:textSize="20dp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8px"
+                android:background="@color/white" />
 
+            <Button
+                android:id="@+id/btn_gallery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/main"
+                android:fontFamily="@font/jalan"
+                android:text="갤러리"
+                android:textSize="20dp" />
+        </LinearLayout>
 
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/navigationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground"
+            app:itemBackground="@color/main"
+
+            app:itemIconSize="@dimen/bottom_navigation_icon_size"
+            app:itemIconTint="@drawable/menu_selector_color"
+            app:itemTextColor="@drawable/menu_selector_color"
+            app:menu="@menu/bottom_menu"></com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    </LinearLayout>
 </LinearLayout>

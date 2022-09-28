@@ -1,11 +1,14 @@
 package kr.ac.cnu.computer.foodpedia_app;
 
+import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewManager;
 import android.widget.Button;
@@ -83,7 +86,7 @@ public class CalendarActivity2 extends AppCompatActivity {
 
         setDate();
         init();
-
+        
         compactCalendarView.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
@@ -204,6 +207,10 @@ public class CalendarActivity2 extends AppCompatActivity {
 
                             Event event = new Event(Color.parseColor("#275C3C"), myCalendar.getTimeInMillis(), "test");
                             compactCalendarView.addEvent(event);
+                            long downTime = SystemClock.uptimeMillis();
+                            long eventTime = SystemClock.uptimeMillis();
+                            MotionEvent event3 = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, 594,46, 0);
+                            compactCalendarView.dispatchTouchEvent(event3);
                         }
                     }
                 });
