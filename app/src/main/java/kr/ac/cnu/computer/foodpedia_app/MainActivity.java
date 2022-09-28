@@ -388,7 +388,13 @@ public class MainActivity extends AppCompatActivity {
                         lineChart.invalidate();
 
                         weight_mean /= weight.size();
-                        weight_num.setText(Math.round(weight.get(weight.size()-1))+"kg");
+                        if (weight.size()==0){
+                            weight_num.setText("");
+                        }
+                        else{
+                            weight_num.setText(Math.round(weight.get(weight.size()-1))+"kg");
+                        }
+
 
                         Legend leg2 = lineChart.getLegend();
                         leg2.setEnabled(false);
@@ -453,8 +459,12 @@ public class MainActivity extends AppCompatActivity {
                         barDataSet.setValueTextSize(15f);
 
                         blood_mean /= blood.size();
-                        blood_num.setText(Math.round(blood.get(blood.size()-1))+"");
-
+                        if (blood.size() == 0){
+                            blood_num.setText("");
+                        }
+                        else{
+                            blood_num.setText(Math.round(blood.get(blood.size()-1))+"");
+                        }
 
                         try {
                             Thread.sleep(500);
