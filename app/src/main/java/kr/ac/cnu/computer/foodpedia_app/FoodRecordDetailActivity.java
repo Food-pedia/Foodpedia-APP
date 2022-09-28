@@ -182,7 +182,7 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                                             else{
                                                 selectedEmoji = 0;
                                                 selectedFeedback = null;
-                                                memoText = "";
+                                                memoText = "emptyMemo";
                                                 Log.e("=== DEBUG", "no data catch");
                                             }
 
@@ -274,6 +274,11 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                                 params2.topMargin = 10;
                                 feedbackText.addView(selectedFeedbackTextView.get(i), params2);
                             }
+                        }
+                        //피드백 메모
+                        if(!memoText.equals("emptyMemo")){
+                            TextView memo = findViewById(R.id.feedbackMemo);
+                            memo.setText(memoText);
                         }
 
 

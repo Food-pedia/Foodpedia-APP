@@ -69,30 +69,31 @@
                         android:orientation="vertical">
 
                     <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="40dp">
 
                         <ImageView
-                                android:id="@+id/feedbackEmogi"
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:layout_margin="10dp"/>
+                            android:id="@+id/feedbackEmogi"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:layout_marginLeft="40dp" />
 
                         <LinearLayout
-                                android:id="@+id/feedbackText"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                tools:ignore="MissingConstraints"></LinearLayout>
+                            android:id="@+id/feedbackText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            tools:ignore="MissingConstraints"></LinearLayout>
                     </LinearLayout>
 
                     <TextView
-                            android:id="@+id/feedbackMemo"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:ems="10"
-                            android:gravity="start|top"/>
+                        android:id="@+id/feedbackMemo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginTop="20dp"
+                        android:gravity="start|top" />
                 </LinearLayout>
 
 
