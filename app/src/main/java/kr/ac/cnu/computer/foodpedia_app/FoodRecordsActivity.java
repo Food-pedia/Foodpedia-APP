@@ -60,6 +60,7 @@ public class FoodRecordsActivity extends AppCompatActivity {
     Double calories = 0.0, fat = 0.0, protein = 0.0, carbohydrate = 0.0;
     String recordDate = "";
     String mode;
+    ImageView calorieIcon;
 //    PieChart pieChartFat, pieChartProtein, pieChartCarb;
     // 일단 한번에 표현
 
@@ -115,6 +116,10 @@ public class FoodRecordsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodrecords);
+
+        calorieIcon = findViewById(R.id.calorieIcon);
+
+        Glide.with(this).load(R.raw.fire).into(calorieIcon);
 
         mode = getIntent().getStringExtra("mode");
         recordDate = (ViewMode.valueOf(mode) == ViewMode.DAY) ? getIntent().getStringExtra("recordDate") : getTodayFromLocalDate();

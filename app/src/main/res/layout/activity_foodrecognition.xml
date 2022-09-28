@@ -58,6 +58,7 @@
                     android:id="@+id/radioButtonMorning"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/jalan"
                     android:text="@string/morning" />
 
                 <RadioButton
@@ -66,12 +67,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="60dp"
                     android:layout_marginEnd="60dp"
+                    android:fontFamily="@font/jalan"
                     android:text="@string/lunch" />
 
                 <RadioButton
                     android:id="@+id/radioButtonDinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/jalan"
                     android:text="@string/dinner" />
             </RadioGroup>
 
@@ -137,6 +140,8 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="30dp"
                     android:layout_marginBottom="4dp"
+                    android:fontFamily="@font/jalan"
+                    android:backgroundTint="@color/main"
                     android:text="@string/update" />
 
                 <Button
@@ -144,6 +149,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="62dp"
                     android:text="@string/feedback"
+                    android:fontFamily="@font/jalan"
+                    android:backgroundTint="@color/main"
                     android:layout_marginStart="4dp"
                     android:layout_marginBottom="4dp"/>
             </LinearLayout>
