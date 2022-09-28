@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Looper;
 
 import android.widget.*;
@@ -598,15 +599,17 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     }
 
     private void drawButton() {
-        Log.e("=== drawButton", foodKorName.size() + "");
         Iterator<String> foodEngNames = foodKorName.keySet().iterator();
         int idx = 0;
 
         while (foodEngNames.hasNext()) {
+            GradientDrawable shape =  new GradientDrawable();
+            shape.setCornerRadius( 20 );
+            shape.setColor(randomColor.get(idx));
             String curFoodEngName = foodEngNames.next();
             String curFoodKorName = foodKorName.get(curFoodEngName);
             Button newBtn = new Button(this);
-            newBtn.setBackgroundColor(randomColor.get(idx));
+            newBtn.setBackground(shape);
             foodButtons.add(newBtn);
             foodButtons.get(idx).setText(curFoodKorName);
             Typeface tf = Typeface.createFromAsset(getAssets(), "jalan.ttf");
@@ -615,6 +618,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             param.weight = 1;
             param.gravity = Gravity.CLIP_HORIZONTAL;
+            param.leftMargin = 5;
+            param.rightMargin = 5;
 
             foodButtonLayout.addView(foodButtons.get(idx), param);
 
