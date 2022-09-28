@@ -29,18 +29,22 @@
                     android:layout_height="416dp"
                     android:scaleType="fitStart" />
 
-                <com.airbnb.lottie.LottieAnimationView
-                    android:id="@+id/lottie"
-                    android:layout_width="match_parent"
-                    android:layout_height="200sp"
-                    android:layout_marginTop="56dp" />
-
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="match_parent"
                     android:layout_height="416dp"
                     android:contentDescription="@string/image_view_description"
                     android:scaleType="fitStart" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/lottie"
+                    android:layout_width="match_parent"
+                    android:layout_height="300sp"
+                    android:layout_marginTop="40dp"
+                    android:elevation="20dp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/loading3" />
             </FrameLayout>
 
             <RadioGroup

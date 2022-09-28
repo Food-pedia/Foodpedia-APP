@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="46dp"
             android:text="반가워요, "
             android:fontFamily="@font/jalan"
             android:textColor="#000000"
@@ -56,35 +56,13 @@
         android:layout_gravity="center"
         android:background="@drawable/round_border">
 
+
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/chart1"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="192dp"
+            android:layout_width="232dp"
+            android:layout_height="189dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/chart2"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="80dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/chart1"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/chart3"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="80dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/chart2"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -93,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Daily Progress"
+            android:text="오늘의 영양소"
             android:fontFamily="@font/jalan"
             android:textColor="#000000"
             android:textSize="20dp"
@@ -108,8 +86,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.809"
-            app:srcCompat="@drawable/fire" />
+            app:layout_constraintVertical_bias="0.809" />
 
         <TextView
             android:id="@+id/calories"
@@ -128,9 +105,9 @@
             android:id="@+id/calories_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="44dp"
-            android:layout_marginTop="120dp"
-            android:text="1284"
+            android:layout_marginStart="55dp"
+            android:layout_marginTop="126dp"
+            android:text=""
             android:fontFamily="@font/jalan"
             android:textColor="#000000"
             android:textSize="25dp"
@@ -152,9 +129,8 @@
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/linechart"
-            android:layout_width="272dp"
-            android:layout_height="110dp"
-            android:layout_marginTop="5dp"
+            android:layout_width="271dp"
+            android:layout_height="138dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -178,7 +154,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="68dp"
-            android:text="72.4 kg"
+            android:text=""
             android:fontFamily="@font/jalan"
             android:textColor="#000000"
             android:textSize="25dp"
@@ -186,7 +162,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/input_weightBtn"
             android:layout_width="390dp"
             android:layout_height="50dp"
             android:layout_marginBottom="5dp"
@@ -228,21 +204,20 @@
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barchart"
-            android:layout_width="272dp"
-            android:layout_height="110dp"
+            android:layout_width="271dp"
+            android:layout_height="125dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
-        </com.github.mikephil.charting.charts.BarChart>
+            app:layout_constraintTop_toTopOf="parent"></com.github.mikephil.charting.charts.BarChart>
 
         <TextView
             android:id="@+id/blood_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="68dp"
-            android:text="134"
+            android:layout_marginTop="70dp"
+            android:text=""
             android:fontFamily="@font/jalan"
             android:textColor="#000000"
             android:textSize="25dp"
@@ -279,17 +254,28 @@
                 android:id="@+id/btn_camera"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/jalan"
+                android:backgroundTint="@color/main"
+                android:textSize="20dp"
                 android:text="카메라" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8px"
+                android:background="@color/white"/>
 
             <Button
                 android:id="@+id/btn_gallery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/jalan"
+                android:backgroundTint="@color/main"
+                android:textSize="20dp"
                 android:text="갤러리" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/bloodBtn"
+            android:id="@+id/input_bloodBtn"
             android:layout_width="390dp"
             android:layout_height="50dp"
             android:layout_marginBottom="5dp"

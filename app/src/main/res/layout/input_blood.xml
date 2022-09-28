@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"/>
 
             <EditText
-                android:id="@+id/weight_date_text"
+                android:id="@+id/blood_date_text"
                 android:layout_width="210dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
@@ -62,20 +62,20 @@
                 android:fontFamily="@font/jalan"
                 android:textColor="#000000"
                 android:textSize="25dp"
-                android:text="체중" />
+                android:text="혈당" />
 
             <View
                 android:layout_width="10dp"
                 android:layout_height="match_parent"/>
 
             <EditText
-                android:id="@+id/weight_text"
+                android:id="@+id/blood_text"
                 android:layout_width="210dp"
                 android:layout_height="40dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/round_border"
                 android:gravity="left"
-                android:hint="체중을 입력해주세요"
+                android:hint="혈당을 입력해주세요"
                 android:padding="10dp"
                 android:textSize="15dp" />
 
@@ -92,8 +92,8 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/jalan"
                 android:text="취소"
-                android:id="@+id/weight_cancleBtn"
-                android:backgroundTint="@color/main"/>
+                android:id="@+id/blood_cancleBtn"
+                android:backgroundTint="@color/red"/>
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
@@ -104,8 +104,8 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/jalan"
                 android:text="저장"
-                android:id="@+id/weight_saveBtn"
-                android:backgroundTint="@color/main"/>
+                android:id="@+id/blood_saveBtn"
+                android:backgroundTint="@color/red"/>
 
         </LinearLayout>
 
