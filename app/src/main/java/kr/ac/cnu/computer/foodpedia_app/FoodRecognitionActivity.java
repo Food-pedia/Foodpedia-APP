@@ -696,4 +696,5 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 //        foodAdapter.filterList(filteredList);
 //    }
 
+
 }
