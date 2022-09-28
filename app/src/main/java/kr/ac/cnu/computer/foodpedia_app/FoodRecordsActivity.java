@@ -130,25 +130,21 @@ public class FoodRecordsActivity extends AppCompatActivity {
         storageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + recordDate + "/");
 
 
+        List<ImageView> imageViewsList = new ArrayList<ImageView>();
         storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
-                for (StorageReference item: listResult.getItems()) {
-                    LinearLayout imageView = (LinearLayout) findViewById(R.id.imageView);
 
+
+                for (StorageReference item: listResult.getItems()) {
+                    int i=0;
+                    System.out.println("아이템 : "+item.getName());
                     // image view 동적 생성
                     ImageView iv = new ImageView(FoodRecordsActivity.this);
-                    iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    imageView.addView(iv);
-                    imageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getApplicationContext(), FoodRecordDetailActivity.class);
-                            intent.putExtra("foodRecordId", item.getName().split("\\.")[0]);
-                            intent.putExtra("date", recordDate);
-                            startActivity(intent);
-                        }
-                    });
+
+                    //iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    //imageView.addView(iv);
+
 
                     item.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
@@ -167,7 +163,31 @@ public class FoodRecordsActivity extends AppCompatActivity {
                             Log.w("=== download image", "error!");
                         }
                     });
+                    iv.setTag(item.getName());
+                    imageViewsList.add(iv);
+
+                    Log.e("imageUrl?: ", (String) iv.getTag());
+
                 }
+                LinearLayout imageView = (LinearLayout) findViewById(R.id.imageView);
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                for(int i=0; i<imageViewsList.size(); i++){
+                    imageView.addView(imageViewsList.get(i), param);
+                    ImageView selectedImg = imageViewsList.get(i);
+                    selectedImg.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getApplicationContext(), FoodRecordDetailActivity.class);
+                            intent.putExtra("foodRecordId", ((String)selectedImg.getTag()).split("\\.")[0]);
+                            intent.putExtra("date", recordDate);
+                            intent.putExtra("tag", (String)selectedImg.getTag());
+                            startActivity(intent);
+                        }
+                    });
+                }
+
+
             }
         });
 

@@ -98,42 +98,48 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String recordId = intent.getStringExtra("foodRecordId");
         String date = intent.getStringExtra("date");
+        String tag = intent.getStringExtra("tag");
         Log.e("식단기록 id", ((GlobalApplication) getApplication()).getKakaoID() + "-" + recordId);
 
         /*식단 이미지 불러오기*/
         ImageView iv = (ImageView) findViewById(R.id.todayFoodImg);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
-        Log.e("=== download the image" , ((GlobalApplication) getApplication()).getKakaoID() + "");
+        Log.e("=== download the image" , ((GlobalApplication) getApplication()).getKakaoID() + " " +date);
         storageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + date + "/");
 
         storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult listResult) {
                 for (StorageReference item: listResult.getItems()) {
-                    ImageView iv = (ImageView) findViewById(R.id.todayFoodImg);
+                    System.out.println("item 이름" + item.getName());
+                    if(item.getName().equals(tag)){
+
+                        ImageView iv = (ImageView) findViewById(R.id.todayFoodImg);
 
 //                    // image view 동적 생성
 //                    iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 //                    imageView.addView(iv);
 
-                    item.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull @NotNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                Glide.with(FoodRecordDetailActivity.this)
-                                        .load(task.getResult())
-                                        .into(iv);
-                            } else {
-                                Toast.makeText(FoodRecordDetailActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        item.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull @NotNull Task<Uri> task) {
+                                if (task.isSuccessful()) {
+                                    Glide.with(FoodRecordDetailActivity.this)
+                                            .load(task.getResult())
+                                            .into(iv);
+                                } else {
+                                    Toast.makeText(FoodRecordDetailActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull @NotNull Exception e) {
-                            Log.w("=== download image", "error!");
-                        }
-                    });
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull @NotNull Exception e) {
+                                Log.w("=== download image", "error!");
+                            }
+                        });
+                    }
+
                 }
             }
         });
