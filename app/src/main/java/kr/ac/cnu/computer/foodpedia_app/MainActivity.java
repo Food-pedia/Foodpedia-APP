@@ -329,76 +329,75 @@ public class MainActivity extends AppCompatActivity {
                             weight_mean += weight.get(i);
                             values.add(new Entry(i, weight.get(i)));
                         }
-                        LineDataSet set1;
-                        set1 = new LineDataSet(values, "DataSet 1");
 
-                        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-                        dataSets.add(set1); // add the data sets
-
-                        // create a data object with the data sets
-                        LineData data = new LineData(dataSets);
-
-                        // black lines and points
-                        set1.setColor(Color.BLACK);
-                        set1.setCircleColor(Color.BLACK);
-
-                        // set data
-                        lineChart.setData(data);
-
-                        set1.setLineWidth(2);
-                        set1.setCircleRadius(6);
-                        set1.setCircleColor(Color.parseColor("#FFA1B4DC"));
-                        set1.setCircleColorHole(Color.BLUE);
-                        set1.setColor(Color.parseColor("#FFA1B4DC"));
-                        set1.setDrawCircleHole(true);
-                        set1.setDrawCircles(true);
-                        set1.setDrawHorizontalHighlightIndicator(false);
-                        set1.setDrawHighlightIndicators(false);
-                        set1.setValueTextSize(10f);
-                        set1.setValueTypeface(tf);
-                        set1.setValueFormatter(new MyValueFormatter2());
-//                        set1.setDrawValues(false);
-
-                        XAxis xAxis = lineChart.getXAxis();
-                        xAxis.setDrawLabels(false);
-                        xAxis.setDrawAxisLine(false);
-//                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//                        xAxis.setTextColor(Color.BLACK);
-//                        xAxis.enableGridDashedLine(8, 24, 0);
-
-                        YAxis yLAxis = lineChart.getAxisLeft();
-                        yLAxis.setDrawLabels(false);
-                        yLAxis.setDrawAxisLine(false);
-//                        yLAxis.setTextColor(Color.BLACK);
-
-                        YAxis yRAxis = lineChart.getAxisRight();
-                        yRAxis.setDrawLabels(false);
-                        yRAxis.setDrawAxisLine(false);
-//                        yRAxis.setDrawGridLines(false);
-
-                        // 격자 없애기
-                        lineChart.getAxisLeft().setDrawGridLines(false);
-                        lineChart.getAxisRight().setDrawGridLines(false);
-                        lineChart.getXAxis().setDrawGridLines(false);
-
-                        lineChart.setDoubleTapToZoomEnabled(false);
-                        lineChart.setDrawGridBackground(false);
-                        lineChart.setDescription(description);
-                        lineChart.animateY(2000, Easing.EasingOption.EaseInCubic);
-                        lineChart.invalidate();
 
 
                         if (weight.size()==0){
                             weight_num.setText("");
                         }
                         else{
+                            LineDataSet set1;
+                            set1 = new LineDataSet(values, "DataSet 1");
+
+                            ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+                            dataSets.add(set1); // add the data sets
+
+                            // create a data object with the data sets
+                            LineData data = new LineData(dataSets);
+
+                            // black lines and points
+                            set1.setColor(Color.BLACK);
+                            set1.setCircleColor(Color.BLACK);
+
+                            // set data
+                            lineChart.setData(data);
+
+                            set1.setLineWidth(2);
+                            set1.setCircleRadius(6);
+                            set1.setCircleColor(Color.parseColor("#FFA1B4DC"));
+                            set1.setCircleColorHole(Color.BLUE);
+                            set1.setColor(Color.parseColor("#FFA1B4DC"));
+                            set1.setDrawCircleHole(true);
+                            set1.setDrawCircles(true);
+                            set1.setDrawHorizontalHighlightIndicator(false);
+                            set1.setDrawHighlightIndicators(false);
+                            set1.setValueTextSize(10f);
+                            set1.setValueTypeface(tf);
+                            set1.setValueFormatter(new MyValueFormatter2());
+//                        set1.setDrawValues(false);
+
+                            XAxis xAxis = lineChart.getXAxis();
+                            xAxis.setDrawLabels(false);
+                            xAxis.setDrawAxisLine(false);
+//                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//                        xAxis.setTextColor(Color.BLACK);
+//                        xAxis.enableGridDashedLine(8, 24, 0);
+
+                            YAxis yLAxis = lineChart.getAxisLeft();
+                            yLAxis.setDrawLabels(false);
+                            yLAxis.setDrawAxisLine(false);
+//                        yLAxis.setTextColor(Color.BLACK);
+
+                            YAxis yRAxis = lineChart.getAxisRight();
+                            yRAxis.setDrawLabels(false);
+                            yRAxis.setDrawAxisLine(false);
+//                        yRAxis.setDrawGridLines(false);
+
+                            // 격자 없애기
+                            lineChart.getAxisLeft().setDrawGridLines(false);
+                            lineChart.getAxisRight().setDrawGridLines(false);
+                            lineChart.getXAxis().setDrawGridLines(false);
+
+                            lineChart.setDoubleTapToZoomEnabled(false);
+                            lineChart.setDrawGridBackground(false);
+                            lineChart.setDescription(description);
+                            lineChart.animateY(2000, Easing.EasingOption.EaseInCubic);
+                            lineChart.invalidate();
+                            Legend leg2 = lineChart.getLegend();
+                            leg2.setEnabled(false);
                             weight_mean /= weight.size();
                             weight_num.setText(Math.round(weight.get(weight.size()-1))+"kg");
                         }
-
-
-                        Legend leg2 = lineChart.getLegend();
-                        leg2.setEnabled(false);
 
                         /*** 혈당량 barchart ***/
                         ArrayList<BarEntry> bar_values = new ArrayList<>();
@@ -412,61 +411,59 @@ public class MainActivity extends AppCompatActivity {
                             theDates.add(blood_date.get(i));
                         }
 
-                        BarDataSet barDataSet = new BarDataSet(bar_values, "");
-
-                        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(theDates));
-                        BarData theData = new BarData(barDataSet);//----Line of error
-                        barChart.setData(theData);
-
-                        YAxis leftAxis = barChart.getAxisLeft();
-                        YAxis yRAxiss = barChart.getAxisRight();
-                        yRAxiss.setDrawLabels(false);
-                        yRAxiss.setDrawAxisLine(false);
-                        leftAxis.setDrawAxisLine(false);
-                        leftAxis.setDrawLabels(false);
-                        barDataSet.setValueTypeface(tf);
-
-                        barChart.getAxisRight();
-//                        leftAxis.setTypeface(tf);
-
-                        XAxis xAxist = barChart.getXAxis();
-                        xAxist.setTypeface(tf);
-
-                        Legend l = barChart.getLegend();
-                        l.setTypeface(tf);
-
-                        // 라벨 제거
-                        barChart.getLegend().setEnabled(false);
-
-                        barChart.setScaleEnabled(true);
-                        barChart.setTouchEnabled(false);
-
-                        // 격자 없애기
-                        barChart.getAxisLeft().setDrawGridLines(false);
-                        barChart.getAxisRight().setDrawGridLines(false);
-                        barChart.getXAxis().setDrawGridLines(false);
-
-
-                        barDataSet.setValueFormatter(new MyValueFormatter());
-                        XAxis xAxiss = barChart.getXAxis();
-                        xAxiss.setPosition(XAxis.XAxisPosition.BOTTOM);
-                        barChart.getAxisLeft().setAxisMinimum(0);
-                        barChart.getAxisRight().setAxisMinimum(0);
-
-                        barChart.animateY(1000);
-
-                        // description 삭제
-                        barChart.getDescription().setEnabled(false);
-                        barDataSet.setValueTextSize(15f);
-
                         if (blood.size() == 0){
                             blood_num.setText("");
                         }
                         else{
+                            BarDataSet barDataSet = new BarDataSet(bar_values, "");
+
+                            barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(theDates));
+                            BarData theData = new BarData(barDataSet);//----Line of error
+                            barChart.setData(theData);
+
+                            YAxis leftAxis = barChart.getAxisLeft();
+                            YAxis yRAxiss = barChart.getAxisRight();
+                            yRAxiss.setDrawLabels(false);
+                            yRAxiss.setDrawAxisLine(false);
+                            leftAxis.setDrawAxisLine(false);
+                            leftAxis.setDrawLabels(false);
+                            barDataSet.setValueTypeface(tf);
+
+                            barChart.getAxisRight();
+//                        leftAxis.setTypeface(tf);
+
+                            XAxis xAxist = barChart.getXAxis();
+                            xAxist.setTypeface(tf);
+
+                            Legend l = barChart.getLegend();
+                            l.setTypeface(tf);
+
+                            // 라벨 제거
+                            barChart.getLegend().setEnabled(false);
+
+                            barChart.setScaleEnabled(true);
+                            barChart.setTouchEnabled(false);
+
+                            // 격자 없애기
+                            barChart.getAxisLeft().setDrawGridLines(false);
+                            barChart.getAxisRight().setDrawGridLines(false);
+                            barChart.getXAxis().setDrawGridLines(false);
+
+
+                            barDataSet.setValueFormatter(new MyValueFormatter());
+                            XAxis xAxiss = barChart.getXAxis();
+                            xAxiss.setPosition(XAxis.XAxisPosition.BOTTOM);
+                            barChart.getAxisLeft().setAxisMinimum(0);
+                            barChart.getAxisRight().setAxisMinimum(0);
+
+                            barChart.animateY(1000);
+
+                            // description 삭제
+                            barChart.getDescription().setEnabled(false);
+                            barDataSet.setValueTextSize(15f);
                             blood_mean /= blood.size();
                             blood_num.setText(Math.round(blood.get(blood.size()-1))+"");
                         }
-
                         try {
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
