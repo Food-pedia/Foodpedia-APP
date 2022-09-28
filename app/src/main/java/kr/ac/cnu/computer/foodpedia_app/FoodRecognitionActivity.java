@@ -564,7 +564,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                     feedbackResult.put("feedback", selectedFeedback);
                     feedbackResult.put("memo", memoText);
 
-                    db.collection("feedback").document(foodRecordId).set(feedbackResult)
+                    db.collection("feedback").document(foodRecordId+"-feedback").set(feedbackResult)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
