@@ -82,6 +82,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     List<Integer> selectedFeedback;
     String memoText = "";
 
+    private List<Integer> randomColor = new ArrayList<>();
+
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -116,6 +118,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
                     int lastIdx = foodButtons.size() - 1;
                     Button newFoodButton = foodButtons.get(lastIdx);
+                    Log.e("컬러러 : ", randomColor.get(lastIdx)+"");
+                    newFoodButton.setBackgroundColor(randomColor.get(lastIdx));
                     newFoodButton.setText(newFoodName);
                     foodButtonLayout.addView(newFoodButton, param);
                     Log.e("성공!", "FoodRecognitionActivity 129줄");
@@ -366,7 +370,6 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     private BorderedText borderedText;
     private Paint boxPaint = new Paint();
 
-
     //    private Button cameraButton;
     private Button detectButton;
 
@@ -455,6 +458,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             int randomC = getRandomColor();
             boxPaint.setColor(randomC);
             paint.setColor(randomC);
+            randomColor.add(randomC);
 
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                 Log.e("=== title : ", result.getTitle());
@@ -597,11 +601,16 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         Log.e("=== drawButton", foodKorName.size() + "");
         Iterator<String> foodEngNames = foodKorName.keySet().iterator();
         int idx = 0;
+
         while (foodEngNames.hasNext()) {
             String curFoodEngName = foodEngNames.next();
             String curFoodKorName = foodKorName.get(curFoodEngName);
-            foodButtons.add(new Button(this));
+            Button newBtn = new Button(this);
+            newBtn.setBackgroundColor(randomColor.get(idx));
+            foodButtons.add(newBtn);
             foodButtons.get(idx).setText(curFoodKorName);
+            Typeface tf = Typeface.createFromAsset(getAssets(), "jalan.ttf");
+            foodButtons.get(idx).setTypeface(tf);
 
             param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             param.weight = 1;
