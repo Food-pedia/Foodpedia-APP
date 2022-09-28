@@ -13,6 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+/gradle
 .log
 output.json
 /.idea/misc.xml
