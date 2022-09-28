@@ -125,35 +125,35 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="잘 챙겨먹었어요" />
+                    android:text="@string/feedbackTextFirst" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipFeedback2"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="양 조절에 실패했어요" />
+                    android:text="@string/feedbackTextSecond" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipFeedback3"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="편식했어요" />
+                    android:text="@string/feedbackTextThird" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipFeedback4"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="단 음식을 많이 먹었어요" />
+                    android:text="@string/feedbackTextFourth" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chipFeedback5"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="균형있게 먹었어요" />
+                    android:text="@string/feedbackTextFifth" />
 
 <!--                <com.google.android.material.chip.Chip-->
 <!--                    android:id="@+id/chip8"-->

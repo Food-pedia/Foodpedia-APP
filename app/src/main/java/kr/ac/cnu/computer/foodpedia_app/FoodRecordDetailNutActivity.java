@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,7 +37,7 @@ public class FoodRecordDetailNutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodnutritioninfo);
 
-        LinearLayout modifyIntakeLayout = findViewById(R.id.modifyIntakeLayout);
+        ConstraintLayout modifyIntakeLayout = findViewById(R.id.modifyIntakeLayout);
         TextView intakeInput = findViewById(R.id.intakeInput);
         TextView textView13 = findViewById(R.id.textView13);
         Button intakeModifyBtn = findViewById(R.id.intakeModifyBtn);
