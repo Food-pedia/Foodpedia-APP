@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/login"
     tools:context=".LoginActivity">
 
     <EditText
@@ -17,7 +17,7 @@
         android:layout_marginStart="8dp"
         android:ems="10"
         android:hint="E-mail"
-        android:layout_marginTop="380dp"
+        android:layout_marginTop="300dp"
         android:padding="10dp"
         android:background="@drawable/round_border"
         android:inputType="textEmailAddress" />
@@ -45,20 +45,19 @@
         <Button
             android:id="@+id/btn_login"
             android:layout_width="110dp"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:layout_gravity="center"
             android:layout_marginRight="30dp"
             android:fontFamily="@font/jalan"
-            android:background="@drawable/round_border"
-            android:backgroundTint="@color/red"
+            android:backgroundTint="@color/main"
+
             android:text="로그인" />
 
         <Button
             android:id="@+id/btn_signup"
             android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/round_border"
-            android:backgroundTint="@color/red"
+            android:layout_height="55dp"
+            android:backgroundTint="@color/main"
             android:fontFamily="@font/jalan"
             android:text="회원가입" />
     </LinearLayout>
@@ -66,10 +65,11 @@
     <com.kakao.usermgmt.LoginButton
         android:id="@+id/com_kakao_login"
         android:layout_width="374dp"
-        android:layout_height="83dp"
+        android:layout_height="81dp"
         android:layout_marginStart="21dp"
+        android:layout_marginTop="90dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="10dp"
         android:layout_weight="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
