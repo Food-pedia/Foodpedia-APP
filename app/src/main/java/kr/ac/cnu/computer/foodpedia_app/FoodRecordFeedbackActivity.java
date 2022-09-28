@@ -90,35 +90,35 @@ public class FoodRecordFeedbackActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.navigationView);
 
         // item selection part
-        bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.Today:
-                        final Intent intent = new Intent(FoodRecordFeedbackActivity.this, MainActivity.class);
-                        startActivity(intent);
-
-                        finish();
-                        overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
-                        return true;
-
-                    case R.id.Camera:
-                        camera_pop.setVisibility(View.VISIBLE);
-//                        bloodBtn.setVisibility(View.GONE);
-                        return true;
-                    case R.id.Records:
-                        final Intent intent3 = new Intent(FoodRecordFeedbackActivity.this, CalendarActivity.class);
-                        startActivity(intent3);
-                        finish();
-                        overridePendingTransition(R.anim.slide_right_enter, R.anim.slide_right_exit);
-                        return true;
-                }
-                return false;
-            }
-        });
-        /************* 하단바 *************/
-
-
+//        bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                switch (item.getItemId()) {
+//                    case R.id.Today:
+//                        final Intent intent = new Intent(FoodRecordFeedbackActivity.this, MainActivity.class);
+//                        startActivity(intent);
+//
+//                        finish();
+//                        overridePendingTransition(R.anim.slide_left_enter, R.anim.slide_left_exit);
+//                        return true;
+//
+//                    case R.id.Camera:
+//                        camera_pop.setVisibility(View.VISIBLE);
+////                        bloodBtn.setVisibility(View.GONE);
+//                        return true;
+//                    case R.id.Records:
+//                        final Intent intent3 = new Intent(FoodRecordFeedbackActivity.this, CalendarActivity.class);
+//                        startActivity(intent3);
+//                        finish();
+//                        overridePendingTransition(R.anim.slide_right_enter, R.anim.slide_right_exit);
+//                        return true;
+//                }
+//                return false;
+//            }
+//        });
+//        /************* 하단바 *************/
+//
+//
 
     }
 }

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -222,12 +223,13 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                         timezoneText.setText(timezone + " 식단");
 
                        /*식단 피드백 출력*/
-                        ImageView feedbackEmoji = findViewById(R.id.feedbackImogi);
+                        ImageView feedbackEmoji = findViewById(R.id.feedbackEmogi);
 
                         //피드백 이모지
                         if(selectedEmoji.intValue() == 0) {
                             LinearLayout feedbackLayout = findViewById(R.id.feedbackalllayout);
                             feedbackLayout.setVisibility(View.GONE);
+                            Log.e("이모지", "이모지안보임");
                         }
                         else {
                             switch(selectedEmoji.intValue()){
@@ -264,7 +266,13 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                                     case FEEDBACK_TEXT_FIFTH:
                                         selectedFeedbackTextView.get(i).setText(R.string.feedbackTextFifth);
                                 }
-                                feedbackText.addView(selectedFeedbackTextView.get(i));
+                                selectedFeedbackTextView.get(i).setTextSize(TypedValue.COMPLEX_UNIT_DIP, 13);
+
+                                LinearLayout.LayoutParams params2 =  new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                params2.weight = 1;
+                                params2.gravity = Gravity.CLIP_HORIZONTAL;
+                                params2.topMargin = 10;
+                                feedbackText.addView(selectedFeedbackTextView.get(i), params2);
                             }
                         }
 
