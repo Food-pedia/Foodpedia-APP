@@ -155,7 +155,7 @@ public class Utils {
 
         Bitmap croppedBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
 
-        Matrix frameToCropTransformations = getTransformationMatrix(image_width,image_height,size,size,0,false);
+        Matrix frameToCropTransformations = getTransformationMatrix(image_width,image_height,size,size,90,false);
         Matrix cropToFrameTransformations = new Matrix();
         frameToCropTransformations.invert(cropToFrameTransformations);
 

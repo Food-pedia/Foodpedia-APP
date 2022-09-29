@@ -144,7 +144,7 @@
 
                             <TextView
                                 android:id="@+id/feedbackMemo"
-                                android:layout_width="109dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="43dp"
                                 android:layout_marginTop="5dp"

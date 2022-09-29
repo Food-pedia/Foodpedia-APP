@@ -153,7 +153,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                     if (feedbackIntent != null){
                         selectedEmoji=feedbackIntent.getIntExtra("selectedEmoji", 1);
                         selectedFeedback=feedbackIntent.getIntegerArrayListExtra("selectedFeedback");
-                        memoText = feedbackIntent.getStringExtra("memo");
+                        memoText = feedbackIntent.getStringExtra("memoText");
 
 
                     }
