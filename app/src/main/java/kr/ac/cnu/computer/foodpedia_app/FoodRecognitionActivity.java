@@ -83,8 +83,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     List<Integer> selectedFeedback;
     String memoText = "";
 
-    private List<Integer> randomColor = new ArrayList<>();
-
+    //private List<Integer> randomColor = new ArrayList<>();
+    Map<String, Integer> foodEngNameAndcolor = new HashMap<>();
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -116,12 +116,25 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                     intake.add(Double.parseDouble(newFoodIntake));
                     param.weight = 1;
                     param.gravity = Gravity.CLIP_HORIZONTAL;
+                    param.leftMargin = 5;
+                    param.rightMargin = 5;
+
+                    int randomC = getRandomColor();
+                    foodEngNameAndcolor.put(newFoodEngName,randomC);
+                    //randomColor.add(randomC);
+                    Typeface tf = Typeface.createFromAsset(getAssets(), "jalan.ttf");
 
                     int lastIdx = foodButtons.size() - 1;
                     Button newFoodButton = foodButtons.get(lastIdx);
-                    Log.e("컬러러 : ", randomColor.get(lastIdx)+"");
-                    newFoodButton.setBackgroundColor(randomColor.get(lastIdx));
+                    Log.e("컬러러 : ", foodEngNameAndcolor.get(newFoodEngName)+"");
+
+                    GradientDrawable shape =  new GradientDrawable();
+                    shape.setCornerRadius( 20 );
+                    //shape.setColor((randomColor.get(lastIdx)));
+                    shape.setColor(foodEngNameAndcolor.get(newFoodEngName));
+                    newFoodButton.setBackground(shape);
                     newFoodButton.setText(newFoodName);
+                    newFoodButton.setTypeface(tf);
                     foodButtonLayout.addView(newFoodButton, param);
                     Log.e("성공!", "FoodRecognitionActivity 129줄");
 
@@ -460,7 +473,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             int randomC = getRandomColor();
             boxPaint.setColor(randomC);
             paint.setColor(randomC);
-            randomColor.add(randomC);
+            foodEngNameAndcolor.put(result.getTitle(), randomC);
+            //randomColor.add(randomC);
 
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                 Log.e("=== title : ", result.getTitle());
@@ -509,92 +523,99 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
-
-//              카카오id-yyyy-MM-dd-HH-mm-ss
-                LocalDateTime now = LocalDateTime.now();
-                String getFormatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
-                String getDate = getFormatedNow.substring(0, 10);
-                foodRecordId = ((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow;
-
-                // upload image
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                // Create a storage reference from our app
-                StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
-                //Create a reference to image
-                StorageReference imageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + getDate + "/" + getFormatedNow + ".jpg");
-
-                imageView.setDrawingCacheEnabled(true);
-                imageView.buildDrawingCache();
-                Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] data = baos.toByteArray();
-
-                UploadTask uploadTask = imageReference.putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        Log.e("=== upload image", "fail to upload the image");
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                        Log.e("=== upload image", "success to upload the image");
-                    }
-                });
-
-                String getName = ((GlobalApplication)getApplication()).getKakaoID(); // 나중에 사용자 이름이나 id 저장
-
                 RadioGroup timezoneGroup = (RadioGroup) findViewById(R.id.radioGroupTimezone);
                 RadioButton selectedTimezone = (RadioButton) findViewById(timezoneGroup.getCheckedRadioButtonId());
-                String getTimezone = selectedTimezone.getText().toString();
+                if (timezoneGroup.getCheckedRadioButtonId() != -1) { // 라디오버튼 클릭 o
+                    //카카오id-yyyy-MM-dd-HH-mm-ss
+                    LocalDateTime now = LocalDateTime.now();
+                    String getFormatedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+                    String getDate = getFormatedNow.substring(0, 10);
+                    foodRecordId = ((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow;
 
-                HashMap<String, Object> result = new HashMap<>();
-                result.put("member", getName);
-                result.put("time", getFormatedNow);
-                result.put("timezone", getTimezone);
-                result.put("foods", foodName);
-                result.put("intake", intake);
+                    // upload image
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    // Create a storage reference from our app
+                    StorageReference storageReference = storage.getReferenceFromUrl("gs://food-pedia-d2bbc.appspot.com/");
+                    //Create a reference to image
+                    StorageReference imageReference = storageReference.child("images/" + ((GlobalApplication) getApplication()).getKakaoID() + "/" + getDate + "/" + getFormatedNow + ".jpg");
 
-                if(feedbackIntent != null){
-                    HashMap<String, Object> feedbackResult = new HashMap<>();
-                    feedbackResult.put("foodRecordId", foodRecordId);
-                    feedbackResult.put("emoji", selectedEmoji);
-                    feedbackResult.put("feedback", selectedFeedback);
-                    feedbackResult.put("memo", memoText);
+                    imageView.setDrawingCacheEnabled(true);
+                    imageView.buildDrawingCache();
+                    Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
 
-                    db.collection("feedback").document(foodRecordId+"-feedback").set(feedbackResult)
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] data = baos.toByteArray();
+
+                    UploadTask uploadTask = imageReference.putBytes(data);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            Log.e("=== upload image", "fail to upload the image");
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                            Log.e("=== upload image", "success to upload the image");
+                        }
+                    });
+
+                    String getName = ((GlobalApplication)getApplication()).getKakaoID(); // 나중에 사용자 이름이나 id 저장
+
+
+                    String getTimezone = selectedTimezone.getText().toString();
+
+                    HashMap<String, Object> result = new HashMap<>();
+                    result.put("member", getName);
+                    result.put("time", getFormatedNow);
+                    result.put("timezone", getTimezone);
+                    result.put("foods", foodName);
+                    result.put("intake", intake);
+
+                    if(feedbackIntent != null){
+                        HashMap<String, Object> feedbackResult = new HashMap<>();
+                        feedbackResult.put("foodRecordId", foodRecordId);
+                        feedbackResult.put("emoji", selectedEmoji);
+                        feedbackResult.put("feedback", selectedFeedback);
+                        feedbackResult.put("memo", memoText);
+
+                        db.collection("feedback").document(foodRecordId+"-feedback").set(feedbackResult)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.e("DB 저장 완료", "피드백 저장 성공");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.e("DB 저장 실패", "피드백 저장 실패");
+                                    }
+                                });
+                    }
+
+                    db.collection("foodRecord").document(foodRecordId).set(result)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.e("DB 저장 완료", "피드백 저장 성공");
+                                    Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
+                                    finish();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.e("DB 저장 실패", "피드백 저장 실패");
+                                    Toast.makeText(getApplicationContext(), "저장에 실패했습니다", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
+                else{
+                    Toast.makeText(getApplicationContext(), "아침, 점심, 저녁 중에 어느 식사인지 선택해주세요", Toast.LENGTH_SHORT).show();
+                }
 
-                db.collection("foodRecord").document(foodRecordId).set(result)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getApplicationContext(), "저장에 실패했습니다", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+//
             }
         });
     }
@@ -604,17 +625,19 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         int idx = 0;
 
         while (foodEngNames.hasNext()) {
-            GradientDrawable shape =  new GradientDrawable();
-            shape.setCornerRadius( 20 );
-            shape.setColor(randomColor.get(idx));
             String curFoodEngName = foodEngNames.next();
             String curFoodKorName = foodKorName.get(curFoodEngName);
+            GradientDrawable shape =  new GradientDrawable();
+            shape.setCornerRadius( 20 );
+            shape.setColor(foodEngNameAndcolor.get(curFoodEngName));
+            //shape.setColor(randomColor.get(idx));
             Button newBtn = new Button(this);
             newBtn.setBackground(shape);
             foodButtons.add(newBtn);
             foodButtons.get(idx).setText(curFoodKorName);
             Typeface tf = Typeface.createFromAsset(getAssets(), "jalan.ttf");
             foodButtons.get(idx).setTypeface(tf);
+
 
             param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             param.weight = 1;
