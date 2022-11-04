@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -54,6 +51,9 @@ public class FoodNutritionInfoActivity extends AppCompatActivity {
         EditText intakeInput = findViewById(R.id.intakeInput);
         Button intakeModifyBtn = findViewById(R.id.intakeModifyBtn);
         Button foodNutSaveBtn = findViewById(R.id.foodNutSaveBtn);
+
+        ImageView todayFoodImg = findViewById(R.id.todayFoodImg);
+        todayFoodImg.setImageBitmap(getIntent().getParcelableExtra("foodImage"));
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("food").document(foodName).get().addOnCompleteListener(task->{
