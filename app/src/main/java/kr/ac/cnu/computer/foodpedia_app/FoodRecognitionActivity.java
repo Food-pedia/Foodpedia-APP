@@ -83,8 +83,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
     List<Integer> selectedFeedback;
     String memoText = "";
 
-    private List<Integer> randomColor = new ArrayList<>();
-
+    //private List<Integer> randomColor = new ArrayList<>();
+    Map<String, Integer> foodEngNameAndcolor = new HashMap<>();
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -120,16 +120,18 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                     param.rightMargin = 5;
 
                     int randomC = getRandomColor();
-                    randomColor.add(randomC);
+                    foodEngNameAndcolor.put(newFoodEngName,randomC);
+                    //randomColor.add(randomC);
                     Typeface tf = Typeface.createFromAsset(getAssets(), "jalan.ttf");
 
                     int lastIdx = foodButtons.size() - 1;
                     Button newFoodButton = foodButtons.get(lastIdx);
-                    Log.e("컬러러 : ", randomColor.get(lastIdx)+"");
+                    Log.e("컬러러 : ", foodEngNameAndcolor.get(newFoodEngName)+"");
 
                     GradientDrawable shape =  new GradientDrawable();
                     shape.setCornerRadius( 20 );
-                    shape.setColor((randomColor.get(lastIdx)));
+                    //shape.setColor((randomColor.get(lastIdx)));
+                    shape.setColor(foodEngNameAndcolor.get(newFoodEngName));
                     newFoodButton.setBackground(shape);
                     newFoodButton.setText(newFoodName);
                     newFoodButton.setTypeface(tf);
@@ -470,7 +472,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             int randomC = getRandomColor();
             boxPaint.setColor(randomC);
             paint.setColor(randomC);
-            randomColor.add(randomC);
+            foodEngNameAndcolor.put(result.getTitle(), randomC);
+            //randomColor.add(randomC);
 
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                 Log.e("=== title : ", result.getTitle());
@@ -621,17 +624,19 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         int idx = 0;
 
         while (foodEngNames.hasNext()) {
-            GradientDrawable shape =  new GradientDrawable();
-            shape.setCornerRadius( 20 );
-            shape.setColor(randomColor.get(idx));
             String curFoodEngName = foodEngNames.next();
             String curFoodKorName = foodKorName.get(curFoodEngName);
+            GradientDrawable shape =  new GradientDrawable();
+            shape.setCornerRadius( 20 );
+            shape.setColor(foodEngNameAndcolor.get(curFoodEngName));
+            //shape.setColor(randomColor.get(idx));
             Button newBtn = new Button(this);
             newBtn.setBackground(shape);
             foodButtons.add(newBtn);
             foodButtons.get(idx).setText(curFoodKorName);
             Typeface tf = Typeface.createFromAsset(getAssets(), "jalan.ttf");
             foodButtons.get(idx).setTypeface(tf);
+
 
             param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             param.weight = 1;
