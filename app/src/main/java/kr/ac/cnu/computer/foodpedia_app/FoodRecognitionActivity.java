@@ -531,6 +531,9 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                     String getDate = getFormatedNow.substring(0, 10);
                     foodRecordId = ((GlobalApplication) getApplication()).getKakaoID()+"-"+getFormatedNow;
 
+                    Collection<Integer> values = foodEngNameAndcolor.values();
+                    List<Integer> foodColor = new ArrayList<>(values);
+
                     // upload image
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     // Create a storage reference from our app
@@ -572,6 +575,8 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                     result.put("timezone", getTimezone);
                     result.put("foods", foodName);
                     result.put("intake", intake);
+                    result.put("foodColor", foodColor);
+
 
                     if(feedbackIntent != null){
                         HashMap<String, Object> feedbackResult = new HashMap<>();

@@ -4,8 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -67,7 +71,7 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
     Map<String, String> foodKorName = new HashMap<>();
     List<Button> foodButtons = new ArrayList<Button>(); //인식된 식품 버튼 저장할 배열
     List<Double> intake;    //인식된 식품 이름별 섭취량 저장할 배열(foodName index에 맞춰)
-
+    List<Integer> foodColor; //식품 버튼 색깔 배열
     LinearLayout.LayoutParams param;
 
 
@@ -165,6 +169,7 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                                 Log.e("=== DEBUG", foodName + "");
                                 intake = (ArrayList<Double>) recordMap.get("intake");
                                 timezone = (String) recordMap.get("timezone");
+                                foodColor = (ArrayList<Integer>) recordMap.get("foodColor");
                             } else {
                                 Log.e("=== DEBUG", "no data");
                             }
@@ -219,6 +224,7 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
                 System.out.println("foodKorName : " + foodKorName);
 
                 handler.post(new Runnable() {
+                   // @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void run() {
                         // UI 작업 수행 가능
@@ -359,18 +365,28 @@ public class FoodRecordDetailActivity extends AppCompatActivity {
 
     private void drawButton() {
         Log.e("=== drawButton", foodKorName.size() + "");
+        Log.e("=== drawButton", foodColor + "");
         LinearLayout foodButtonLayout = findViewById(R.id.foodButtonLayout);
         Iterator<String> foodEngNames = foodKorName.keySet().iterator();
         int idx = 0;
         while (foodEngNames.hasNext()) {
             String curFoodEngName = foodEngNames.next();
             String curFoodKorName = foodKorName.get(curFoodEngName);
-            foodButtons.add(new Button(getApplicationContext()));
+            GradientDrawable shape =  new GradientDrawable();
+            shape.setCornerRadius(20);
+            shape.setColor(Integer.parseInt(String.valueOf(foodColor.get(idx))));
+            Button newBtn = new Button(this);
+            newBtn.setBackground(shape);
+            foodButtons.add(newBtn);
             foodButtons.get(idx).setText(curFoodKorName);
+            Typeface tf = Typeface.createFromAsset(getAssets(), "jalan.ttf");
+            foodButtons.get(idx).setTypeface(tf);
 
             param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             param.weight = 1;
             param.gravity = Gravity.CLIP_HORIZONTAL;
+            param.leftMargin = 5;
+            param.rightMargin = 5;
 
             foodButtonLayout.addView(foodButtons.get(idx), param);
 
