@@ -432,6 +432,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
         }
     }
 
+    HashMap<String, Coordination> coordinations = new HashMap<>();
     private void handleResult(Bitmap bitmap, List<Classifier.Recognition> results) {
         final Canvas canvas = new Canvas(bitmap);
         final Paint paint = new Paint();
@@ -464,13 +465,13 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             if (location != null && result.getConfidence() >= MINIMUM_CONFIDENCE_TF_OD_API) {
                 Log.e("=== title : ", result.getTitle());
                 Log.e("=== location : ", location + "");
+                coordinations.put(result.getTitle(), new Coordination((int)location.left, (int)location.right, (int)location.top, (int)location.bottom));
                 canvas.drawRect(location, paint);
 
                 String foodName = (foodKorName.get(result.getTitle()) == null ? "" : foodKorName.get(result.getTitle()));
                 borderedText.drawText(
                         canvas, location.left, location.top, foodName, boxPaint);
                 cropToFrameTransform.mapRect(location);
-
                 result.setLocation(location);
                 mappedRecognitions.add(result);
             }
@@ -626,7 +627,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
             //식품 버튼 누르면 해당 식품영양정보 페이지로 이동
             Button foodButton = foodButtons.get(idx);
             String foodButtonEngName = curFoodEngName;
-            String foodButtonIntake = "";
+            Coordination imageCoordination = coordinations.get(foodButtonEngName);
             foodButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -642,11 +643,77 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                     System.out.println("updateIntakeHere : " + intake.get(foodName.indexOf(foodButtonEngName)).toString());
                     intent.putExtra("foodIntake", intake.get(foodName.indexOf(foodButtonEngName)).toString());   //다음 페이지로 해당 식품 섭취량 전달
                     intent.putExtra("foodRecordId", foodRecordId);  //다음 페이지로 현재 식단 기록 id 전달
+                    intent.putExtra("foodImage", makeAutoFitableBitMap(cropBitmap, imageCoordination));
                     mStartForResult.launch(intent);
                 }
             });
             idx++;
         }
+    }
+
+    // 이미지 좌표 클래스 *** 추후 RectF 타입으로 변경
+    class Coordination {
+        int left, right, bottom, top;
+        Coordination(int left, int right, int bottom, int top) {
+            this.left = left;
+            this.right = right;
+            this.bottom = bottom;
+            this.top = top;
+        }
+    }
+
+    private Bitmap makeAutoFitableBitMap(Bitmap bit, Coordination coordination){
+
+        int width = bit.getWidth();
+        int height = bit.getHeight();
+
+        //변경될 이미지를 담을 새로은 비트맵을 생성
+        Bitmap myBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        int[] allpixels = new int[myBitmap.getHeight() * myBitmap.getWidth()];
+
+        bit.getPixels(allpixels, 0, myBitmap.getWidth(), 0, 0, myBitmap.getWidth(), myBitmap.getHeight());
+        myBitmap.setPixels(allpixels, 0, width, 0, 0, width, height);
+
+        // 1. 해당 식품만 가지고 와서 가운데 정렬 실행
+        int minX = coordination.left;
+        int maxX = coordination.right;
+        int minY = coordination.bottom;
+        int maxY = coordination.top;
+        int currX = 0;
+        int currY = 0;
+
+        // 주위에 들어갈 패딩
+        int padding = 10;
+        minX = minX - padding;
+        maxX = maxX + padding;
+        minY = minY - padding;
+        maxY = maxY + padding;
+
+        // 1-2. 새로 복사될 전체 2차원 width, height 크기 구하기
+        int resWidth = bit.getWidth() - ( bit.getWidth() - maxX ) - minX;
+        int resHeight = bit.getHeight() - ( bit.getHeight() - maxY ) - minY;
+
+        int[] resPixels = new int[resWidth * resHeight];
+        int resCpCnt = 0;
+
+        // 1-3. 기존 픽셀에서 해당 식품의 좌표의 픽셀들만 복사하기
+        for (int i = 0; i < myBitmap.getHeight() * myBitmap.getWidth(); i++) {
+            currY = i / bit.getWidth();
+            currX = i - (currY * bit.getWidth());
+
+            // 좌표가 최소Y ~ 최대Y && 최소X ~ 최대X 좌표 사이에 있는경우
+            if(minY <= currY && maxY > currY){
+                if(minX <= currX && maxX > currX){
+                    resPixels[resCpCnt++] = allpixels[i]; // 좌표안의 픽셀 복사
+                }
+            }
+        }
+
+        // 1-4. 복사한 픽셀들만 비트맵으로 만들기
+        Bitmap resBitmap = Bitmap.createBitmap(resWidth, resHeight, Bitmap.Config.ARGB_8888);
+        resBitmap.setPixels(resPixels, 0, resWidth, 0, 0, resWidth, resHeight);
+
+        return resBitmap;
     }
 
     private void updateIntake() {
