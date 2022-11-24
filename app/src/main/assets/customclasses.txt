@@ -1,9 +1,5 @@
-gimbap
-gimchibokkeumbap
-gimchijeon
-gochujangjinmichaebokeum
-gochutwigim
-gopchangguyi
-gopchangjeongol
-gwamegi
-seolreongtang
+bibimbap
+hobakjeon
+miyeokjulgibokkeum
+sausagebokkeum
+yeongeunjorim

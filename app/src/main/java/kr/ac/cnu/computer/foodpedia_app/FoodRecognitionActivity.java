@@ -2,6 +2,7 @@ package kr.ac.cnu.computer.foodpedia_app;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
@@ -360,7 +361,7 @@ public class FoodRecognitionActivity extends AppCompatActivity {
 
     private static final boolean TF_OD_API_IS_QUANTIZED = false;
 
-    private static final String TF_OD_API_MODEL_FILE = "best-fp16.tflite";
+    private static final String TF_OD_API_MODEL_FILE = "fp16_2.tflite";
 
     private static final String TF_OD_API_LABELS_FILE = "file:///android_asset/customclasses.txt";
 
@@ -607,6 +608,9 @@ public class FoodRecognitionActivity extends AppCompatActivity {
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(getApplicationContext(), "저장을 완료했습니다", Toast.LENGTH_SHORT).show();
                                     finish();
+                                    Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                    startActivity(intent);//액티비티 띄우기
+                                    overridePendingTransition(0, 0);//인텐트 효과 없애기
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
